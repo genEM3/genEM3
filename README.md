@@ -1,2 +1,2 @@
-# emvae
-Variational autoencoder for 3D EM
+# gen-EM
+Generative models for 3D EM
