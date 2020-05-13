@@ -2,6 +2,9 @@ name: gen-EM
 
 dependencies:
   - python=3.8
+  - jupyter
+  - matplotlib
+  - pandas
   - pip
   - pip:
     - torch
