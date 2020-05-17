@@ -9,5 +9,5 @@ dependencies:
   - pip:
     - torch
     - torchvision
-
+    - tensorboard
 
