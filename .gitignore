@@ -133,3 +133,5 @@ dmypy.json
 
 # Log folder
 playground/autoencoder_2d/logs/*
+# AK: this would be the generic format for log directories so that it would be easy to ignore
+__logs__/
