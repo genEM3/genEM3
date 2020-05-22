@@ -1,4 +1,7 @@
-# Ignore dot folders
+# Ignore tensorboard logs
+events.out.tfevents*
+
+# ignore dot folders
 .*/
 
 # Byte-compiled / optimized / DLL files
