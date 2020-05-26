@@ -1,4 +1,4 @@
-# gen-EM
+# GenereEM
 Generative models for 3D EM
 
 # installation
