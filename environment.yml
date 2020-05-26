@@ -1,4 +1,4 @@
-name: generem
+name: genEM3
 channels:
   - pytorch
 dependencies:
