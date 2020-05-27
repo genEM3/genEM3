@@ -1,10 +1,11 @@
+import os
+import random
+from shutil import rmtree
 from typing import Tuple, Sequence, Dict
 from collections import namedtuple
 
-import random
 import numpy as np
-import matplotlib.pyplot as plt
-
+import torch
 from torch.utils.data import Dataset
 import wkw
 
@@ -13,25 +14,39 @@ DataSource = namedtuple('DataSource',
     'input_path',
     'input_dtype',
     'input_bbox',
-    'label_path',
-    'label_dtype',
-    'label_bbox'
+    'target_path',
+    'target_dtype',
+    'target_bbox'
     ])
 
 
-class Wkwdata(Dataset):
+class WkwData(Dataset):
 
     def __init__(self,
                  data_sources: Sequence[DataSource],
                  data_strata: Dict,
                  input_shape: Tuple[int, int, int],
                  output_shape: Tuple[int, int, int],
+                 pad_target: bool = False,
+                 cache_root: str = None,
+                 cache_wipe: bool = False,
+                 cache_size: int = 1024,#MiB
+                 cache_dim: int = 0,
+                 cache_range: int = 8#times output_shape in cache_dim
                  ):
+
+        # if cache_root is not None and cache_wipe:
+        #     rmtree(cache_root)
 
         self.data_sources = data_sources
         self.data_strata = data_strata
         self.input_shape = input_shape
         self.output_shape = output_shape
+        self.pad_target = pad_target
+        self.cache_root = cache_root
+        self.cache_size = cache_size
+        self.cache_dim = cache_dim
+        self.cache_range = cache_range
 
         self.data_meshes = []
         self.data_inds_min = []
@@ -56,7 +71,6 @@ class Wkwdata(Dataset):
         n_fits = np.floor(np.asarray(self.data_sources[data_source_idx].input_bbox[3:6]) /
                                     np.asarray(self.output_shape)).astype(int)
         corner_max_target = corner_min_target + n_fits * np.asarray(self.output_shape)
-        print(corner_min_target, corner_max_target)
         x = np.arange(corner_min_target[0], corner_max_target[0], self.output_shape[0])
         y = np.arange(corner_min_target[1], corner_max_target[1], self.output_shape[1])
         z = np.arange(corner_min_target[2], corner_max_target[2], self.output_shape[2])
@@ -84,45 +98,42 @@ class Wkwdata(Dataset):
         sample_idx"""
 
         # Get appropriate training data cube sample_idx based on global linear sample_idx
-        source_idx = int(np.argmax(np.asarray(self.cube_idx_ranges_max) >= sample_idx))
-        cube_key = list(self.data_object.keys())[source_idx]
+        source_idx = int(np.argmax(np.asarray(self.data_inds_max) >= sample_idx))
         # Get appropriate subscript index for the respective training data cube, given the global linear index
-        cube_sub = np.unravel_index(sample_idx - self.source_idx_ranges_min[source_idx],
-                                    dims=self.cube_mesh_grids[source_idx]['target']['x'].shape)
-
-        # Get target sample
-        origin_target = np.asarray([
-            self.cube_mesh_grids[source_idx]['target']['x'][cube_sub[0], cube_sub[1], cube_sub[2]],
-            self.cube_mesh_grids[source_idx]['target']['y'][cube_sub[0], cube_sub[1], cube_sub[2]],
-            self.cube_mesh_grids[source_idx]['target']['z'][cube_sub[0], cube_sub[1], cube_sub[2]],
-        ]).astype(np.uint16)
-        # ds_target = self.data_object[cube_key]['target']
-        # target = D3d.crop_c(ds_target, origin_target, self.output_shape)
+        mesh_inds = np.unravel_index(sample_idx - self.data_inds_min[source_idx],
+                                    dims=self.data_meshes[source_idx]['target']['x'].shape)
 
         # Get input sample
-        origin_input = np.asarray([
-            self.cube_mesh_grids[source_idx]['input']['x'][cube_sub[0], cube_sub[1], cube_sub[2]],
-            self.cube_mesh_grids[source_idx]['input']['y'][cube_sub[0], cube_sub[1], cube_sub[2]],
-            self.cube_mesh_grids[source_idx]['input']['z'][cube_sub[0], cube_sub[1], cube_sub[2]],
-        ]).astype(np.uint16)
-        # ds_input = self.data_object[cube_key]['input']
-        # input_ = D3d.crop_c(ds_input, origin_input, self.input_shape)
+        origin_input = [
+            int(self.data_meshes[source_idx]['input']['x'][mesh_inds[0], mesh_inds[1], mesh_inds[2]]),
+            int(self.data_meshes[source_idx]['input']['y'][mesh_inds[0], mesh_inds[1], mesh_inds[2]]),
+            int(self.data_meshes[source_idx]['input']['z'][mesh_inds[0], mesh_inds[1], mesh_inds[2]]),
+        ]
+        bbox_input = origin_input + list(self.input_shape)
+        input_ = self.wkw_read_cached(self.data_sources[source_idx].input_path, bbox_input)
 
-        # if self.pad_target is True:
-        #     target = self.pad(target)
-        #
-        # input_ = torch.from_numpy(np.reshape(input_, (1, input_.shape[0], input_.shape[1], input_.shape[2])))
-        # target = torch.from_numpy(np.reshape(target, (1, target.shape[0], target.shape[1], target.shape[2])))
+        # Get target sample
+        origin_target = [
+            self.data_meshes[source_idx]['target']['x'][mesh_inds[0], mesh_inds[1], mesh_inds[2]],
+            self.data_meshes[source_idx]['target']['y'][mesh_inds[0], mesh_inds[1], mesh_inds[2]],
+            self.data_meshes[source_idx]['target']['z'][mesh_inds[0], mesh_inds[1], mesh_inds[2]],
+        ]
+        bbox_target = origin_target + list(self.output_shape)
+        target = self.wkw_read_cached(self.data_sources[source_idx].target_path, bbox_target)
 
-        # return input_, target
+        if self.pad_target is True:
+            target = self.pad(target)
 
-        pass
+        input_ = torch.from_numpy(input_)
+        target = torch.from_numpy(target)
+
+        return input_, target
 
     def get_random_sample(self):
 
         """ Retrieves a random pair of input and target tensors from all available training cubes"""
 
-        idx = random.sample(range(self.cube_idx_ranges_max[-1]), 1)
+        idx = random.sample(range(self.data_inds_max[-1]), 1)
         input_, target = self.get_ordered_sample(idx)
 
         return input_, target
@@ -132,8 +143,64 @@ class Wkwdata(Dataset):
         target = np.pad(target,
                         ((pad_shape[0], pad_shape[0]), (pad_shape[1], pad_shape[1]), (pad_shape[2], pad_shape[2])),
                         'constant')
-
         return target
+
+    def wkw_read_cached(self, wkw_path, wkw_bbox):
+
+        # If caching active
+        if self.cache_root is not None:
+            bbox_mult = np.zeros(3)
+            bbox_mult[self.cache_dim] = self.cache_range
+            wkw_cache_bbox = wkw_bbox[0:3] + \
+                             list((np.asarray(wkw_bbox[3:6]) + np.asarray(self.output_shape) * bbox_mult).astype(int))
+            wkw_cache_path = os.path.join(self.cache_root, wkw_path[1::])
+            # If caching path does not exist create dirs and wkw dataset
+            if not os.path.exists(wkw_cache_path):
+                os.makedirs(wkw_cache_path)
+                self.wkw_create(wkw_cache_path, self.wkw_header(wkw_path))
+            # If caching path exists, attempt to load bbox from cache
+            else:
+                data = self.wkw_read(wkw_cache_path, wkw_bbox)
+                # If data incomplete preload full cache bbox and write to cache
+                if self.assert_data_completeness(data) is False:
+                    data = self.wkw_read(wkw_path, wkw_cache_bbox)
+                    self.wkw_write(wkw_cache_path, wkw_cache_bbox, data)
+        else:
+            data = self.wkw_read(wkw_path, wkw_bbox)
+
+        return data
+
+    @staticmethod
+    def wkw_header(wkw_path):
+        with wkw.Dataset.open(wkw_path) as w:
+            header = w.header
+
+        return header
+
+    @staticmethod
+    def wkw_read(wkw_path, wkw_bbox):
+        with wkw.Dataset.open(wkw_path) as w:
+            data = w.read(wkw_bbox[0:3], wkw_bbox[3:6])
+
+        return data
+
+    @staticmethod
+    def wkw_write(wkw_path, wkw_bbox, data):
+        with wkw.Dataset.open(wkw_path) as w:
+            w.write(wkw_bbox[0:3], data)
+
+    @staticmethod
+    def wkw_create(wkw_path, wkw_header):
+        wkw.Dataset.create(wkw_path, wkw_header)
+
+    @staticmethod
+    def assert_data_completeness(data):
+        if (np.any(data[:, 0, :, :]) & np.any(data[:, -1, :, :]) & np.any(data[:, :, 0, :]) & np.any(data[:, :, -1, :])
+                & np.any(data[:, :, :, 0]) & np.any(data[:, :, :, -1])):
+            flag = True
+        else:
+            flag = False
+        return flag
 
 
     @staticmethod
@@ -143,5 +210,3 @@ class Wkwdata(Dataset):
     @staticmethod
     def datasources_to_json(json_path):
         pass
-
-
