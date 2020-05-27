@@ -35,8 +35,8 @@ class WkwData(Dataset):
                  cache_range: int = 8#times output_shape in cache_dim
                  ):
 
-        # if cache_root is not None and cache_wipe:
-        #     rmtree(cache_root)
+        if cache_root is not None and cache_wipe:
+            rmtree(cache_root)
 
         self.data_sources = data_sources
         self.data_strata = data_strata
@@ -149,23 +149,34 @@ class WkwData(Dataset):
 
         # If caching active
         if self.cache_root is not None:
+
+            # Every 10th call check cache disk usage, if too large delete cache
+            if (random.randint(0, 9) == 1) & (self.disk_usage(self.cache_root) > self.cache_size):
+                rmtree('self.cache_root')
+
+            # Generate elongated prefetching bbox in direction specified by self.cache_dim sized
+            # self.cache_range*self.output_shape
             bbox_mult = np.zeros(3)
             bbox_mult[self.cache_dim] = self.cache_range
             wkw_cache_bbox = wkw_bbox[0:3] + \
                              list((np.asarray(wkw_bbox[3:6]) + np.asarray(self.output_shape) * bbox_mult).astype(int))
             wkw_cache_path = os.path.join(self.cache_root, wkw_path[1::])
+
             # If caching path does not exist create dirs and wkw dataset
             if not os.path.exists(wkw_cache_path):
                 os.makedirs(wkw_cache_path)
                 self.wkw_create(wkw_cache_path, self.wkw_header(wkw_path))
-            # If caching path exists, attempt to load bbox from cache
-            else:
+
+            # Attempt to load bbox from cache
+            data = self.wkw_read(wkw_cache_path, wkw_bbox)
+
+            # If data incomplete preload full cache bbox, write to cache and then load original bbox from cache
+            if self.assert_data_completeness(data) is False:
+                data = self.wkw_read(wkw_path, wkw_cache_bbox)
+                self.wkw_write(wkw_cache_path, wkw_cache_bbox, data)
                 data = self.wkw_read(wkw_cache_path, wkw_bbox)
-                # If data incomplete preload full cache bbox and write to cache
-                if self.assert_data_completeness(data) is False:
-                    data = self.wkw_read(wkw_path, wkw_cache_bbox)
-                    self.wkw_write(wkw_cache_path, wkw_cache_bbox, data)
         else:
+
             data = self.wkw_read(wkw_path, wkw_bbox)
 
         return data
@@ -202,6 +213,16 @@ class WkwData(Dataset):
             flag = False
         return flag
 
+    @staticmethod
+    def disk_usage(root):
+        total_size = 0
+        for dirpath, dirnames, filenames in os.walk(root):
+            for f in filenames:
+                fp = os.path.join(dirpath, f)
+                if not os.path.islink(fp):
+                    total_size += os.path.getsize(fp)
+
+        return np.floor(total_size/1024/1024) #MiB
 
     @staticmethod
     def datasources_from_json(json_path):

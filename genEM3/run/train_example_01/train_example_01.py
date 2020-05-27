@@ -7,7 +7,7 @@ run_root = os.path.dirname(os.path.abspath(__file__))
 wkw_root = '/gaba/tmpscratch/webknossos/Connectomics_Department/' \
                   '2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1'
 
-cache_root = os.path.join(run_root, 'cache')
+cache_root = os.path.join(run_root, '.cache/')
 if not os.path.exists(cache_root):
     os.makedirs(cache_root)
 
