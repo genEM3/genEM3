@@ -1,5 +1,6 @@
 import os
 import random
+import json
 from shutil import rmtree
 from typing import Tuple, Sequence, Dict
 from collections import namedtuple
@@ -9,8 +10,10 @@ import torch
 from torch.utils.data import Dataset
 import wkw
 
+
 DataSource = namedtuple('DataSource',
     [
+    'id',
     'input_path',
     'input_dtype',
     'input_bbox',
@@ -30,13 +33,16 @@ class WkwData(Dataset):
                  pad_target: bool = False,
                  cache_root: str = None,
                  cache_wipe: bool = False,
-                 cache_size: int = 1024,#MiB
+                 cache_size: int = 1024,    # MiB
                  cache_dim: int = 0,
-                 cache_range: int = 8#times output_shape in cache_dim
+                 cache_range: int = 8   # times output_shape in cache_dim
                  ):
 
-        if cache_root is not None and cache_wipe:
-            rmtree(cache_root)
+        if cache_root is not None:
+            if not os.path.exists(cache_root):
+                os.makedirs(cache_root)
+            elif cache_wipe:
+                rmtree(cache_root)
 
         self.data_sources = data_sources
         self.data_strata = data_strata
@@ -226,8 +232,31 @@ class WkwData(Dataset):
 
     @staticmethod
     def datasources_from_json(json_path):
-        pass
+        with open(json_path) as f:
+            datasources_dict = json.load(f)
+
+        datasources = []
+        for key in datasources_dict.keys():
+            datasource = DataSource(**datasources_dict[key])
+            datasources.append(datasource)
+
+        return datasources
 
     @staticmethod
-    def datasources_to_json(json_path):
-        pass
+    def datasources_to_json(datasources, json_path):
+
+        dumps = '{'
+        for datasource_idx, datasource in enumerate(datasources):
+            dumps += '\n    "datasource_{}"'.format(datasource.id) + ': {'
+            dumps += json.dumps(datasource._asdict(), indent=8)[1:-1]
+            dumps += "    },"
+        dumps = dumps[:-1] + "\n}"
+
+        with open(json_path, 'w') as f:
+            f.write(dumps)
+
+
+
+
+
+

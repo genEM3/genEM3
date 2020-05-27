@@ -12,6 +12,7 @@ if not os.path.exists(cache_root):
     os.makedirs(cache_root)
 
 datasource_1 = DataSource(
+    id=1,
     input_path=wkw_root,
     input_dtype='uint8',
     input_bbox=[20001, 16001, 0, 200, 200, 2],
@@ -21,6 +22,7 @@ datasource_1 = DataSource(
     )
 
 datasource_2 = DataSource(
+    id=2,
     input_path=wkw_root,
     input_dtype='uint8',
     input_bbox=[20501, 16501, 0, 200, 200, 2],
@@ -30,6 +32,7 @@ datasource_2 = DataSource(
     )
 
 datasource_3 = DataSource(
+    id=3,
     input_path=wkw_root,
     input_dtype='uint8',
     input_bbox=[21001, 17001, 0, 500, 500, 50],
@@ -39,6 +42,7 @@ datasource_3 = DataSource(
     )
 
 data_sources = [datasource_1, datasource_2, datasource_3]
+WkwData.datasources_to_json(data_sources, os.path.join(run_root, 'datasources.json'))
 data_strata = {'train': [1, 2], 'validate': [3], 'test': []}
 
 input_shape = (250, 250, 5)
