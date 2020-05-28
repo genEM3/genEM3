@@ -61,3 +61,8 @@ def data2fig_subplot(inputs, outputs, idx):
     img_output = output_cpu.numpy().squeeze()
     axs[1].imshow(img_output, cmap='gray')
     return fig
+
+# crop the valid part of the image
+def crop_valid(tensor, center, width):
+    valid_tensor = tensor[:, 0:1, center-width:center+width+1, center-width:center+width+1]
+    return valid_tensor
