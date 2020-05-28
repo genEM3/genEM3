@@ -50,3 +50,14 @@ class ImageSliceViewer3D:
         self.fig = plt.figure(figsize=self.figsize)
         plt.imshow(self.vol[:,:,z], cmap=plt.get_cmap(self.cmap), 
             vmin=self.v[0], vmax=self.v[1])
+
+# Plotting input and output of individual training examples        
+def data2fig_subplot(inputs, outputs, idx):
+    fig, axs = plt.subplots(1, 2, figsize=(16,12))
+    input_cpu = inputs[idx].data.cpu()
+    img_input = input_cpu.numpy().squeeze()
+    axs[0].imshow(img_input, cmap='gray')
+    output_cpu = outputs[idx].data.cpu()
+    img_output = output_cpu.numpy().squeeze()
+    axs[1].imshow(img_output, cmap='gray')
+    return fig
