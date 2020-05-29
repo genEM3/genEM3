@@ -43,7 +43,7 @@ datasource_3 = DataSource(
 
 data_sources = [datasource_1, datasource_2, datasource_3]
 WkwData.datasources_to_json(data_sources, os.path.join(run_root, 'datasources.json'))
-data_strata = {'train': [1, 2], 'validate': [3], 'test': []}
+data_strata = {'training': [1, 2], 'validate': [3], 'test': []}
 
 input_shape = (250, 250, 5)
 output_shape = (125, 125, 3)

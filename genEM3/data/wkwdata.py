@@ -11,16 +11,15 @@ from torch.utils.data import Dataset
 import wkw
 
 
-DataSource = namedtuple('DataSource',
-    [
-    'id',
-    'input_path',
-    'input_dtype',
-    'input_bbox',
-    'target_path',
-    'target_dtype',
-    'target_bbox'
-    ])
+DataSource = namedtuple(
+    'DataSource',
+    ['id',
+     'input_path',
+     'input_dtype',
+     'input_bbox',
+     'target_path',
+     'target_dtype',
+     'target_bbox'])
 
 
 class WkwData(Dataset):
