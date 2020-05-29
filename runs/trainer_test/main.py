@@ -12,7 +12,7 @@ from genEM3.training.training import Trainer
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
 
-wkw_root = '/gaba/tmpscratch/webknossos/Connectomics_Department/' \
+wkw_root = '/tmpscratch/webknossos/Connectomics_Department/' \
                   '2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1'
 
 cache_root = os.path.join(run_root, '.cache/')
@@ -35,12 +35,12 @@ dataset = WkwData(
     norm_mean=norm_mean,
     norm_std=norm_std,
     cache_root=cache_root,
-    cache_size=1024,#MiB
+    cache_size=4096,#MiB
     cache_dim=2,
-    cache_range=8
+    cache_range=24
 )
 
-dataloader = DataLoader(dataset, batch_size=8, shuffle=False, num_workers=0)
+dataloader = DataLoader(dataset, batch_size=24, shuffle=False, num_workers=8)
 
 input_size = 302
 output_size = input_size
@@ -53,10 +53,10 @@ model = AE(
     Encoder_4_sampling_bn(input_size, kernel_size, stride, n_fmaps, n_latent),
     Decoder_4_sampling_bn(output_size, kernel_size, stride, n_fmaps, n_latent))
 criterion = torch.nn.MSELoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.8)
+optimizer = torch.optim.SGD(model.parameters(), lr=0.025, momentum=0.8)
 
 num_epoch = 10
-log_int = 5
+log_int = 10
 device = 'cpu'
 
 trainer = Trainer(run_root,
