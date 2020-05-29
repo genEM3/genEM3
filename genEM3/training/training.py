@@ -1,4 +1,5 @@
 import os
+import matplotlib.pyplot as plt
 from torch.utils.tensorboard import SummaryWriter
 
 class Trainer:
@@ -10,7 +11,7 @@ class Trainer:
                  optimizer,
                  criterion,
                  num_epoch,
-                 log_int=100,
+                 log_int=10,
                  device='cpu'
                  ):
 
@@ -27,49 +28,58 @@ class Trainer:
 
     def train(self):
 
+        print('Starting training ...')
+
         if not os.path.exists(self.log_root):
             os.makedirs(self.log_root)
 
         writer = SummaryWriter(self.log_root)
-        writer_int = 5
-        n_epoch = 500
-        it = 0
 
-        for epoch in range(self.num_epoch):  # loop over the dataset multiple times
+        it = 0
+        for epoch in range(self.num_epoch):
             running_loss = 0.0
-            for i, data in enumerate(self.dataloader):
+            for i, (inputs, targets) in enumerate(self.dataloader):
                 it += 1
 
-                if which_device == 'gpu':
-                    inputs = data.to(device)
-                    labels = data.clone().to(device)
-                else:
-                    inputs = data
-                    labels = data.clone()
-
-                #         data = self.dataloader.dataset[0]
-                #         inputs = data.unsqueeze(0)
-                #         labels = data.clone().unsqueeze(0)
-
-                #         labels_valid = crop_valid(labels, input_center, valid_width)
-
                 # zero the parameter gradients
-                optimizer.zero_grad()
+                self.optimizer.zero_grad()
 
                 # forward + backward + optimize
-                outputs = net(inputs)
-                #         outputs_valid = crop_valid(outputs, input_center, valid_width)
-                loss = criterion(outputs, labels)
+                outputs = self.model(inputs)
+                loss = self.criterion(outputs, targets)
                 loss.backward()
-                optimizer.step()
+                self.optimizer.step()
 
                 # print statistics
                 running_loss += loss.item()
-                if (i + 1) % writer_int == 0:
-                    print('it: {} (epoch: {}, batch: {}), running loss: {:0.3f}'.format(i, epoch, i + 1, running_loss))
+                if (i + 1) % self.log_int == 0:
+                    print('it: {} (epoch: {}, batch: {}), running loss: {:0.3f}'.format(it, epoch, i + 1, running_loss))
 
                     writer.add_scalar('loss', loss.item(), it)
                     writer.add_scalar('running_loss', running_loss, it)
-                    writer.add_figure('inputs', data2fig_subplot(inputs, outputs, 0), it)
+                    writer.add_figure('image', self.show_img(inputs, outputs, 0), it)
+                    writer.add_figure('hist', self.show_hist(inputs, outputs, 0), it)
 
                     running_loss = 0.0
+
+    @staticmethod
+    def show_img(inputs, outputs, idx):
+
+        fig, axs = plt.subplots(1, 2, figsize=(4, 3))
+        img_input = inputs[idx].data.numpy().squeeze()
+        axs[0].imshow(img_input, cmap='gray')
+        img_output = outputs[idx].data.numpy().squeeze()
+        axs[1].imshow(img_output, cmap='gray')
+
+        return fig
+
+    @staticmethod
+    def show_hist(inputs, outputs, idx):
+
+        fig, axs = plt.subplots(1, 2, figsize=(4, 3))
+        axs[0].hist(inputs[idx].data.numpy().flatten())
+        axs[1].hist(outputs[idx].data.numpy().flatten())
+
+        return fig
+
+

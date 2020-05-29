@@ -16,6 +16,7 @@ class AE(nn.Module):
         self.decoder = decoder
 
     def forward(self, x):
+
         x = self.encoder(x)
         x = self.decoder(x)
 

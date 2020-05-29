@@ -1,7 +1,9 @@
 import os
-import random
 import json
-from shutil import rmtree
+import time
+import random
+import warnings
+#from shutil import rmtree
 from typing import Tuple, Sequence, Dict
 from collections import namedtuple
 
@@ -29,24 +31,21 @@ class WkwData(Dataset):
                  data_strata: Dict,
                  input_shape: Tuple[int, int, int],
                  output_shape: Tuple[int, int, int],
+                 norm_mean: float,
+                 norm_std: float,
                  pad_target: bool = False,
                  cache_root: str = None,
-                 cache_wipe: bool = False,
                  cache_size: int = 1024,    # MiB
                  cache_dim: int = 0,
                  cache_range: int = 8   # times output_shape in cache_dim
                  ):
 
-        if cache_root is not None:
-            if not os.path.exists(cache_root):
-                os.makedirs(cache_root)
-            elif cache_wipe:
-                rmtree(cache_root)
-
         self.data_sources = data_sources
         self.data_strata = data_strata
         self.input_shape = input_shape
         self.output_shape = output_shape
+        self.norm_mean = norm_mean
+        self.norm_std = norm_std
         self.pad_target = pad_target
         self.cache_root = cache_root
         self.cache_size = cache_size
@@ -115,7 +114,7 @@ class WkwData(Dataset):
             int(self.data_meshes[source_idx]['input']['z'][mesh_inds[0], mesh_inds[1], mesh_inds[2]]),
         ]
         bbox_input = origin_input + list(self.input_shape)
-        input_ = self.wkw_read_cached(self.data_sources[source_idx].input_path, bbox_input)
+        input_ = self.normalize(self.wkw_read_cached(self.data_sources[source_idx].input_path, bbox_input))
 
         # Get target sample
         origin_target = [
@@ -124,13 +123,18 @@ class WkwData(Dataset):
             self.data_meshes[source_idx]['target']['z'][mesh_inds[0], mesh_inds[1], mesh_inds[2]],
         ]
         bbox_target = origin_target + list(self.output_shape)
-        target = self.wkw_read_cached(self.data_sources[source_idx].target_path, bbox_target)
+        target = self.normalize(self.wkw_read_cached(self.data_sources[source_idx].target_path, bbox_target))
 
         if self.pad_target is True:
             target = self.pad(target)
 
-        input_ = torch.from_numpy(input_)
-        target = torch.from_numpy(target)
+        input_ = torch.from_numpy(input_).float()
+        if self.input_shape[2] == 1:
+            input_ = input_.squeeze(3)
+
+        target = torch.from_numpy(target).float()
+        if self.output_shape[2] == 1:
+            target = target.squeeze(3)
 
         return input_, target
 
@@ -150,14 +154,20 @@ class WkwData(Dataset):
                         'constant')
         return target
 
+    def normalize(self, data):
+        return (np.asarray(data)-self.norm_mean)/self.norm_std
+
     def wkw_read_cached(self, wkw_path, wkw_bbox):
 
         # If caching active
         if self.cache_root is not None:
 
-            # Every 10th call check cache disk usage, if too large delete cache
-            if (random.randint(0, 9) == 1) & (self.disk_usage(self.cache_root) > self.cache_size):
-                rmtree('self.cache_root')
+            # Every 100th call check cache disk usage, if too large delete cache
+            if (time.time_ns() % 100 == 0) & (self.disk_usage(self.cache_root) > self.cache_size):
+                # self.clear_cache()
+                warnings.warn("Cache disk usage ({} MiB) exceeds pre-defined limit ({} MiB).".format(
+                    self.disk_usage(self.cache_root),
+                    self.cache_size))
 
             # Generate elongated prefetching bbox in direction specified by self.cache_dim sized
             # self.cache_range*self.output_shape
@@ -170,6 +180,8 @@ class WkwData(Dataset):
             # If caching path does not exist create dirs and wkw dataset
             if not os.path.exists(wkw_cache_path):
                 os.makedirs(wkw_cache_path)
+
+            if not os.path.exists(os.path.join(wkw_cache_path, 'header.wkw')):
                 self.wkw_create(wkw_cache_path, self.wkw_header(wkw_path))
 
             # Attempt to load bbox from cache
@@ -185,6 +197,10 @@ class WkwData(Dataset):
             data = self.wkw_read(wkw_path, wkw_bbox)
 
         return data
+
+    # <- Too risky? Make user clear cache manually?
+    # def clear_cache(self):
+    #     rmtree(self.cache_root)
 
     @staticmethod
     def wkw_header(wkw_path):
