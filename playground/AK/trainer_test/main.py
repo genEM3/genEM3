@@ -8,18 +8,22 @@ from torch.utils.data import DataLoader
 from genEM3.data.wkwdata import WkwData
 from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn, Decoder_4_sampling_bn
 from genEM3.training.training import Trainer
-import pdb
-pdb.set_trace()
 from genEM3.util import gpu
-gpu.get_empty_gpu() 
+import pdb
+# Get the empty gpu
+gpu.get_empty_gpu()
 # Parameters
-run_root = os.path.dirname(os.path.abspath(__file__))
-
+run_root = '/u/alik/tmpscratch/runlogs/AE_2d'
+json_root = os.path.abspath(os.path.dirname(__file__))
+# directory for the data
 wkw_root = '/tmpscratch/webknossos/Connectomics_Department/' \
                   '2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1'
 
 cache_root = os.path.join(run_root, '.cache/')
-datasources_json_path = os.path.join(run_root, 'datasources.json')
+# path for the datasource JSON
+datasources_json_path = os.path.join(json_root, 'datasources.json')
+assert os.path.exists(datasources_json_path)
+# other parameterss
 data_strata = {'training': [1, 2], 'validate': [3], 'test': []}
 input_shape = (302, 302, 1)
 output_shape = (302, 302, 1)
@@ -38,12 +42,12 @@ dataset = WkwData(
     norm_mean=norm_mean,
     norm_std=norm_std,
     cache_root=cache_root,
-    cache_size=1024,#MiB
+    cache_size=10240,  # MiB
     cache_dim=2,
     cache_range=8
 )
 
-dataloader = DataLoader(dataset, batch_size=8, shuffle=False, num_workers=0)
+dataloader = DataLoader(dataset, batch_size=24, shuffle=False, num_workers=16)
 
 input_size = 302
 output_size = input_size
@@ -58,17 +62,17 @@ model = AE(
 criterion = torch.nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.8)
 
-num_epoch = 10
-log_int = 5
-device = 'gpu'
+num_epoch = 100
+log_int = 10
+device = 'cuda'
 
 trainer = Trainer(run_root,
-                 dataloader,
-                 model,
-                 optimizer,
-                 criterion,
-                 num_epoch,
-                 log_int,
-                 device)
+                  dataloader,
+                  model,
+                  optimizer,
+                  criterion,
+                  num_epoch,
+                  log_int,
+                  device)
 
 trainer.train()

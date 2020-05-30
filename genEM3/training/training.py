@@ -1,6 +1,8 @@
 import os
 import matplotlib.pyplot as plt
 from torch.utils.tensorboard import SummaryWriter
+from torch import device as torchDevice
+
 
 class Trainer:
 
@@ -22,7 +24,8 @@ class Trainer:
         self.criterion = criterion
         self.num_epoch = num_epoch
         self.log_int = log_int
-        self.device = device
+        # convert the string to torch.device object
+        self.device = torchDevice(device)
 
         self.log_root = os.path.join(run_root, '.log')
 
@@ -32,15 +35,17 @@ class Trainer:
 
         if not os.path.exists(self.log_root):
             os.makedirs(self.log_root)
-
         writer = SummaryWriter(self.log_root)
-
+        # Copy model to specified device
+        self.model = self.model.to(self.device)
         it = 0
         for epoch in range(self.num_epoch):
             running_loss = 0.0
             for i, (inputs, targets) in enumerate(self.dataloader):
                 it += 1
-
+                # copy input and targets to the device object
+                inputs = inputs.to(self.device)
+                targets = targets.to(self.device)
                 # zero the parameter gradients
                 self.optimizer.zero_grad()
 
@@ -64,11 +69,12 @@ class Trainer:
 
     @staticmethod
     def show_img(inputs, outputs, idx):
-
+        curInput, curOutput = Trainer.copy2cpu(inputs, outputs, idx)
+        # plot the input and output images as subplots
         fig, axs = plt.subplots(1, 2, figsize=(4, 3))
-        img_input = inputs[idx].data.numpy().squeeze()
+        img_input = curInput.data.numpy().squeeze()
         axs[0].imshow(img_input, cmap='gray')
-        img_output = outputs[idx].data.numpy().squeeze()
+        img_output = curOutput.data.numpy().squeeze()
         axs[1].imshow(img_output, cmap='gray')
 
         return fig
@@ -76,10 +82,20 @@ class Trainer:
     @staticmethod
     def show_hist(inputs, outputs, idx):
 
+        curInput, curOutput = Trainer.copy2cpu(inputs, outputs, idx)
         fig, axs = plt.subplots(1, 2, figsize=(4, 3))
-        axs[0].hist(inputs[idx].data.numpy().flatten())
-        axs[1].hist(outputs[idx].data.numpy().flatten())
+        axs[0].hist(curInput.data.numpy().flatten())
+        axs[1].hist(curOutput.data.numpy().flatten())
 
         return fig
 
-
+    @staticmethod
+    def copy2cpu(inputs, outputs, idx):
+        # copies the specified training example (idx) to the cpu
+        if inputs.is_cuda or outputs.is_cuda:
+            curInput_cpu = inputs[idx].cpu()
+            curOutput_cpu = outputs[idx].cpu()
+        else:
+            curInput_cpu = inputs[idx]
+            curOutput_cpu = outputs[idx]
+        return curInput_cpu, curOutput_cpu
