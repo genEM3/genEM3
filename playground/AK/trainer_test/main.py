@@ -13,7 +13,7 @@ import pdb
 # Get the empty gpu
 gpu.get_empty_gpu()
 # Parameters
-run_root = '/u/alik/tmpscratch/runlogs/AE_2d'
+run_root = '/u/alik/tmpscratch/runlogs/AE_2d/adam'
 json_root = os.path.abspath(os.path.dirname(__file__))
 # directory for the data
 wkw_root = '/tmpscratch/webknossos/Connectomics_Department/' \
@@ -60,7 +60,7 @@ model = AE(
     Encoder_4_sampling_bn(input_size, kernel_size, stride, n_fmaps, n_latent),
     Decoder_4_sampling_bn(output_size, kernel_size, stride, n_fmaps, n_latent))
 criterion = torch.nn.MSELoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.8)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01, betas=(0.9, 0.999))
 
 num_epoch = 100
 log_int = 10
