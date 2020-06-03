@@ -1,7 +1,9 @@
 import torch.optim as optim
 from ray import tune
 from ray.tune.examples.mnist_pytorch import get_data_loaders, ConvNet, train, test
+import ray 
 
+ray.init(temp_dir='/u/alik/tmpscratch/runlogs/ray')
 
 def train_mnist(config):
     train_loader, test_loader = get_data_loaders()
@@ -10,7 +12,7 @@ def train_mnist(config):
     for i in range(10):
         train(model, optimizer, train_loader)
         acc = test(model, test_loader)
-        tune.report(mean_accuracy=acc)
+        tune.track.log(mean_accuracy=acc)
 
 
 analysis = tune.run(
