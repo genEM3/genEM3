@@ -34,10 +34,9 @@ class WkwData(Dataset):
                  norm_mean: float,
                  norm_std: float,
                  pad_target: bool = False,
-                 cache_root: str = None,
-                 cache_size: int = 1024,    # MiB
-                 cache_dim: int = 0,
-                 cache_range: int = 8   # times output_shape in cache_dim
+                 cache_RAM: bool = True,
+                 cache_HDD: bool = True,
+                 cache_HDD_root: str = None
                  ):
 
         self.data_sources = data_sources
@@ -47,17 +46,20 @@ class WkwData(Dataset):
         self.norm_mean = norm_mean
         self.norm_std = norm_std
         self.pad_target = pad_target
-        self.cache_root = cache_root
-        self.cache_size = cache_size
-        self.cache_dim = cache_dim
-        self.cache_range = cache_range
+        self.cache_RAM = cache_RAM
+        self.cache_HDD = cache_HDD
+        self.cache_HDD_root = cache_HDD_root
 
+        self.data_cache = dict()
         self.data_meshes = []
         self.data_inds_min = []
         self.data_inds_max = []
 
         self.get_data_meshes()
         self.get_data_ind_ranges()
+
+        if cache_RAM | cache_HDD:
+            self.fill_caches()
 
     def __len__(self):
         return self.data_inds_max[-1]
@@ -157,50 +159,62 @@ class WkwData(Dataset):
     def normalize(self, data):
         return (np.asarray(data)-self.norm_mean)/self.norm_std
 
-    def wkw_read_cached(self, wkw_path, wkw_bbox):
+    def fill_caches(self):
+        for data_source_idx, data_source in enumerate(self.data_sources):
+            print('Filling caches ... data source {}/{} input'.format(data_source_idx+1, len(self.data_sources)))
+            self.fill_cache(data_source.input_path, data_source.input_bbox)
+            print('Filling caches ... data source {}/{} target'.format(data_source_idx+1, len(self.data_sources)))
+            self.fill_cache(data_source.target_path, data_source.target_bbox)
 
-        # If caching active
-        if self.cache_root is not None:
+    def fill_cache(self, wkw_path, wkw_bbox):
 
-            # Every 100th call check cache disk usage, if too large delete cache
-            if (time.time_ns() % 100 == 0) & (self.disk_usage(self.cache_root) > self.cache_size):
-                # self.clear_cache()
-                warnings.warn("Cache disk usage ({} MiB) exceeds pre-defined limit ({} MiB).".format(
-                    self.disk_usage(self.cache_root),
-                    self.cache_size))
+        wkw_cache_path = os.path.join(self.cache_HDD_root, wkw_path[1::])
 
-            # Generate elongated prefetching bbox in direction specified by self.cache_dim sized
-            # self.cache_range*self.output_shape
-            bbox_mult = np.zeros(3)
-            bbox_mult[self.cache_dim] = self.cache_range
-            wkw_cache_bbox = wkw_bbox[0:3] + \
-                             list((np.asarray(wkw_bbox[3:6]) + np.asarray(self.output_shape) * bbox_mult).astype(int))
-            wkw_cache_path = os.path.join(self.cache_root, wkw_path[1::])
+        # Attempt to read from HDD cache if already exists:
+        if os.path.exists(os.path.join(wkw_cache_path, 'header.wkw')):
+            data = self.wkw_read(wkw_cache_path, wkw_bbox)
+            # If data incomplete read again from remote source
+            if self.assert_data_completeness(data) is False:
+                data = self.wkw_read(wkw_path, wkw_bbox)
+        else:
+            data = self.wkw_read(wkw_path, wkw_bbox)
 
-            # If caching path does not exist create dirs and wkw dataset
+        # If cache to RAM is true, save to RAM
+        if self.cache_RAM:
+            if wkw_path not in self.data_cache:
+                self.data_cache[wkw_path] = {'data': data, 'wkw_bbox': wkw_bbox}
+
+        # If cache to HDD is true, save to HDD
+        if self.cache_HDD:
             if not os.path.exists(wkw_cache_path):
                 os.makedirs(wkw_cache_path)
 
             if not os.path.exists(os.path.join(wkw_cache_path, 'header.wkw')):
                 self.wkw_create(wkw_cache_path, self.wkw_header(wkw_path))
+                self.wkw_write(wkw_cache_path, wkw_bbox, data)
 
-            # Attempt to load bbox from cache
+    def wkw_read_cached(self, wkw_path, wkw_bbox):
+
+        # Attempt to load bbox from RAM cache
+        if wkw_path in self.data_cache:
+            rel_pos = np.asarray(wkw_bbox[0:3]) - np.asarray(self.data_cache[wkw_path]['wkw_bbox'][0:3])
+            data = self.data_cache[wkw_path]['data'][
+                :,
+                rel_pos[0]:rel_pos[0] + wkw_bbox[3],
+                rel_pos[1]:rel_pos[1] + wkw_bbox[4],
+                rel_pos[2]:rel_pos[2] + wkw_bbox[5],
+                ]
+
+        # Attempt to load bbox from HDD cache
+        else:
+            wkw_cache_path = os.path.join(self.cache_HDD_root, wkw_path[1::])
             data = self.wkw_read(wkw_cache_path, wkw_bbox)
 
-            # If data incomplete preload full cache bbox, write to cache and then load original bbox from cache
-            if self.assert_data_completeness(data) is False:
-                data = self.wkw_read(wkw_path, wkw_cache_bbox)
-                self.wkw_write(wkw_cache_path, wkw_cache_bbox, data)
-                data = self.wkw_read(wkw_cache_path, wkw_bbox)
-        else:
-
+        # If data incomplete, load conventionally
+        if self.assert_data_completeness(data) is False:
             data = self.wkw_read(wkw_path, wkw_bbox)
 
         return data
-
-    # <- Too risky? Make user clear cache manually?
-    # def clear_cache(self):
-    #     rmtree(self.cache_root)
 
     @staticmethod
     def wkw_header(wkw_path):

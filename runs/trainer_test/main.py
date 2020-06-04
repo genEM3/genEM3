@@ -12,7 +12,7 @@ from genEM3.training.training import Trainer
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
 
-wkw_root = '/tmpscratch/webknossos/Connectomics_Department/' \
+wkw_root = '/gaba/tmpscratch/webknossos/Connectomics_Department/' \
                   '2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1'
 
 cache_root = os.path.join(run_root, '.cache/')
@@ -34,13 +34,12 @@ dataset = WkwData(
     output_shape=output_shape,
     norm_mean=norm_mean,
     norm_std=norm_std,
-    cache_root=cache_root,
-    cache_size=4096,#MiB
-    cache_dim=2,
-    cache_range=24
+    cache_RAM=True,
+    cache_HDD=True,
+    cache_HDD_root=cache_root,
 )
 
-dataloader = DataLoader(dataset, batch_size=24, shuffle=False, num_workers=8)
+dataloader = DataLoader(dataset, batch_size=24, shuffle=False, num_workers=0)
 
 input_size = 302
 output_size = input_size
