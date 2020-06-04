@@ -1,9 +1,6 @@
 import os
 import json
-import time
 import random
-import warnings
-#from shutil import rmtree
 from typing import Tuple, Sequence, Dict
 from collections import namedtuple
 
@@ -191,7 +188,8 @@ class WkwData(Dataset):
 
             if not os.path.exists(os.path.join(wkw_cache_path, 'header.wkw')):
                 self.wkw_create(wkw_cache_path, self.wkw_header(wkw_path))
-                self.wkw_write(wkw_cache_path, wkw_bbox, data)
+
+            self.wkw_write(wkw_cache_path, wkw_bbox, data)
 
     def wkw_read_cached(self, wkw_path, wkw_bbox):
 
