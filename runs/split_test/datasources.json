@@ -27,7 +27,7 @@
         "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
         "input_bbox": [
                 21001,
-                16001,
+                16501,
                 0,
                 500,
                 500,
@@ -38,6 +38,75 @@
         "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
         "target_bbox": [
                 21001,
+                16501,
+                0,
+                500,
+                500,
+                50
+        ]
+    },
+        "datasource_3": {
+        "id": 3,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                21001,
+                17001,
+                0,
+                500,
+                500,
+                50
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                21001,
+                17001,
+                0,
+                500,
+                500,
+                50
+        ]
+    },
+        "datasource_4": {
+        "id": 4,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                21501,
+                16001,
+                0,
+                500,
+                500,
+                50
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                21501,
+                16001,
+                0,
+                500,
+                500,
+                50
+        ]
+    },
+        "datasource_5": {
+        "id": 5,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                22001,
+                16001,
+                0,
+                500,
+                500,
+                50
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                22001,
                 16001,
                 0,
                 500,

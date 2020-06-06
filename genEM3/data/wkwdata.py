@@ -70,7 +70,7 @@ class WkwData(Dataset):
                         sets).
                         Example (strata):
                             To use data source ids (1,3,4) as train-, ids (2,6) as validation- and id 5 as test set:
-                            data_split = wkwdata.DataSplit(train=(1,3,4), validation=(2,6), test=5)
+                            data_split = wkwdata.DataSplit(train=[1,3,4], validation=[2,6], test=[5])
                         Example (fractions)
                             To use a 70% of the data as train, 20% as validation and 10% as test set:
                             data_split = wkwdata.DataSplit(train=0.7, validation=0.2, test=0.1)
@@ -109,8 +109,13 @@ class WkwData(Dataset):
         self.data_inds_min = []
         self.data_inds_max = []
 
+        self.data_train_inds = []
+        self.data_validation_inds = []
+        self.data_test_inds = []
+
         self.get_data_meshes()
         self.get_data_ind_ranges()
+        self.get_data_ind_splits()
 
         if cache_RAM | cache_HDD:
             self.fill_caches()
@@ -152,6 +157,40 @@ class WkwData(Dataset):
             self.data_inds_max.append(self.data_inds_min[source_idx] +
                                       self.data_meshes[source_idx]['target']['x'].size - 1)
 
+    def get_data_ind_splits(self):
+
+        if type(self.data_split.train) is float:
+
+            data_inds_all = list(range(self.data_inds_max[-1]+1))
+            data_inds_all_rand = np.random.permutation(data_inds_all)
+            train_idx_max = int(self.data_split.train*self.data_inds_max[-1])
+            data_train_inds = list(data_inds_all_rand[0:train_idx_max])
+            validation_idx_max = train_idx_max + int(self.data_split.validation * self.data_inds_max[-1])
+            data_validation_inds = list(data_inds_all_rand[train_idx_max+1:validation_idx_max])
+            test_idx_max = validation_idx_max + int(self.data_split.validation * self.data_inds_max[-1])
+            data_test_inds = list(data_inds_all_rand[validation_idx_max+1:test_idx_max])
+
+        else:
+
+            data_train_inds = []
+            for i, id in enumerate(self.data_split.train):
+                idx = self.datasource_id_to_idx(id)
+                data_train_inds += list(range(self.data_inds_min[idx], self.data_inds_max[idx]+1))
+
+            data_validation_inds = []
+            for i, id in enumerate(self.data_split.validation):
+                idx = self.datasource_id_to_idx(id)
+                data_validation_inds += list(range(self.data_inds_min[idx], self.data_inds_max[idx] + 1))
+
+            data_test_inds = []
+            for i, id in enumerate(self.data_split.test):
+                idx = self.datasource_id_to_idx(id)
+                data_test_inds += list(range(self.data_inds_min[idx], self.data_inds_max[idx] + 1))
+
+        self.data_train_inds = data_train_inds
+        self.data_validation_inds = data_validation_inds
+        self.data_test_inds = data_test_inds
+
     def get_ordered_sample(self, sample_idx, normalize=None):
 
         """ Retrieves a pair of input and target tensors from all available training cubes based on the global linear
@@ -180,7 +219,7 @@ class WkwData(Dataset):
             input_ = self.wkw_read(self.data_sources[source_idx].input_path, bbox_input)
 
         if normalize:
-            input_ = self.normalize(input_, self.data_sources[source_idx].input_mean,
+            input_ = WkwData.normalize(input_, self.data_sources[source_idx].input_mean,
                                     self.data_sources[source_idx].input_std)
 
         # Get target sample
@@ -304,6 +343,14 @@ class WkwData(Dataset):
         std = np.mean(stds)
 
         return {'mean': mean, 'std': std}
+
+    def datasource_id_to_idx(self, id):
+        idx = [data_source.id for data_source in self.data_sources].index(id)
+        return idx
+
+    def datasource_idx_to_id(self, idx):
+        id = self.data_sources[idx].id
+        return id
 
     @staticmethod
     def normalize(data, mean, std):
