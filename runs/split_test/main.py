@@ -1,46 +1,34 @@
 import os
-import time
 import torch
-import numpy as np
-from matplotlib import pyplot as plt
 from torch.utils.data import DataLoader
+from torch.utils.data.sampler import SubsetRandomSampler
 
-from genEM3.data.wkwdata import WkwData
-from genEM3.data.normalize import Normalizer
+from genEM3.data.wkwdata import WkwData, DataSplit
 from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn, Decoder_4_sampling_bn
 from genEM3.training.training import Trainer
 
+
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
-
-wkw_root = '/tmpscratch/webknossos/Connectomics_Department/' \
-                  '2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1'
-
-cache_root = os.path.join(run_root, '.cache/')
 datasources_json_path = os.path.join(run_root, 'datasources.json')
-data_strata = {'training': [1, 2], 'validate': [3], 'test': []}
 input_shape = (302, 302, 1)
 output_shape = (302, 302, 1)
-norm_mean = 148.0
-norm_std = 36.0
-
-# Run
 data_sources = WkwData.datasources_from_json(datasources_json_path)
+# data_split = DataSplit(train=[1, 3], validation=[2, 4], test=[5])
+data_split = DataSplit(train=0.7, validation=0.2, test=0.1)
 
-# With Caching (cache filled)
 dataset = WkwData(
-    data_sources=data_sources,
-    data_strata=data_strata,
     input_shape=input_shape,
     target_shape=output_shape,
-    norm_mean=norm_mean,
-    norm_std=norm_std,
-    cache_RAM=True,
-    cache_HDD=True,
-    cache_HDD_root=cache_root,
+    data_sources=data_sources,
+    data_split=data_split
 )
 
-dataloader = DataLoader(dataset, batch_size=24, shuffle=False, num_workers=0)
+train_sampler = SubsetRandomSampler(dataset.data_train_inds)
+validation_sampler = SubsetRandomSampler(dataset.data_validation_inds)
+
+train_loader = torch.utils.data.DataLoader(dataset, sampler=train_sampler)
+validation_loader = torch.utils.data.DataLoader(dataset, sampler=validation_sampler)
 
 input_size = 302
 output_size = input_size
@@ -60,12 +48,14 @@ log_int = 10
 device = 'cpu'
 
 trainer = Trainer(run_root,
-                 dataloader,
-                 model,
-                 optimizer,
-                 criterion,
-                 num_epoch,
-                 log_int,
-                 device)
+                  model,
+                  optimizer,
+                  criterion,
+                  train_loader,
+                  validation_loader,
+                  num_epoch,
+                  log_int,
+                  device)
 
 trainer.train()
+
