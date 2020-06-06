@@ -1,7 +1,7 @@
 import os
 import json
 import random
-from typing import Tuple, Sequence, Dict
+from typing import Tuple, Sequence, Union
 from collections import namedtuple
 
 import numpy as np
@@ -20,21 +20,74 @@ DataSource = namedtuple(
      'target_dtype',
      'target_bbox'])
 
+DataStrata = namedtuple(
+    'DataStrata',
+    ['train_ids',
+     'validation_ids',
+     'test_ids']
+)
+
+DataSplit = namedtuple(
+    'DataStrata',
+    ['train_frac',
+     'validation_frac',
+     'test_frac']
+)
+
 
 class WkwData(Dataset):
+    """Implements (2D/3D) pytorch Dataset subclass for wkw data"""
 
     def __init__(self,
                  data_sources: Sequence[DataSource],
-                 data_strata: Dict,
+                 data_strata: DataStrata,
                  input_shape: Tuple[int, int, int],
                  output_shape: Tuple[int, int, int],
                  norm_mean: float,
                  norm_std: float,
                  pad_target: bool = False,
                  cache_RAM: bool = True,
-                 cache_HDD: bool = True,
+                 cache_HDD: bool = False,
                  cache_HDD_root: str = None
                  ):
+
+        """
+                Args:
+                    data_sources:
+                        Sequence of `DataSource` named tuples defining a given wkw data source and bounding box. Can
+                        either be defined directly or generated from a datasource json file using the static
+                        `WkwData.datasources_from_json` method.
+                        Example (direct):
+                            data_sources = [
+                                wkwdata.Datasource(id=1, input_path='/path/to/wkw/input1', input_dtype='uint8',
+                                    input_bbox=[pos_x, pos_y, pos_z, ext_x, ext_y, ext_z],
+                                    target_path='/path/to/wkw/target1'), target_dtype='uint32',
+                                    target_bbox=[pos_x, pos_y, pos_z, ext_x, ext_y, ext_z]),
+                                wkwdata.Datasource(id=2, input_path='/path/to/wkw/input2', input_dtype='uint8',
+                                    input_bbox=[pos_x, pos_y, pos_z, ext_x, ext_y, ext_z],
+                                    target_path='/path/to/wkw/target2'), target_dtype='uint32',
+                                    target_bbox=[pos_x, pos_y, pos_z, ext_x, ext_y, ext_z]),
+                                ]
+                        Example (json import):
+                            data_sources = WkwData.datasources_from_json(datasources_json_path)
+                    data_strata:
+                        Defines stratification of data into training, validation and test sets. Can either be an
+                        explicit assignment of specific data source ids to strata defined in a `DataStrata` named tuple.
+                        Alternatively, fractions can be passed for the strata, which are then filled by random
+                        assignment of data subsets.
+                        Example (explicit):
+                            To use data source ids (1,3,4) as train-, ids (2,6) as validation- and id 5 as test set:
+                            data_strata = wkwdata.DataStrata(train=(1,3,4), validation=(2,6), test=5)
+                        Example (implicit)
+                            To use a 70% of the data as train, 20% as validation and 10% as test set:
+                            data_strata = wkwdata.DataStrata(train=0.7, validation=0.2, test=0.1)
+                    input_shape:
+                        Input shape
+                    output_shape:
+                        Output shape
+
+
+                """
 
         self.data_sources = data_sources
         self.data_strata = data_strata
