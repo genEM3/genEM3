@@ -1,5 +1,6 @@
 import os
 import matplotlib.pyplot as plt
+import torch
 from torch.utils.tensorboard import SummaryWriter
 from torch import device as torchDevice
 
@@ -15,7 +16,8 @@ class Trainer:
                  validation_loader=None,
                  num_epoch=100,
                  log_int=10,
-                 device='cpu'
+                 device='cpu',
+                 save=False
                  ):
 
         self.run_root = run_root
@@ -26,6 +28,7 @@ class Trainer:
         self.log_int = log_int
         self.device = torchDevice(device)
         self.log_root = os.path.join(run_root, '.log')
+        self.save = save
 
         self.data_loaders = {"train": train_loader, "val": validation_loader}
         self.data_lengths = {"train": len(train_loader), "val": len(validation_loader)}
@@ -79,6 +82,9 @@ class Trainer:
                         writer.add_figure('hist'+phase, self.show_hist(inputs, outputs, 0), it)
 
                         running_loss = 0.0
+
+        if self.save:
+            torch.save(self.model.state_dict(), os.path.join(self.run_root, 'torch_model'))
 
     @staticmethod
     def show_img(inputs, outputs, idx):

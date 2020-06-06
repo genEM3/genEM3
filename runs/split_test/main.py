@@ -46,6 +46,7 @@ optimizer = torch.optim.SGD(model.parameters(), lr=0.025, momentum=0.8)
 num_epoch = 10
 log_int = 10
 device = 'cpu'
+save = True
 
 trainer = Trainer(run_root,
                   model,
@@ -55,7 +56,8 @@ trainer = Trainer(run_root,
                   validation_loader,
                   num_epoch,
                   log_int,
-                  device)
+                  device,
+                  save)
 
 trainer.train()
 
