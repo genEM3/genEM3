@@ -6,13 +6,14 @@ from matplotlib import pyplot as plt
 from torch.utils.data import DataLoader
 
 from genEM3.data.wkwdata import WkwData
+from genEM3.data.normalize import Normalizer
 from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn, Decoder_4_sampling_bn
 from genEM3.training.training import Trainer
 
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
 
-wkw_root = '/gaba/tmpscratch/webknossos/Connectomics_Department/' \
+wkw_root = '/tmpscratch/webknossos/Connectomics_Department/' \
                   '2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1'
 
 cache_root = os.path.join(run_root, '.cache/')
@@ -31,7 +32,7 @@ dataset = WkwData(
     data_sources=data_sources,
     data_strata=data_strata,
     input_shape=input_shape,
-    output_shape=output_shape,
+    target_shape=output_shape,
     norm_mean=norm_mean,
     norm_std=norm_std,
     cache_RAM=True,
