@@ -82,7 +82,7 @@ class Trainer:
                         running_loss_avg = running_loss/self.log_int
                         print('Phase: ' + phase + ', epoch: {}, batch {}: running loss: {:0.3f}'.
                               format(epoch, i + 1, running_loss_avg))
-                        writer.add_scalars('running_loss', {phase: running_loss}, it)
+                        writer.add_scalars('running_loss', {phase: running_loss_avg}, it)
                         running_loss = 0.0
 
                 epoch_loss_avg = epoch_loss / self.data_lengths[phase]

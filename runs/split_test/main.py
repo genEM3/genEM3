@@ -10,7 +10,7 @@ from genEM3.training.training import Trainer
 
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
-datasources_json_path = os.path.join(run_root, 'datasources_auto_stat.json')
+datasources_json_path = os.path.join(run_root, 'datasources.json')
 input_shape = (302, 302, 1)
 output_shape = (302, 302, 1)
 data_sources = WkwData.datasources_from_json(datasources_json_path)
@@ -19,7 +19,7 @@ data_split = DataSplit(train=0.7, validation=0.2, test=0.1)
 cache_RAM = True
 cache_HDD = True
 cache_root = os.path.join(run_root, '.cache/')
-batch_size = 24
+batch_size = 32
 num_workers = 4
 
 dataset = WkwData(
@@ -58,8 +58,8 @@ model = AE(
 criterion = torch.nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=0.025, momentum=0.8)
 
-num_epoch = 500
-log_int = 150
+num_epoch = 100
+log_int = 128 
 device = 'cuda'
 save = True
 
