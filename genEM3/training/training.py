@@ -97,7 +97,10 @@ class Trainer:
                     'images ' + phase, Trainer.show_imgs(inputs, outputs, figure_inds), epoch)
 
         if self.save:
+            print('Saving model ...')
             torch.save(self.model.state_dict(), os.path.join(self.log_root, 'torch_model'))
+
+        print('Finished training ...')
 
     @staticmethod
     def copy2cpu(inputs, outputs):
