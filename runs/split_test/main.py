@@ -14,7 +14,7 @@ datasources_json_path = os.path.join(run_root, 'datasources_auto_stat.json')
 input_shape = (302, 302, 1)
 output_shape = (302, 302, 1)
 data_sources = WkwData.datasources_from_json(datasources_json_path)
-data_split = DataSplit(train=[1, 3], validation=[2, 4], test=[5])
+data_split = DataSplit(train=[1], validation=[2], test=[])
 # data_split = DataSplit(train=0.7, validation=0.2, test=0.1)
 cache_RAM = True
 cache_HDD = True

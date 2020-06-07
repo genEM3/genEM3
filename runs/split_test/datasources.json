@@ -3,22 +3,22 @@
         "id": 1,
         "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
         "input_bbox": [
-                20001,
-                16001,
-                0,
-                500,
-                500,
+                22001,
+                17001,
+                2001,
+                1000,
+                1000,
                 500
         ],
         "input_mean": 148.0,
         "input_std": 36.0,
         "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
         "target_bbox": [
-                20001,
-                16001,
-                0,
-                500,
-                500,
+                22001,
+                17001,
+                2001,
+                1000,
+                1000,
                 500
         ]
     },
@@ -26,9 +26,9 @@
         "id": 2,
         "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
         "input_bbox": [
-                21001,
-                16501,
-                0,
+                23001,
+                17001,
+                2001,
                 500,
                 500,
                 500
@@ -37,9 +37,9 @@
         "input_std": 36.0,
         "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
         "target_bbox": [
-                21001,
-                16501,
-                0,
+                23001,
+                17001,
+                2001,
                 500,
                 500,
                 500
