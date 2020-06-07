@@ -19,8 +19,8 @@ data_split = DataSplit(train=[1, 3], validation=[2, 4], test=[5])
 cache_RAM = True
 cache_HDD = True
 cache_root = os.path.join(run_root, '.cache/')
-batch_size = 4
-num_workers = 0
+batch_size = 24
+num_workers = 4
 
 dataset = WkwData(
     input_shape=input_shape,
@@ -55,9 +55,9 @@ model = AE(
 criterion = torch.nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=0.025, momentum=0.8)
 
-num_epoch = 5
-log_int = 10
-device = 'cpu'
+num_epoch = 500
+log_int = 20
+device = 'cuda'
 save = True
 
 trainer = Trainer(run_root=run_root,
