@@ -19,8 +19,8 @@ data_split = DataSplit(train=[1], validation=[2], test=[])
 cache_RAM = True
 cache_HDD = True
 cache_root = os.path.join(run_root, '.cache/')
-batch_size = 4
-num_workers = 0
+batch_size = 24
+num_workers = 4
 
 dataset = WkwData(
     input_shape=input_shape,
@@ -32,8 +32,8 @@ dataset = WkwData(
     cache_HDD_root=cache_root
 )
 
-# dataset.update_datasources_stats()
-# dataset.datasources_to_json(dataset.data_sources, os.path.join(run_root, 'datasources_auto_stat.json'))
+#dataset.update_datasources_stats()
+#dataset.datasources_to_json(dataset.data_sources, os.path.join(run_root, 'datasources_auto_stat.json'))
 
 train_sampler = SubsetRandomSampler(dataset.data_train_inds)
 validation_sampler = SubsetRandomSampler(dataset.data_validation_inds)
@@ -51,7 +51,7 @@ valid_size = 17
 kernel_size = 3
 stride = 1
 n_fmaps = 8
-n_latent = 5000
+n_latent = 10000
 model = AE(
     Encoder_4_sampling_bn(input_size, kernel_size, stride, n_fmaps, n_latent),
     Decoder_4_sampling_bn(output_size, kernel_size, stride, n_fmaps, n_latent))
@@ -59,8 +59,8 @@ criterion = torch.nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=0.025, momentum=0.8)
 
 num_epoch = 500
-log_int = 10
-device = 'cpu'
+log_int = 150
+device = 'cuda'
 save = True
 
 trainer = Trainer(run_root=run_root,
