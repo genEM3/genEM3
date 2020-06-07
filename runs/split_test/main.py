@@ -14,8 +14,8 @@ datasources_json_path = os.path.join(run_root, 'datasources_auto_stat.json')
 input_shape = (302, 302, 1)
 output_shape = (302, 302, 1)
 data_sources = WkwData.datasources_from_json(datasources_json_path)
-data_split = DataSplit(train=[1], validation=[2], test=[])
-# data_split = DataSplit(train=0.7, validation=0.2, test=0.1)
+# data_split = DataSplit(train=[1], validation=[2], test=[])
+data_split = DataSplit(train=0.7, validation=0.2, test=0.1)
 cache_RAM = True
 cache_HDD = True
 cache_root = os.path.join(run_root, '.cache/')
@@ -32,8 +32,8 @@ dataset = WkwData(
     cache_HDD_root=cache_root
 )
 
-#dataset.update_datasources_stats()
-#dataset.datasources_to_json(dataset.data_sources, os.path.join(run_root, 'datasources_auto_stat.json'))
+dataset.update_datasources_stats()
+dataset.datasources_to_json(dataset.data_sources, os.path.join(run_root, 'datasources_auto_stat.json'))
 
 train_sampler = SubsetRandomSampler(dataset.data_train_inds)
 validation_sampler = SubsetRandomSampler(dataset.data_validation_inds)
