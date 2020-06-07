@@ -337,21 +337,30 @@ class WkwData(Dataset):
 
         return data
 
-    def get_datasource_stats(self, data_source_idx, num_samples=10):
+    def get_datasources_stats(self, num_samples=30):
+        return [self.get_datasource_stats(i, num_samples) for i in range(len(self.data_sources))]
+
+    def get_datasource_stats(self, data_source_idx, num_samples=30):
         sample_inds = np.random.random_integers(self.data_inds_min[data_source_idx],
                                                 self.data_inds_max[data_source_idx], num_samples)
-
         means = []
         stds = []
         for i, sample_idx in enumerate(sample_inds):
             print('Getting stats from dataset ... sample {} of {}'.format(i, num_samples))
-            input_, _ = self.get_ordered_sample(sample_idx, normalize=False)
-            means.append(np.mean(input_.data.numpy()))
-            stds.append(np.std(input_.data.numpy()))
-        mean = np.mean(means)
-        std = np.mean(stds)
+            data = self.get_ordered_sample(sample_idx, normalize=False)
+            means.append(np.mean(data['input'].data.numpy()))
+            stds.append(np.std(data['input'].data.numpy()))
 
-        return {'mean': mean, 'std': std}
+        return {'mean': float(np.around(np.mean(means), 1)), 'std': float(np.around(np.mean(stds), 1))}
+
+    def update_datasources_stats(self, num_samples=30):
+        [self.update_datasource_stats(i, num_samples) for i in range(len(self.data_sources))]
+
+    def update_datasource_stats(self, data_source_idx, num_samples=30):
+
+        stats = self.get_datasource_stats(data_source_idx, num_samples)
+        self.data_sources[data_source_idx] = self.data_sources[data_source_idx]._replace(input_mean=stats['mean'])
+        self.data_sources[data_source_idx] = self.data_sources[data_source_idx]._replace(input_std=stats['std'])
 
     def datasource_id_to_idx(self, id):
         idx = [data_source.id for data_source in self.data_sources].index(id)

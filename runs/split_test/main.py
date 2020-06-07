@@ -10,7 +10,7 @@ from genEM3.training.training import Trainer
 
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
-datasources_json_path = os.path.join(run_root, 'datasources.json')
+datasources_json_path = os.path.join(run_root, 'datasources_auto_stat.json')
 input_shape = (302, 302, 1)
 output_shape = (302, 302, 1)
 data_sources = WkwData.datasources_from_json(datasources_json_path)
@@ -19,8 +19,8 @@ data_split = DataSplit(train=[1, 3], validation=[2, 4], test=[5])
 cache_RAM = True
 cache_HDD = True
 cache_root = os.path.join(run_root, '.cache/')
-batch_size = 24
-num_workers = 4
+batch_size = 4
+num_workers = 0
 
 dataset = WkwData(
     input_shape=input_shape,
@@ -31,6 +31,9 @@ dataset = WkwData(
     cache_HDD=cache_HDD,
     cache_HDD_root=cache_root
 )
+
+# dataset.update_datasources_stats()
+# dataset.datasources_to_json(dataset.data_sources, os.path.join(run_root, 'datasources_auto_stat.json'))
 
 train_sampler = SubsetRandomSampler(dataset.data_train_inds)
 validation_sampler = SubsetRandomSampler(dataset.data_validation_inds)
@@ -56,8 +59,8 @@ criterion = torch.nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=0.025, momentum=0.8)
 
 num_epoch = 500
-log_int = 20
-device = 'cuda'
+log_int = 10
+device = 'cpu'
 save = True
 
 trainer = Trainer(run_root=run_root,

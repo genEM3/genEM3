@@ -2,6 +2,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
+from dataclasses import dataclass
 import torch
 from torch.utils.tensorboard import SummaryWriter
 from torch import device as torchDevice
@@ -19,7 +20,7 @@ class Trainer:
                  num_epoch=100,
                  log_int=10,
                  device='cpu',
-                 save=False
+                 save=False,
                  ):
 
         self.run_root = run_root
@@ -28,17 +29,16 @@ class Trainer:
         self.criterion = criterion
         self.num_epoch = num_epoch
         self.log_int = log_int
+        self.save = save
         self.device = torchDevice(device)
 
         time_str = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         self.log_root = os.path.join(run_root, '.log', time_str)
-        self.save = save
 
         self.data_loaders = {"train": train_loader, "val": validation_loader}
         self.data_lengths = {"train": len(train_loader), "val": len(validation_loader)}
 
     def train(self):
-
         print('Starting training ...')
 
         if not os.path.exists(self.log_root):
@@ -91,8 +91,10 @@ class Trainer:
                 writer.add_scalars('epoch_loss', {phase: epoch_loss_avg}, epoch)
                 writer.add_histogram('input histogram', inputs.cpu().data.numpy()[0, 0].flatten(), epoch)
                 writer.add_histogram('output histogram', outputs.cpu().data.numpy()[0, 0].flatten(), epoch)
+                figure_inds = list(range(inputs.shape[0]))
+                figure_inds = figure_inds if len(figure_inds) < 4 else list(range(4))
                 writer.add_figure(
-                    'images ' + phase, Trainer.show_imgs(inputs, outputs, list(range(0, inputs.shape[0], 2))), epoch)
+                    'images ' + phase, Trainer.show_imgs(inputs, outputs, figure_inds), epoch)
 
         if self.save:
             torch.save(self.model.state_dict(), os.path.join(self.log_root, 'torch_model'))
@@ -120,11 +122,13 @@ class Trainer:
     @staticmethod
     def show_imgs(inputs, outputs, inds):
         inputs, outputs = Trainer.copy2cpu(inputs, outputs)
-        fig, axs = plt.subplots(len(inds), 2)
+        fig, axs = plt.subplots(1, len(inds), figsize=(3*len(inds), 6))
         for i, idx in enumerate(inds):
-            axs[i, 0].imshow(inputs[idx].data.numpy().squeeze(), cmap='gray')
-            axs[i, 0].axis('off')
-            axs[i, 1].imshow(outputs[idx].data.numpy().squeeze(), cmap='gray')
-            axs[i, 1].axis('off')
+            input_ = inputs[idx].data.numpy().squeeze()
+            output = outputs[idx].data.numpy().squeeze()
+            input_output = np.concatenate((input_, output), axis=0)
+            axs[i].imshow(input_output, cmap='gray')
+            axs[i].axis('off')
+        plt.tight_layout()
 
         return fig
