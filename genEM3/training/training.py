@@ -1,5 +1,7 @@
 import os
+import numpy as np
 import matplotlib.pyplot as plt
+from datetime import datetime
 import torch
 from torch.utils.tensorboard import SummaryWriter
 from torch import device as torchDevice
@@ -27,7 +29,9 @@ class Trainer:
         self.num_epoch = num_epoch
         self.log_int = log_int
         self.device = torchDevice(device)
-        self.log_root = os.path.join(run_root, '.log')
+
+        time_str = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        self.log_root = os.path.join(run_root, '.log', time_str)
         self.save = save
 
         self.data_loaders = {"train": train_loader, "val": validation_loader}
@@ -47,6 +51,7 @@ class Trainer:
         for epoch in range(self.num_epoch):
 
             for phase in ['train', 'val']:
+                epoch_loss = 0
 
                 if phase == 'train':
                     self.model.train(True)
@@ -54,11 +59,11 @@ class Trainer:
                     self.model.train(False)
 
                 running_loss = 0.0
-                for i, (inputs, targets) in enumerate(self.data_loaders[phase]):
+                for i, data in enumerate(self.data_loaders[phase]):
                     it += 1
                     # copy input and targets to the device object
-                    inputs = inputs.to(self.device)
-                    targets = targets.to(self.device)
+                    inputs = data['input'].to(self.device)
+                    targets = data['target'].to(self.device)
                     # zero the parameter gradients
                     self.optimizer.zero_grad()
 
@@ -72,49 +77,54 @@ class Trainer:
 
                     # print statistics
                     running_loss += loss.item()
+                    epoch_loss += loss.item()
                     if (i + 1) % self.log_int == 0:
-                        print('it: {} (epoch: {}, batch: {}), running loss: {:0.3f}'.format(it, epoch, i + 1,
-                                                                                            running_loss))
-
-                        writer.add_scalar('loss_'+phase, loss.item(), it)
-                        writer.add_scalar('running_loss_'+phase, running_loss, it)
-                        writer.add_figure('image'+phase, self.show_img(inputs, outputs, 0), it)
-                        writer.add_figure('hist'+phase, self.show_hist(inputs, outputs, 0), it)
-
+                        running_loss_avg = running_loss/self.log_int
+                        print('Phase: ' + phase + ', epoch: {}, batch {}: running loss: {:0.3f}'.
+                              format(epoch, i + 1, running_loss_avg))
+                        writer.add_scalars('running_loss', {phase: running_loss}, it)
                         running_loss = 0.0
 
+                epoch_loss_avg = epoch_loss / self.data_lengths[phase]
+                print('Phase: ' + phase + ', epoch: {}: epoch loss: {:0.3f}'.
+                      format(epoch, epoch_loss_avg))
+                writer.add_scalars('epoch_loss', {phase: epoch_loss_avg}, epoch)
+                writer.add_histogram('input histogram', inputs.cpu().data.numpy()[0, 0].flatten(), epoch)
+                writer.add_histogram('output histogram', outputs.cpu().data.numpy()[0, 0].flatten(), epoch)
+                writer.add_figure(
+                    'images ' + phase, Trainer.show_imgs(inputs, outputs, list(range(0, inputs.shape[0], 2))), epoch)
+
         if self.save:
-            torch.save(self.model.state_dict(), os.path.join(self.run_root, 'torch_model'))
+            torch.save(self.model.state_dict(), os.path.join(self.log_root, 'torch_model'))
+
+    @staticmethod
+    def copy2cpu(inputs, outputs):
+        if inputs.is_cuda:
+            inputs = inputs.cpu()
+        if outputs.is_cuda:
+            outputs = outputs.cpu()
+        return inputs, outputs
+
+    @staticmethod
+    def n1hw_to_n3hw(data):
+        return data.cpu().repeat(1, 3, 1, 1)
 
     @staticmethod
     def show_img(inputs, outputs, idx):
-        curInput, curOutput = Trainer.copy2cpu(inputs, outputs, idx)
-        # plot the input and output images as subplots
+        inputs, outputs = Trainer.copy2cpu(inputs, outputs)
         fig, axs = plt.subplots(1, 2, figsize=(4, 3))
-        img_input = curInput.data.numpy().squeeze()
-        axs[0].imshow(img_input, cmap='gray')
-        img_output = curOutput.data.numpy().squeeze()
-        axs[1].imshow(img_output, cmap='gray')
-
+        axs[0].imshow(inputs[idx].data.numpy().squeeze(), cmap='gray')
+        axs[1].imshow(outputs[idx].data.numpy().squeeze(), cmap='gray')
         return fig
 
     @staticmethod
-    def show_hist(inputs, outputs, idx):
-
-        curInput, curOutput = Trainer.copy2cpu(inputs, outputs, idx)
-        fig, axs = plt.subplots(1, 2, figsize=(4, 3))
-        axs[0].hist(curInput.data.numpy().flatten())
-        axs[1].hist(curOutput.data.numpy().flatten())
+    def show_imgs(inputs, outputs, inds):
+        inputs, outputs = Trainer.copy2cpu(inputs, outputs)
+        fig, axs = plt.subplots(len(inds), 2)
+        for i, idx in enumerate(inds):
+            axs[i, 0].imshow(inputs[idx].data.numpy().squeeze(), cmap='gray')
+            axs[i, 0].axis('off')
+            axs[i, 1].imshow(outputs[idx].data.numpy().squeeze(), cmap='gray')
+            axs[i, 1].axis('off')
 
         return fig
-
-    @staticmethod
-    def copy2cpu(inputs, outputs, idx):
-        # copies the specified training example (idx) to the cpu
-        if inputs.is_cuda or outputs.is_cuda:
-            curInput_cpu = inputs[idx].cpu()
-            curOutput_cpu = outputs[idx].cpu()
-        else:
-            curInput_cpu = inputs[idx]
-            curOutput_cpu = outputs[idx]
-        return curInput_cpu, curOutput_cpu

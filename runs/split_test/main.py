@@ -17,22 +17,30 @@ data_sources = WkwData.datasources_from_json(datasources_json_path)
 data_split = DataSplit(train=[1, 3], validation=[2, 4], test=[5])
 # data_split = DataSplit(train=0.7, validation=0.2, test=0.1)
 cache_RAM = True
-batch_size = 24
-num_workers = 4
+cache_HDD = True
+cache_root = os.path.join(run_root, '.cache/')
+batch_size = 4
+num_workers = 0
 
 dataset = WkwData(
     input_shape=input_shape,
     target_shape=output_shape,
     data_sources=data_sources,
     data_split=data_split,
-    cache_RAM=cache_RAM
+    cache_RAM=cache_RAM,
+    cache_HDD=cache_HDD,
+    cache_HDD_root=cache_root
 )
 
 train_sampler = SubsetRandomSampler(dataset.data_train_inds)
 validation_sampler = SubsetRandomSampler(dataset.data_validation_inds)
 
-train_loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, num_workers=num_workers, sampler=train_sampler)
-validation_loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, num_workers=num_workers, sampler=validation_sampler)
+train_loader = torch.utils.data.DataLoader(
+    dataset=dataset, batch_size=batch_size, num_workers=num_workers, sampler=train_sampler,
+    collate_fn=dataset.collate_fn)
+validation_loader = torch.utils.data.DataLoader(
+    dataset=dataset, batch_size=batch_size, num_workers=num_workers, sampler=validation_sampler,
+    collate_fn=dataset.collate_fn)
 
 input_size = 302
 output_size = input_size
@@ -47,21 +55,21 @@ model = AE(
 criterion = torch.nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=0.025, momentum=0.8)
 
-num_epoch = 500
+num_epoch = 5
 log_int = 10
-device = 'cuda'
+device = 'cpu'
 save = True
 
-trainer = Trainer(run_root,
-                  model,
-                  optimizer,
-                  criterion,
-                  train_loader,
-                  validation_loader,
-                  num_epoch,
-                  log_int,
-                  device,
-                  save)
+trainer = Trainer(run_root=run_root,
+                  model=model,
+                  optimizer=optimizer,
+                  criterion=criterion,
+                  train_loader=train_loader,
+                  validation_loader=validation_loader,
+                  num_epoch=num_epoch,
+                  log_int=log_int,
+                  device=device,
+                  save=save)
 
 trainer.train()
 

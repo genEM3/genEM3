@@ -214,7 +214,7 @@ class WkwData(Dataset):
         bbox_input = origin_input + list(self.input_shape)
 
         if self.cache_RAM | self.cache_HDD:
-            input_ = self.wkw_read_cached(self.data_sources[source_idx].input_path, bbox_input)
+            input_ = self.wkw_read_cached(source_idx, 'input', bbox_input)
         else:
             input_ = self.wkw_read(self.data_sources[source_idx].input_path, bbox_input)
 
@@ -236,7 +236,7 @@ class WkwData(Dataset):
             target = input_
         else:
             if self.cache_RAM | self.cache_HDD:
-                target = self.wkw_read_cached(self.data_sources[source_idx].target_path, bbox_target)
+                target = self.wkw_read_cached(source_idx, 'target', bbox_target)
             else:
                 target = self.wkw_read(self.data_sources[source_idx].target_path, bbox_target)
 
@@ -251,7 +251,7 @@ class WkwData(Dataset):
         if self.output_shape[2] == 1:
             target = target.squeeze(3)
 
-        return input_, target
+        return {'input': input_, 'target': target}
 
     def get_random_sample(self):
 
@@ -260,7 +260,7 @@ class WkwData(Dataset):
         idx = random.sample(range(self.data_inds_max[-1]), 1)
         input_, target = self.get_ordered_sample(idx)
 
-        return input_, target
+        return {'input': input_, 'target': target}
 
     def pad(self, target):
         pad_shape = np.floor((np.asarray(self.input_shape) - np.asarray(self.output_shape)) / 2).astype(int)
@@ -292,7 +292,7 @@ class WkwData(Dataset):
         # If cache to RAM is true, save to RAM
         if self.cache_RAM:
             if wkw_path not in self.data_cache:
-                self.data_cache[wkw_path] = {'data': data, 'wkw_bbox': wkw_bbox}
+                self.data_cache[wkw_path] = {str(wkw_bbox): data}
 
         # If cache to HDD is true, save to HDD
         if self.cache_HDD:
@@ -304,11 +304,20 @@ class WkwData(Dataset):
 
             self.wkw_write(wkw_cache_path, wkw_bbox, data)
 
-    def wkw_read_cached(self, wkw_path, wkw_bbox):
+    def wkw_read_cached(self, source_idx, source_type, wkw_bbox):
+
+        key = source_type+'_path'
+        key_idx = self.data_sources[source_idx]._fields.index(key)
+        wkw_path = self.data_sources[source_idx][key_idx]
+
+        key = source_type + '_bbox'
+        key_idx = self.data_sources[source_idx]._fields.index(key)
+        abs_pos = self.data_sources[source_idx][key_idx]
 
         # Attempt to load bbox from RAM cache
-        if wkw_path in self.data_cache:
-            rel_pos = np.asarray(wkw_bbox[0:3]) - np.asarray(self.data_cache[wkw_path]['wkw_bbox'][0:3])
+        if (wkw_path in self.data_cache) & (str(wkw_bbox) in self.data_cache[wkw_path]):
+
+            rel_pos = np.asarray(wkw_bbox[0:3]) - np.asarray(abs_pos[0:3])
             data = self.data_cache[wkw_path]['data'][
                 :,
                 rel_pos[0]:rel_pos[0] + wkw_bbox[3],
@@ -351,6 +360,12 @@ class WkwData(Dataset):
     def datasource_idx_to_id(self, idx):
         id = self.data_sources[idx].id
         return id
+
+    @staticmethod
+    def collate_fn(batch):
+        input_ = torch.cat([torch.unsqueeze(item['input'], dim=0) for item in batch], dim=0)
+        target = torch.cat([torch.unsqueeze(item['target'], dim=0) for item in batch], dim=0)
+        return {'input': input_, 'target': target}
 
     @staticmethod
     def normalize(data, mean, std):
