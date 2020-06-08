@@ -35,5 +35,5 @@ class Trainable(tune.Trainable):
 
 
 # Run with a and b uniformly sampled from (-1,1)
-space = {"a": tune.uniform(-1, 1), "b": tune.uniform(-1, 1)}
+space = {"a": tune.loguniform(1e-8, 1), "b": tune.uniform(1e-8, 1)}
 tune.run(trainable, config=space, num_samples=100)
