@@ -36,4 +36,8 @@ class Trainable(tune.Trainable):
 
 # Run with a and b uniformly sampled from (-1,1)
 space = {"a": tune.loguniform(1e-8, 1), "b": tune.uniform(1e-8, 1)}
-tune.run(trainable, config=space, num_samples=100)
+analysis = tune.run(trainable, config=space, num_samples=100, resources_per_trial={'gpu': 1, 'cpu': 4})
+
+# Use analysis object
+df = analysis.dataframe(metric="score", mode="max")
+print(df)
