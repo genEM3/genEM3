@@ -1,0 +1,25 @@
+{
+    "datasource_1": {
+      "id": 1,
+      "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+      "input_bbox": [
+        22000,
+        17000,
+        2000,
+        1000,
+        1000,
+        1
+      ],
+      "input_mean": 148.0,
+      "input_std": 36.0,
+      "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+      "target_bbox": [
+        22000,
+        17000,
+        2000,
+        1000,
+        1000,
+        1
+      ]
+    }
+}
