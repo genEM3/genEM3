@@ -1,7 +1,6 @@
 import numpy as np
 import torch
 import torch.optim as optim
-# from torchvision import datasets
 
 import ray
 from ray import tune
@@ -11,6 +10,9 @@ from ray.tune.examples.mnist_pytorch import get_data_loaders, ConvNet, train, te
 
 import os
 import matplotlib.pyplot as plt
+
+from hyperopt import hp
+from ray.tune.suggest.hyperopt import HyperOptSearch
 
 # make the log directory
 logdir = "/gaba/u/alik/code/genEM3/playground/AK/raytune/__logs__/"
@@ -43,12 +45,19 @@ search_space = {
 # /tmp is not accessible on GABA use the following dir:
 ray.init(temp_dir='/tmpscratch/alik/runlogs/ray/')
 
-analysis = tune.run(train_mnist,
-                    config=search_space, num_samples=10,
-                    resources_per_trial={'cpu': 4},
-                    scheduler=ASHAScheduler(metric="mean_accuracy", mode="max"),
-                    local_dir='/tmpscratch/alik/runlogs/ray_results')
+space = {
+    "lr": hp.loguniform("lr", 1e-10, 0.1),
+    "momentum": hp.uniform("momentum", 0.1, 0.9),
+}
 
+hyperopt_search = HyperOptSearch(space, metric="mean_accuracy", mode="max")
+
+analysis = tune.run(train_mnist,
+                    num_samples=10,
+                    search_alg=hyperopt_search,
+                    resources_per_trial={'cpu': 4},
+                    local_dir='/tmpscratch/alik/runlogs/ray_results',
+                    scheduler=ASHAScheduler(metric="mean_accuracy", mode="max"))
 # Test whether figures could be transferred using X11
 fig, ax = plt.subplots()
 dfs = analysis.trial_dataframes
