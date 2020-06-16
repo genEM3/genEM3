@@ -1,6 +1,6 @@
 import os
 import torch
-from torch.utils.data import DataLoader
+# from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 
 from genEM3.data.wkwdata import WkwData, DataSplit
@@ -13,6 +13,7 @@ run_root = os.path.dirname(os.path.abspath(__file__))
 datasources_json_path = os.path.join(run_root, 'datasources.json')
 input_shape = (302, 302, 1)
 output_shape = (302, 302, 1)
+# Read parameters for the data into a list of named tuples
 data_sources = WkwData.datasources_from_json(datasources_json_path)
 # data_split = DataSplit(train=[1], validation=[2], test=[])
 data_split = DataSplit(train=0.7, validation=0.2, test=0.1)
@@ -59,7 +60,7 @@ criterion = torch.nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=0.025, momentum=0.8)
 
 num_epoch = 100
-log_int = 128 
+log_int = 128
 device = 'cuda'
 save = True
 
@@ -75,4 +76,3 @@ trainer = Trainer(run_root=run_root,
                   save=save)
 
 trainer.train()
-
