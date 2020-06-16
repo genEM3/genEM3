@@ -9,6 +9,8 @@ import torch
 from torch.utils.data import Dataset
 import wkw
 
+# named tuple instantiation. These collections could be accessed by numeric indices and dot notation
+# similar to matlab structures
 DataSource = namedtuple(
     'DataSource',
     ['id',
@@ -25,6 +27,7 @@ DataSplit = namedtuple(
      'validation',
      'test']
 )
+
 
 class WkwData(Dataset):
     """Implements (2D/3D) pytorch Dataset subclass for wkw data"""
@@ -203,7 +206,7 @@ class WkwData(Dataset):
         source_idx = int(np.argmax(np.asarray(self.data_inds_max) >= sample_idx))
         # Get appropriate subscript index for the respective training data cube, given the global linear index
         mesh_inds = np.unravel_index(sample_idx - self.data_inds_min[source_idx],
-                                    dims=self.data_meshes[source_idx]['target']['x'].shape)
+                                     dims=self.data_meshes[source_idx]['target']['x'].shape)
 
         # Get input sample
         origin_input = [
@@ -421,7 +424,7 @@ class WkwData(Dataset):
                 if not os.path.islink(fp):
                     total_size += os.path.getsize(fp)
 
-        return np.floor(total_size/1024/1024) #MiB
+        return np.floor(total_size/1024/1024)  # MiB
 
     @staticmethod
     def datasources_from_json(json_path):
@@ -447,9 +450,3 @@ class WkwData(Dataset):
 
         with open(json_path, 'w') as f:
             f.write(dumps)
-
-
-
-
-
-
