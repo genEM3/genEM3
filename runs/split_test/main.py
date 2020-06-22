@@ -7,8 +7,6 @@ from genEM3.data.wkwdata import WkwData, DataSplit
 from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn, Decoder_4_sampling_bn
 from genEM3.training.training import Trainer
 from genEM3.util import gpu
-# Get the empty gpu
-gpu.get_empty_gpu()
 
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
@@ -20,7 +18,7 @@ data_sources = WkwData.datasources_from_json(datasources_json_path)
 # data_split = DataSplit(train=[1], validation=[2], test=[])
 data_split = DataSplit(train=0.7, validation=0.2, test=0.1)
 cache_RAM = True
-cache_HDD = True
+cache_HDD = False
 cache_root = os.path.join(run_root, '.cache/')
 batch_size = 32
 num_workers = 4
@@ -61,10 +59,14 @@ model = AE(
 criterion = torch.nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=0.025, momentum=0.8)
 
-num_epoch = 100
+num_epoch = 10000
 log_int = 128
 device = 'cuda'
 save = True
+if device == 'cuda':
+    # Get the empty gpu
+    gpu.get_empty_gpu()
+
 
 trainer = Trainer(run_root=run_root,
                   model=model,
