@@ -6,7 +6,9 @@ from torch.utils.data.sampler import SubsetRandomSampler
 from genEM3.data.wkwdata import WkwData, DataSplit
 from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn, Decoder_4_sampling_bn
 from genEM3.training.training import Trainer
-
+from genEM3.util import gpu
+# Get the empty gpu
+gpu.get_empty_gpu()
 
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
