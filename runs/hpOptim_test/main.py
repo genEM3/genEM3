@@ -1,17 +1,21 @@
+# TODO: Add hyperopt and ray to requirements file
 import os
 import torch
+
 import ray
 from ray import tune
+from ray.tune.schedulers import ASHAScheduler
+import matplotlib.pyplot as plt
+from hyperopt import hp
+from ray.tune.suggest.hyperopt import HyperOptSearch
+
 from torch.utils.data.sampler import SubsetRandomSampler
 
 from genEM3.data.wkwdata import WkwData, DataSplit
 from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn, Decoder_4_sampling_bn
 from genEM3.training.training import Trainer
+from genEM3.training.hyperParamOptim import trainable
 from genEM3.util import gpu
-
-
-# /tmp is not accessible on GABA use the following dir:
-ray.init(temp_dir='/tmpscratch/alik/runlogs/ray/')
 
 # Parameters
 run_root = '/tmpscratch/alik/runlogs/AE_2d/hpOptim_test'
@@ -52,26 +56,27 @@ validation_loader = torch.utils.data.DataLoader(
     dataset=dataset, batch_size=batch_size, num_workers=num_workers, sampler=validation_sampler,
     collate_fn=dataset.collate_fn)
 
-# More parameters: all hyper parameters should be set inside the trainable so some of these need to move into the class definition
-input_size = 302
-output_size = input_size
-valid_size = 17
-kernel_size = 3
-stride = 1
-n_fmaps = 8
-n_latent = 10000
-model = AE(
-    Encoder_4_sampling_bn(input_size, kernel_size, stride, n_fmaps, n_latent),
-    Decoder_4_sampling_bn(output_size, kernel_size, stride, n_fmaps, n_latent))
-criterion = torch.nn.MSELoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=0.025, momentum=0.8)
-
-num_epoch = 10000
+num_epoch_perTrainCall = 10
 log_int = 128
 device = 'cuda'
-save = True
+saveForTrainable = True
 if device == 'cuda':
     # Get the empty gpu
     gpu.get_empty_gpu()
 
-# TODO: Add the ray call here:
+# /tmp is not accessible on GABA use the following dir:
+ray.init(temp_dir='/tmpscratch/alik/runlogs/ray/')
+
+# random search
+space = {"lr": tune.loguniform(1e-6, 0.1), "momentum": tune.loguniform(0.8, 0.9999),
+         "n_latent": tune.sample_from(lambda _: round(tune.loguniform(100, 1e4))),
+         "n_fmaps": tune.choice(list(range(4, 16))),
+         "validation_loader": validation_loader,
+         "train_loader": train_loader}
+
+analysis = tune.run(trainable,
+                    config=space,
+                    num_samples=100,
+                    resources_per_trial={'gpu': 1},
+                    local_dir='/tmpscratch/alik/runlogs/ray_results',
+                    scheduler=ASHAScheduler(metric="mean_accuracy", mode="max"))
