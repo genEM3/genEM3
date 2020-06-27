@@ -10,8 +10,8 @@
                 2000,
                 200
         ],
-        "input_mean": 141.60000610351562,
-        "input_std": 43.599998474121094,
+        "input_mean": 148.0,
+        "input_std": 36.0,
         "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
         "target_bbox": [
                 22001,
@@ -22,7 +22,7 @@
                 200
         ]
     },
-    "datasource_2": {
+        "datasource_2": {
         "id": 2,
         "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
         "input_bbox": [
@@ -33,8 +33,8 @@
                 2000,
                 200
         ],
-        "input_mean": 143.10000610351562,
-        "input_std": 40.79999923706055,
+        "input_mean": 148.0,
+        "input_std": 36.0,
         "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
         "target_bbox": [
                 23001,
