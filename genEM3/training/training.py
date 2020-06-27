@@ -101,7 +101,8 @@ class Trainer:
             torch.save(self.model.state_dict(), os.path.join(self.log_root, 'torch_model'))
 
         print('Finished training ...')
-
+        # dictionary of accuracy metrics for tune hyperparameter optimization
+        return {"val_loss_avg": epoch_loss_avg}
     @staticmethod
     def copy2cpu(inputs, outputs):
         if inputs.is_cuda:

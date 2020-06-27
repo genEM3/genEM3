@@ -1,5 +1,6 @@
 from ray import tune
 import torch
+import os
 from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn, Decoder_4_sampling_bn
 from genEM3.training.training import Trainer
 
@@ -15,10 +16,13 @@ class trainable(tune.Trainable):
 
         """
 
-        num_epoch_perTrain = 10,
-        trainer_run_root = '/u/alik/tmpscratch/runlogs/AE_2d/hpOptim_test/',
-        trainer_log_int = 128,
-        trainer_save = True,
+        num_epoch_perTrain = 1
+        trainer_run_root = '/u/alik/tmpscratch/runlogs/AE_2d/hpOptim_test/'
+        # create directory if not preset
+        if not(os.path.isdir(trainer_run_root)):
+            os.mkdir(trainer_run_root)
+        trainer_log_int = 128
+        trainer_save = True
         device = 'cpu'
         # Model parameters
         input_size = 302
@@ -49,8 +53,8 @@ class trainable(tune.Trainable):
 
         """A single iteration of this method is run for each call.
         This should take more than a few econds and less than a few minutes"""
-        self.Trainer.train()
-
+        val_loss_dict = self.trainer.train()
+        return val_loss_dict
     def _save(self):
 
         """ Saving the model """
