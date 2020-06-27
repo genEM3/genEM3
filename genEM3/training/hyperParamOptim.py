@@ -49,22 +49,27 @@ class trainable(tune.Trainable):
                                device=device,
                                save=trainer_save)
 
-    def _train(self):
+    def _train(self, tmp_checkpoint_dir):
 
         """A single iteration of this method is run for each call.
         This should take more than a few econds and less than a few minutes"""
         val_loss_dict = self.trainer.train()
         return val_loss_dict
+    
     def _save(self):
 
         """ Saving the model """
-        pass
+        checkpoint_path = os.path.join(tmp_checkpoint_dir, "model.pth")
+        torch.save(self.trainer.model.state_dict(), checkpoint_path)
+        return tmp_checkpoint_dir
 
     def _restore(self):
 
         """ Restoring the model"""
-        pass
+        checkpoint_path = os.path.join(tmp_checkpoint_dir, "model.pth")
+        self.trainer.model.load_state_dict(torch.load(checkpoint_path))
 
-    def _stop(self):
-        """This is run when the experiment ends"""
-        pass
+# If necessary in the future implement stop
+#     def _stop(self):
+#         """This is run when the experiment ends"""
+#         pass
