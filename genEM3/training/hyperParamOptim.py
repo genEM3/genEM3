@@ -23,7 +23,7 @@ class trainable(tune.Trainable):
             os.mkdir(trainer_run_root)
         trainer_log_int = 128
         trainer_save = True
-        device = 'cpu'
+        device = 'cuda'
         # Model parameters
         input_size = 302
         output_size = input_size
@@ -49,21 +49,21 @@ class trainable(tune.Trainable):
                                device=device,
                                save=trainer_save)
 
-    def _train(self, tmp_checkpoint_dir):
+    def _train(self):
 
         """A single iteration of this method is run for each call.
         This should take more than a few econds and less than a few minutes"""
         val_loss_dict = self.trainer.train()
         return val_loss_dict
     
-    def _save(self):
+    def _save(self, tmp_checkpoint_dir):
 
         """ Saving the model """
         checkpoint_path = os.path.join(tmp_checkpoint_dir, "model.pth")
         torch.save(self.trainer.model.state_dict(), checkpoint_path)
         return tmp_checkpoint_dir
 
-    def _restore(self):
+    def _restore(self, tmp_checkpoint_dir):
 
         """ Restoring the model"""
         checkpoint_path = os.path.join(tmp_checkpoint_dir, "model.pth")
