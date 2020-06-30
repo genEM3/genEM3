@@ -1,18 +1,31 @@
 import numpy as np
+from genEM3.data.wkwdata import WkwData, DataSource
 
 wkw_path = "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1"
 wkw_lims = np.asarray([19500, 15500, 0, 11000, 11000, 7000])
 
-num_samples = 10
-input_width = 302
-mesh_width = 3
-mesh_spacing = 10
-sample_mesh_xy = np.arange(0,mesh_width*input_width, input_width)
-sample_mesh_z = np.arange(0,999,10)
+num_samples = 100
 
+sample_dims = (906, 906, 100)
 
-wkw_lims_valid = wkw_lims - np.asarray([0, 0, 0, 1000, 1000, 1000])
-wkw_steps_valid = (wkw_lims_valid[3:6]/1000).astype(int)
+input_mean = 148.0
+input_std = 36.0
 
-rand_linds = np.random.randint(1, np.prod(wkw_steps_valid), num_samples)
+input_path = wkw_path
+target_path = wkw_path
 
+json_path = 'datasources_distributed.json'
+
+sample_pos_x = np.random.randint(wkw_lims[0], wkw_lims[0]+wkw_lims[3]-sample_dims[0], num_samples)
+sample_pos_y = np.random.randint(wkw_lims[1], wkw_lims[1]+wkw_lims[4]-sample_dims[1], num_samples)
+sample_pos_z = np.random.randint(wkw_lims[2], wkw_lims[2]+wkw_lims[5]-sample_dims[2], num_samples)
+
+datasources = []
+for id in range(num_samples):
+    input_bbox = [int(sample_pos_x[id]), int(sample_pos_y[id]), int(sample_pos_z[id]),
+                  int(sample_pos_x[id])+sample_dims[0], int(sample_pos_y[id])+sample_dims[1], int(sample_pos_z[id])+sample_dims[2]]
+    target_bbox = input_bbox
+    datasource = DataSource(id, input_path, input_bbox, input_mean, input_std, target_path, target_bbox)
+    datasources.append(datasource)
+
+WkwData.datasources_to_json(datasources, json_path)

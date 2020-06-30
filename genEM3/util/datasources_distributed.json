@@ -1,0 +1,2302 @@
+{
+    "datasource_0": {
+        "id": 0,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                20425,
+                23584,
+                1075,
+                21331,
+                24490,
+                1175
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                20425,
+                23584,
+                1075,
+                21331,
+                24490,
+                1175
+        ]
+    },
+    "datasource_1": {
+        "id": 1,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                22174,
+                17277,
+                5155,
+                23080,
+                18183,
+                5255
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                22174,
+                17277,
+                5155,
+                23080,
+                18183,
+                5255
+        ]
+    },
+    "datasource_2": {
+        "id": 2,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                22205,
+                22269,
+                1473,
+                23111,
+                23175,
+                1573
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                22205,
+                22269,
+                1473,
+                23111,
+                23175,
+                1573
+        ]
+    },
+    "datasource_3": {
+        "id": 3,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                25239,
+                20443,
+                3007,
+                26145,
+                21349,
+                3107
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                25239,
+                20443,
+                3007,
+                26145,
+                21349,
+                3107
+        ]
+    },
+    "datasource_4": {
+        "id": 4,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                27854,
+                20497,
+                4988,
+                28760,
+                21403,
+                5088
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                27854,
+                20497,
+                4988,
+                28760,
+                21403,
+                5088
+        ]
+    },
+    "datasource_5": {
+        "id": 5,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                23076,
+                21441,
+                6313,
+                23982,
+                22347,
+                6413
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                23076,
+                21441,
+                6313,
+                23982,
+                22347,
+                6413
+        ]
+    },
+    "datasource_6": {
+        "id": 6,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                20960,
+                24606,
+                1019,
+                21866,
+                25512,
+                1119
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                20960,
+                24606,
+                1019,
+                21866,
+                25512,
+                1119
+        ]
+    },
+    "datasource_7": {
+        "id": 7,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                23169,
+                21942,
+                5512,
+                24075,
+                22848,
+                5612
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                23169,
+                21942,
+                5512,
+                24075,
+                22848,
+                5612
+        ]
+    },
+    "datasource_8": {
+        "id": 8,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                21950,
+                24936,
+                4234,
+                22856,
+                25842,
+                4334
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                21950,
+                24936,
+                4234,
+                22856,
+                25842,
+                4334
+        ]
+    },
+    "datasource_9": {
+        "id": 9,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                27026,
+                20170,
+                5735,
+                27932,
+                21076,
+                5835
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                27026,
+                20170,
+                5735,
+                27932,
+                21076,
+                5835
+        ]
+    },
+    "datasource_10": {
+        "id": 10,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                25825,
+                21176,
+                4279,
+                26731,
+                22082,
+                4379
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                25825,
+                21176,
+                4279,
+                26731,
+                22082,
+                4379
+        ]
+    },
+    "datasource_11": {
+        "id": 11,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                22118,
+                23208,
+                2406,
+                23024,
+                24114,
+                2506
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                22118,
+                23208,
+                2406,
+                23024,
+                24114,
+                2506
+        ]
+    },
+    "datasource_12": {
+        "id": 12,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                28783,
+                21977,
+                6350,
+                29689,
+                22883,
+                6450
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                28783,
+                21977,
+                6350,
+                29689,
+                22883,
+                6450
+        ]
+    },
+    "datasource_13": {
+        "id": 13,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                26987,
+                21586,
+                931,
+                27893,
+                22492,
+                1031
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                26987,
+                21586,
+                931,
+                27893,
+                22492,
+                1031
+        ]
+    },
+    "datasource_14": {
+        "id": 14,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                21669,
+                19270,
+                1172,
+                22575,
+                20176,
+                1272
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                21669,
+                19270,
+                1172,
+                22575,
+                20176,
+                1272
+        ]
+    },
+    "datasource_15": {
+        "id": 15,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                22128,
+                22995,
+                6491,
+                23034,
+                23901,
+                6591
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                22128,
+                22995,
+                6491,
+                23034,
+                23901,
+                6591
+        ]
+    },
+    "datasource_16": {
+        "id": 16,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                25534,
+                18885,
+                6789,
+                26440,
+                19791,
+                6889
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                25534,
+                18885,
+                6789,
+                26440,
+                19791,
+                6889
+        ]
+    },
+    "datasource_17": {
+        "id": 17,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                21073,
+                17799,
+                6661,
+                21979,
+                18705,
+                6761
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                21073,
+                17799,
+                6661,
+                21979,
+                18705,
+                6761
+        ]
+    },
+    "datasource_18": {
+        "id": 18,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                29061,
+                23348,
+                5052,
+                29967,
+                24254,
+                5152
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                29061,
+                23348,
+                5052,
+                29967,
+                24254,
+                5152
+        ]
+    },
+    "datasource_19": {
+        "id": 19,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                27937,
+                18294,
+                4101,
+                28843,
+                19200,
+                4201
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                27937,
+                18294,
+                4101,
+                28843,
+                19200,
+                4201
+        ]
+    },
+    "datasource_20": {
+        "id": 20,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                19991,
+                22104,
+                1200,
+                20897,
+                23010,
+                1300
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                19991,
+                22104,
+                1200,
+                20897,
+                23010,
+                1300
+        ]
+    },
+    "datasource_21": {
+        "id": 21,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                21210,
+                20471,
+                6804,
+                22116,
+                21377,
+                6904
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                21210,
+                20471,
+                6804,
+                22116,
+                21377,
+                6904
+        ]
+    },
+    "datasource_22": {
+        "id": 22,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                28551,
+                23642,
+                3170,
+                29457,
+                24548,
+                3270
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                28551,
+                23642,
+                3170,
+                29457,
+                24548,
+                3270
+        ]
+    },
+    "datasource_23": {
+        "id": 23,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                24241,
+                18149,
+                1640,
+                25147,
+                19055,
+                1740
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                24241,
+                18149,
+                1640,
+                25147,
+                19055,
+                1740
+        ]
+    },
+    "datasource_24": {
+        "id": 24,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                21251,
+                22828,
+                1956,
+                22157,
+                23734,
+                2056
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                21251,
+                22828,
+                1956,
+                22157,
+                23734,
+                2056
+        ]
+    },
+    "datasource_25": {
+        "id": 25,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                20829,
+                20367,
+                1593,
+                21735,
+                21273,
+                1693
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                20829,
+                20367,
+                1593,
+                21735,
+                21273,
+                1693
+        ]
+    },
+    "datasource_26": {
+        "id": 26,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                24753,
+                23604,
+                3762,
+                25659,
+                24510,
+                3862
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                24753,
+                23604,
+                3762,
+                25659,
+                24510,
+                3862
+        ]
+    },
+    "datasource_27": {
+        "id": 27,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                21035,
+                23490,
+                1795,
+                21941,
+                24396,
+                1895
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                21035,
+                23490,
+                1795,
+                21941,
+                24396,
+                1895
+        ]
+    },
+    "datasource_28": {
+        "id": 28,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                23632,
+                16418,
+                828,
+                24538,
+                17324,
+                928
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                23632,
+                16418,
+                828,
+                24538,
+                17324,
+                928
+        ]
+    },
+    "datasource_29": {
+        "id": 29,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                23126,
+                21799,
+                4963,
+                24032,
+                22705,
+                5063
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                23126,
+                21799,
+                4963,
+                24032,
+                22705,
+                5063
+        ]
+    },
+    "datasource_30": {
+        "id": 30,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                24637,
+                21007,
+                974,
+                25543,
+                21913,
+                1074
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                24637,
+                21007,
+                974,
+                25543,
+                21913,
+                1074
+        ]
+    },
+    "datasource_31": {
+        "id": 31,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                29254,
+                19499,
+                1082,
+                30160,
+                20405,
+                1182
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                29254,
+                19499,
+                1082,
+                30160,
+                20405,
+                1182
+        ]
+    },
+    "datasource_32": {
+        "id": 32,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                29025,
+                19216,
+                187,
+                29931,
+                20122,
+                287
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                29025,
+                19216,
+                187,
+                29931,
+                20122,
+                287
+        ]
+    },
+    "datasource_33": {
+        "id": 33,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                29549,
+                22196,
+                4609,
+                30455,
+                23102,
+                4709
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                29549,
+                22196,
+                4609,
+                30455,
+                23102,
+                4709
+        ]
+    },
+    "datasource_34": {
+        "id": 34,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                24610,
+                18182,
+                5432,
+                25516,
+                19088,
+                5532
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                24610,
+                18182,
+                5432,
+                25516,
+                19088,
+                5532
+        ]
+    },
+    "datasource_35": {
+        "id": 35,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                24124,
+                16857,
+                6144,
+                25030,
+                17763,
+                6244
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                24124,
+                16857,
+                6144,
+                25030,
+                17763,
+                6244
+        ]
+    },
+    "datasource_36": {
+        "id": 36,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                26204,
+                16174,
+                4239,
+                27110,
+                17080,
+                4339
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                26204,
+                16174,
+                4239,
+                27110,
+                17080,
+                4339
+        ]
+    },
+    "datasource_37": {
+        "id": 37,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                19726,
+                20047,
+                5008,
+                20632,
+                20953,
+                5108
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                19726,
+                20047,
+                5008,
+                20632,
+                20953,
+                5108
+        ]
+    },
+    "datasource_38": {
+        "id": 38,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                27618,
+                22858,
+                2188,
+                28524,
+                23764,
+                2288
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                27618,
+                22858,
+                2188,
+                28524,
+                23764,
+                2288
+        ]
+    },
+    "datasource_39": {
+        "id": 39,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                26017,
+                16523,
+                2918,
+                26923,
+                17429,
+                3018
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                26017,
+                16523,
+                2918,
+                26923,
+                17429,
+                3018
+        ]
+    },
+    "datasource_40": {
+        "id": 40,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                22392,
+                21557,
+                6790,
+                23298,
+                22463,
+                6890
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                22392,
+                21557,
+                6790,
+                23298,
+                22463,
+                6890
+        ]
+    },
+    "datasource_41": {
+        "id": 41,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                29050,
+                16843,
+                5451,
+                29956,
+                17749,
+                5551
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                29050,
+                16843,
+                5451,
+                29956,
+                17749,
+                5551
+        ]
+    },
+    "datasource_42": {
+        "id": 42,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                19804,
+                18626,
+                609,
+                20710,
+                19532,
+                709
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                19804,
+                18626,
+                609,
+                20710,
+                19532,
+                709
+        ]
+    },
+    "datasource_43": {
+        "id": 43,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                19501,
+                20693,
+                6825,
+                20407,
+                21599,
+                6925
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                19501,
+                20693,
+                6825,
+                20407,
+                21599,
+                6925
+        ]
+    },
+    "datasource_44": {
+        "id": 44,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                27193,
+                19531,
+                2081,
+                28099,
+                20437,
+                2181
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                27193,
+                19531,
+                2081,
+                28099,
+                20437,
+                2181
+        ]
+    },
+    "datasource_45": {
+        "id": 45,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                22938,
+                24469,
+                1401,
+                23844,
+                25375,
+                1501
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                22938,
+                24469,
+                1401,
+                23844,
+                25375,
+                1501
+        ]
+    },
+    "datasource_46": {
+        "id": 46,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                20443,
+                23316,
+                5962,
+                21349,
+                24222,
+                6062
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                20443,
+                23316,
+                5962,
+                21349,
+                24222,
+                6062
+        ]
+    },
+    "datasource_47": {
+        "id": 47,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                24217,
+                18873,
+                1493,
+                25123,
+                19779,
+                1593
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                24217,
+                18873,
+                1493,
+                25123,
+                19779,
+                1593
+        ]
+    },
+    "datasource_48": {
+        "id": 48,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                28611,
+                20259,
+                4676,
+                29517,
+                21165,
+                4776
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                28611,
+                20259,
+                4676,
+                29517,
+                21165,
+                4776
+        ]
+    },
+    "datasource_49": {
+        "id": 49,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                23954,
+                23334,
+                6027,
+                24860,
+                24240,
+                6127
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                23954,
+                23334,
+                6027,
+                24860,
+                24240,
+                6127
+        ]
+    },
+    "datasource_50": {
+        "id": 50,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                22335,
+                25194,
+                5696,
+                23241,
+                26100,
+                5796
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                22335,
+                25194,
+                5696,
+                23241,
+                26100,
+                5796
+        ]
+    },
+    "datasource_51": {
+        "id": 51,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                20306,
+                19835,
+                6775,
+                21212,
+                20741,
+                6875
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                20306,
+                19835,
+                6775,
+                21212,
+                20741,
+                6875
+        ]
+    },
+    "datasource_52": {
+        "id": 52,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                22130,
+                21932,
+                5823,
+                23036,
+                22838,
+                5923
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                22130,
+                21932,
+                5823,
+                23036,
+                22838,
+                5923
+        ]
+    },
+    "datasource_53": {
+        "id": 53,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                23834,
+                16594,
+                1927,
+                24740,
+                17500,
+                2027
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                23834,
+                16594,
+                1927,
+                24740,
+                17500,
+                2027
+        ]
+    },
+    "datasource_54": {
+        "id": 54,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                29185,
+                24182,
+                6390,
+                30091,
+                25088,
+                6490
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                29185,
+                24182,
+                6390,
+                30091,
+                25088,
+                6490
+        ]
+    },
+    "datasource_55": {
+        "id": 55,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                28405,
+                24785,
+                4090,
+                29311,
+                25691,
+                4190
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                28405,
+                24785,
+                4090,
+                29311,
+                25691,
+                4190
+        ]
+    },
+    "datasource_56": {
+        "id": 56,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                23841,
+                15532,
+                3934,
+                24747,
+                16438,
+                4034
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                23841,
+                15532,
+                3934,
+                24747,
+                16438,
+                4034
+        ]
+    },
+    "datasource_57": {
+        "id": 57,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                22254,
+                22224,
+                3481,
+                23160,
+                23130,
+                3581
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                22254,
+                22224,
+                3481,
+                23160,
+                23130,
+                3581
+        ]
+    },
+    "datasource_58": {
+        "id": 58,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                24884,
+                21034,
+                3108,
+                25790,
+                21940,
+                3208
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                24884,
+                21034,
+                3108,
+                25790,
+                21940,
+                3208
+        ]
+    },
+    "datasource_59": {
+        "id": 59,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                29526,
+                22773,
+                2961,
+                30432,
+                23679,
+                3061
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                29526,
+                22773,
+                2961,
+                30432,
+                23679,
+                3061
+        ]
+    },
+    "datasource_60": {
+        "id": 60,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                29083,
+                19777,
+                5704,
+                29989,
+                20683,
+                5804
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                29083,
+                19777,
+                5704,
+                29989,
+                20683,
+                5804
+        ]
+    },
+    "datasource_61": {
+        "id": 61,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                28018,
+                24096,
+                1406,
+                28924,
+                25002,
+                1506
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                28018,
+                24096,
+                1406,
+                28924,
+                25002,
+                1506
+        ]
+    },
+    "datasource_62": {
+        "id": 62,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                27867,
+                18678,
+                4462,
+                28773,
+                19584,
+                4562
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                27867,
+                18678,
+                4462,
+                28773,
+                19584,
+                4562
+        ]
+    },
+    "datasource_63": {
+        "id": 63,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                26294,
+                23008,
+                4604,
+                27200,
+                23914,
+                4704
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                26294,
+                23008,
+                4604,
+                27200,
+                23914,
+                4704
+        ]
+    },
+    "datasource_64": {
+        "id": 64,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                26699,
+                23775,
+                6505,
+                27605,
+                24681,
+                6605
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                26699,
+                23775,
+                6505,
+                27605,
+                24681,
+                6605
+        ]
+    },
+    "datasource_65": {
+        "id": 65,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                20133,
+                15868,
+                5609,
+                21039,
+                16774,
+                5709
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                20133,
+                15868,
+                5609,
+                21039,
+                16774,
+                5709
+        ]
+    },
+    "datasource_66": {
+        "id": 66,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                22844,
+                22907,
+                6798,
+                23750,
+                23813,
+                6898
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                22844,
+                22907,
+                6798,
+                23750,
+                23813,
+                6898
+        ]
+    },
+    "datasource_67": {
+        "id": 67,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                19854,
+                17151,
+                1495,
+                20760,
+                18057,
+                1595
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                19854,
+                17151,
+                1495,
+                20760,
+                18057,
+                1595
+        ]
+    },
+    "datasource_68": {
+        "id": 68,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                21756,
+                20380,
+                5188,
+                22662,
+                21286,
+                5288
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                21756,
+                20380,
+                5188,
+                22662,
+                21286,
+                5288
+        ]
+    },
+    "datasource_69": {
+        "id": 69,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                21261,
+                22805,
+                2409,
+                22167,
+                23711,
+                2509
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                21261,
+                22805,
+                2409,
+                22167,
+                23711,
+                2509
+        ]
+    },
+    "datasource_70": {
+        "id": 70,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                28500,
+                19623,
+                2081,
+                29406,
+                20529,
+                2181
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                28500,
+                19623,
+                2081,
+                29406,
+                20529,
+                2181
+        ]
+    },
+    "datasource_71": {
+        "id": 71,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                26304,
+                18557,
+                5657,
+                27210,
+                19463,
+                5757
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                26304,
+                18557,
+                5657,
+                27210,
+                19463,
+                5757
+        ]
+    },
+    "datasource_72": {
+        "id": 72,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                21536,
+                23186,
+                5873,
+                22442,
+                24092,
+                5973
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                21536,
+                23186,
+                5873,
+                22442,
+                24092,
+                5973
+        ]
+    },
+    "datasource_73": {
+        "id": 73,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                22971,
+                16196,
+                3470,
+                23877,
+                17102,
+                3570
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                22971,
+                16196,
+                3470,
+                23877,
+                17102,
+                3570
+        ]
+    },
+    "datasource_74": {
+        "id": 74,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                28393,
+                24286,
+                4096,
+                29299,
+                25192,
+                4196
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                28393,
+                24286,
+                4096,
+                29299,
+                25192,
+                4196
+        ]
+    },
+    "datasource_75": {
+        "id": 75,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                24411,
+                16263,
+                2675,
+                25317,
+                17169,
+                2775
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                24411,
+                16263,
+                2675,
+                25317,
+                17169,
+                2775
+        ]
+    },
+    "datasource_76": {
+        "id": 76,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                22170,
+                19586,
+                5072,
+                23076,
+                20492,
+                5172
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                22170,
+                19586,
+                5072,
+                23076,
+                20492,
+                5172
+        ]
+    },
+    "datasource_77": {
+        "id": 77,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                20067,
+                16655,
+                69,
+                20973,
+                17561,
+                169
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                20067,
+                16655,
+                69,
+                20973,
+                17561,
+                169
+        ]
+    },
+    "datasource_78": {
+        "id": 78,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                29001,
+                23953,
+                13,
+                29907,
+                24859,
+                113
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                29001,
+                23953,
+                13,
+                29907,
+                24859,
+                113
+        ]
+    },
+    "datasource_79": {
+        "id": 79,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                28820,
+                20647,
+                5209,
+                29726,
+                21553,
+                5309
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                28820,
+                20647,
+                5209,
+                29726,
+                21553,
+                5309
+        ]
+    },
+    "datasource_80": {
+        "id": 80,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                20064,
+                17107,
+                5962,
+                20970,
+                18013,
+                6062
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                20064,
+                17107,
+                5962,
+                20970,
+                18013,
+                6062
+        ]
+    },
+    "datasource_81": {
+        "id": 81,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                22594,
+                18190,
+                3996,
+                23500,
+                19096,
+                4096
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                22594,
+                18190,
+                3996,
+                23500,
+                19096,
+                4096
+        ]
+    },
+    "datasource_82": {
+        "id": 82,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                24816,
+                22995,
+                2352,
+                25722,
+                23901,
+                2452
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                24816,
+                22995,
+                2352,
+                25722,
+                23901,
+                2452
+        ]
+    },
+    "datasource_83": {
+        "id": 83,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                19631,
+                22930,
+                5637,
+                20537,
+                23836,
+                5737
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                19631,
+                22930,
+                5637,
+                20537,
+                23836,
+                5737
+        ]
+    },
+    "datasource_84": {
+        "id": 84,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                26446,
+                16262,
+                5304,
+                27352,
+                17168,
+                5404
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                26446,
+                16262,
+                5304,
+                27352,
+                17168,
+                5404
+        ]
+    },
+    "datasource_85": {
+        "id": 85,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                23704,
+                17803,
+                4677,
+                24610,
+                18709,
+                4777
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                23704,
+                17803,
+                4677,
+                24610,
+                18709,
+                4777
+        ]
+    },
+    "datasource_86": {
+        "id": 86,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                25630,
+                18826,
+                582,
+                26536,
+                19732,
+                682
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                25630,
+                18826,
+                582,
+                26536,
+                19732,
+                682
+        ]
+    },
+    "datasource_87": {
+        "id": 87,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                22804,
+                15729,
+                504,
+                23710,
+                16635,
+                604
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                22804,
+                15729,
+                504,
+                23710,
+                16635,
+                604
+        ]
+    },
+    "datasource_88": {
+        "id": 88,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                24654,
+                22024,
+                1438,
+                25560,
+                22930,
+                1538
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                24654,
+                22024,
+                1438,
+                25560,
+                22930,
+                1538
+        ]
+    },
+    "datasource_89": {
+        "id": 89,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                25803,
+                18437,
+                4846,
+                26709,
+                19343,
+                4946
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                25803,
+                18437,
+                4846,
+                26709,
+                19343,
+                4946
+        ]
+    },
+    "datasource_90": {
+        "id": 90,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                20828,
+                23663,
+                296,
+                21734,
+                24569,
+                396
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                20828,
+                23663,
+                296,
+                21734,
+                24569,
+                396
+        ]
+    },
+    "datasource_91": {
+        "id": 91,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                23166,
+                19880,
+                6501,
+                24072,
+                20786,
+                6601
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                23166,
+                19880,
+                6501,
+                24072,
+                20786,
+                6601
+        ]
+    },
+    "datasource_92": {
+        "id": 92,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                24435,
+                25348,
+                2012,
+                25341,
+                26254,
+                2112
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                24435,
+                25348,
+                2012,
+                25341,
+                26254,
+                2112
+        ]
+    },
+    "datasource_93": {
+        "id": 93,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                27603,
+                16482,
+                5954,
+                28509,
+                17388,
+                6054
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                27603,
+                16482,
+                5954,
+                28509,
+                17388,
+                6054
+        ]
+    },
+    "datasource_94": {
+        "id": 94,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                24935,
+                21561,
+                1127,
+                25841,
+                22467,
+                1227
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                24935,
+                21561,
+                1127,
+                25841,
+                22467,
+                1227
+        ]
+    },
+    "datasource_95": {
+        "id": 95,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                29541,
+                23804,
+                1240,
+                30447,
+                24710,
+                1340
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                29541,
+                23804,
+                1240,
+                30447,
+                24710,
+                1340
+        ]
+    },
+    "datasource_96": {
+        "id": 96,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                20353,
+                21445,
+                877,
+                21259,
+                22351,
+                977
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                20353,
+                21445,
+                877,
+                21259,
+                22351,
+                977
+        ]
+    },
+    "datasource_97": {
+        "id": 97,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                19694,
+                17924,
+                419,
+                20600,
+                18830,
+                519
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                19694,
+                17924,
+                419,
+                20600,
+                18830,
+                519
+        ]
+    },
+    "datasource_98": {
+        "id": 98,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                26723,
+                20398,
+                2448,
+                27629,
+                21304,
+                2548
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                26723,
+                20398,
+                2448,
+                27629,
+                21304,
+                2548
+        ]
+    },
+    "datasource_99": {
+        "id": 99,
+        "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "input_bbox": [
+                23192,
+                24333,
+                4838,
+                24098,
+                25239,
+                4938
+        ],
+        "input_mean": 148.0,
+        "input_std": 36.0,
+        "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
+        "target_bbox": [
+                23192,
+                24333,
+                4838,
+                24098,
+                25239,
+                4938
+        ]
+    }
+}
