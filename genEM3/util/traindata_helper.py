@@ -4,9 +4,9 @@ from genEM3.data.wkwdata import WkwData, DataSource
 wkw_path = "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1"
 wkw_lims = np.asarray([19500, 15500, 0, 11000, 11000, 7000])
 
-num_samples = 100
+num_samples = 20
 
-sample_dims = (906, 906, 100)
+sample_dims = (906, 906, 500)
 
 input_mean = 148.0
 input_std = 36.0
@@ -23,7 +23,7 @@ sample_pos_z = np.random.randint(wkw_lims[2], wkw_lims[2]+wkw_lims[5]-sample_dim
 datasources = []
 for id in range(num_samples):
     input_bbox = [int(sample_pos_x[id]), int(sample_pos_y[id]), int(sample_pos_z[id]),
-                  int(sample_pos_x[id])+sample_dims[0], int(sample_pos_y[id])+sample_dims[1], int(sample_pos_z[id])+sample_dims[2]]
+                  sample_dims[0], sample_dims[1], sample_dims[2]]
     target_bbox = input_bbox
     datasource = DataSource(id, input_path, input_bbox, input_mean, input_std, target_path, target_bbox)
     datasources.append(datasource)
