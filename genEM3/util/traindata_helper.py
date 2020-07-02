@@ -2,11 +2,11 @@ import numpy as np
 from genEM3.data.wkwdata import WkwData, DataSource
 
 wkw_path = "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1"
-wkw_lims = np.asarray([19500, 15500, 0, 11000, 11000, 7000])
+wkw_lims = np.asarray([21500, 15500, 0, 8000, 11000, 6000])
 
 num_samples = 20
 
-sample_dims = (906, 906, 500)
+sample_dims = (906, 906, 1000)
 
 input_mean = 148.0
 input_std = 36.0
