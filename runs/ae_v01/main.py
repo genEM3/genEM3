@@ -15,12 +15,12 @@ input_shape = (302, 302, 1)
 output_shape = (302, 302, 1)
 data_sources = WkwData.datasources_from_json(datasources_json_path)
 # data_split = DataSplit(train=[1], validation=[], test=[])
-data_split = DataSplit(train=0.7, validation=0.2, test=0.1)
+data_split = DataSplit(train=0.75, validation=0.15, test=0.1)
 cache_RAM = True
 cache_HDD = True
 cache_root = os.path.join(run_root, '.cache/')
-batch_size = 32
-num_workers = 4
+batch_size = 64
+num_workers = 1
 
 dataset = WkwData(
     input_shape=input_shape,
@@ -58,7 +58,7 @@ model = AE(
 criterion = torch.nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=0.025, momentum=0.8)
 
-num_epoch = 20
+num_epoch = 30
 log_int = 10
 device = 'cuda'
 save = True
