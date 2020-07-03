@@ -296,6 +296,8 @@ class WkwData(Dataset):
         if self.cache_RAM:
             if wkw_path not in self.data_cache:
                 self.data_cache[wkw_path] = {str(wkw_bbox): data}
+            else:
+                self.data_cache[wkw_path][str(wkw_bbox)] = data
 
         # If cache to HDD is true, save to HDD
         if self.cache_HDD:
@@ -318,10 +320,10 @@ class WkwData(Dataset):
         abs_pos = self.data_sources[source_idx][key_idx]
 
         # Attempt to load bbox from RAM cache
-        if (wkw_path in self.data_cache) & (str(wkw_bbox) in self.data_cache[wkw_path]):
+        if (wkw_path in self.data_cache) & (str(abs_pos) in self.data_cache[wkw_path]):
 
             rel_pos = np.asarray(wkw_bbox[0:3]) - np.asarray(abs_pos[0:3])
-            data = self.data_cache[wkw_path]['data'][
+            data = self.data_cache[wkw_path][str(abs_pos)][
                 :,
                 rel_pos[0]:rel_pos[0] + wkw_bbox[3],
                 rel_pos[1]:rel_pos[1] + wkw_bbox[4],
@@ -333,9 +335,8 @@ class WkwData(Dataset):
             wkw_cache_path = os.path.join(self.cache_HDD_root, wkw_path[1::])
             if os.path.exists(os.path.join(wkw_cache_path, 'header.wkw')):
                 data = self.wkw_read(wkw_cache_path, wkw_bbox)
-
             # If data incomplete, load conventionally
-            if self.assert_data_completeness(data) is False:
+            else:
                 data = self.wkw_read(wkw_path, wkw_bbox)
 
         return data
