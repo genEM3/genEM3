@@ -2,10 +2,10 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
-from dataclasses import dataclass
 import torch
 from torch.utils.tensorboard import SummaryWriter
 from torch import device as torchDevice
+from genEM3.util import gpu
 
 
 class Trainer:
@@ -30,7 +30,12 @@ class Trainer:
         self.num_epoch = num_epoch
         self.log_int = log_int
         self.save = save
-        self.device = torchDevice(device)
+
+        if device is 'cuda':
+            gpu.get_empty_gpu()
+            device = torch.device(torch.cuda.current_device())
+        elif device is int:
+            self.device = torchDevice(device)
 
         time_str = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         self.log_root = os.path.join(run_root, '.log', time_str)
