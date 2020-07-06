@@ -17,10 +17,10 @@ data_sources = WkwData.datasources_from_json(datasources_json_path)
 # data_split = DataSplit(train=[1], validation=[], test=[])
 data_split = DataSplit(train=0.75, validation=0.15, test=0.1)
 cache_RAM = True
-cache_HDD = True
+cache_HDD = False
 cache_root = os.path.join(run_root, '.cache/')
-batch_size = 64
-num_workers = 1
+batch_size = 16
+num_workers = 4
 
 dataset = WkwData(
     input_shape=input_shape,

@@ -31,11 +31,11 @@ class Trainer:
         self.log_int = log_int
         self.save = save
 
-        if device is 'cuda':
+        if device == 'cuda':
             gpu.get_empty_gpu()
             device = torch.device(torch.cuda.current_device())
-        elif device is int:
-            self.device = torchDevice(device)
+        
+        self.device = torchDevice(device)
 
         time_str = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         self.log_root = os.path.join(run_root, '.log', time_str)
