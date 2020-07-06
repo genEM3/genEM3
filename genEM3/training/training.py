@@ -21,6 +21,7 @@ class Trainer:
                  log_int=10,
                  device='cpu',
                  save=False,
+                 resume=False
                  ):
 
         self.run_root = run_root
@@ -30,30 +31,36 @@ class Trainer:
         self.num_epoch = num_epoch
         self.log_int = log_int
         self.save = save
+        self.resume = resume
 
         if device == 'cuda':
             gpu.get_empty_gpu()
             device = torch.device(torch.cuda.current_device())
         
         self.device = torchDevice(device)
-
-        time_str = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        self.log_root = os.path.join(run_root, '.log', time_str)
-
+        self.log_root = os.path.join(run_root, '.log')
         self.data_loaders = {"train": train_loader, "val": validation_loader}
         self.data_lengths = {"train": len(train_loader), "val": len(validation_loader)}
 
     def train(self):
-        print('Starting training ...')
 
         if not os.path.exists(self.log_root):
             os.makedirs(self.log_root)
 
+        if self.resume:
+            print('Resuming training ...')
+            checkpoint = torch.load(os.path.join(self.log_root, 'torch_model'))
+            self.model.load_state_dict(checkpoint['model_state_dict'])
+            self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        else:
+            print('Starting training ...')
+
         writer = SummaryWriter(self.log_root)
         self.model = self.model.to(self.device)
 
-        it = 0
-        for epoch in range(self.num_epoch):
+        epoch = int(self.model.epoch) + 1
+        it = int(self.model.iteration)
+        for epoch in range(epoch, epoch + self.num_epoch):
 
             for phase in ['train', 'val']:
                 epoch_loss = 0
@@ -86,7 +93,7 @@ class Trainer:
                     if (i + 1) % self.log_int == 0:
                         running_loss_avg = running_loss/self.log_int
                         print('Phase: ' + phase + ', epoch: {}, batch {}: running loss: {:0.3f}'.
-                              format(epoch, i + 1, running_loss_avg))
+                              format(self.model.epoch, i + 1, running_loss_avg))
                         writer.add_scalars('running_loss', {phase: running_loss_avg}, it)
                         running_loss = 0.0
 
@@ -101,13 +108,20 @@ class Trainer:
                 writer.add_figure(
                     'images ' + phase, Trainer.show_imgs(inputs, outputs, figure_inds), epoch)
 
-        if self.save:
-            print('Saving model ...')
-            torch.save(self.model.state_dict(), os.path.join(self.log_root, 'torch_model'))
+                if self.save & (phase == 'train'):
+                    print('Saving model state...')
+                    self.model.epoch = torch.nn.Parameter(torch.tensor(epoch), requires_grad=False)
+                    self.model.iteration = torch.nn.Parameter(torch.tensor(it), requires_grad=False)
+                    torch.save({
+                        'model_state_dict': self.model.state_dict(),
+                        'optimizer_state_dict': self.optimizer.state_dict()
+                    }, os.path.join(self.log_root, 'torch_model'))
 
         print('Finished training ...')
+
         # dictionary of accuracy metrics for tune hyperparameter optimization
         return {"val_loss_avg": epoch_loss_avg}
+
     @staticmethod
     def copy2cpu(inputs, outputs):
         if inputs.is_cuda:

@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 from torch import nn
 
 
@@ -14,6 +15,8 @@ class AE(nn.Module):
 
         self.encoder = encoder
         self.decoder = decoder
+        self.iteration = nn.Parameter(torch.tensor(0), requires_grad=False)
+        self.epoch = nn.Parameter(torch.tensor(0), requires_grad=False)
 
     def forward(self, x):
 
