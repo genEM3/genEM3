@@ -19,7 +19,7 @@ data_split = DataSplit(train=0.75, validation=0.15, test=0.1)
 cache_RAM = True
 cache_HDD = False
 cache_root = os.path.join(run_root, '.cache/')
-batch_size = 64
+batch_size = 128
 num_workers = 4
 
 dataset = WkwData(
@@ -50,18 +50,19 @@ output_size = input_size
 valid_size = 2
 kernel_size = 3
 stride = 1
-n_fmaps = 8
-n_latent = 5000
+n_fmaps = 64
+n_latent = 256
 model = AE(
     Encoder_4_sampling_bn_1px(input_size, kernel_size, stride, n_fmaps, n_latent),
     Decoder_4_sampling_bn_1px(output_size, kernel_size, stride, n_fmaps, n_latent))
 criterion = torch.nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=0.025, momentum=0.8)
 
-num_epoch = 30
+num_epoch = 100
 log_int = 10
 device = 'cuda'
 save = True
+resume = False
 
 trainer = Trainer(run_root=run_root,
                   model=model,
@@ -72,7 +73,8 @@ trainer = Trainer(run_root=run_root,
                   num_epoch=num_epoch,
                   log_int=log_int,
                   device=device,
-                  save=save)
+                  save=save,
+		  resume=resume)
 
 trainer.train()
 
