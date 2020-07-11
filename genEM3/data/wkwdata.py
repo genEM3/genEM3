@@ -9,6 +9,8 @@ import torch
 from torch.utils.data import Dataset
 import wkw
 
+np.random.seed(1337)
+
 # named tuple instantiation. These collections could be accessed by numeric indices and dot notation
 # similar to matlab structures
 DataSource = namedtuple(
