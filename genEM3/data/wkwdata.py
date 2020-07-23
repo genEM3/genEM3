@@ -120,7 +120,9 @@ class WkwData(Dataset):
 
         self.get_data_meshes()
         self.get_data_ind_ranges()
-        self.get_data_ind_splits()
+
+        if data_split is not None:
+            self.get_data_ind_splits()
 
         if cache_RAM | cache_HDD:
             self.fill_caches()

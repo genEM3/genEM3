@@ -1,7 +1,7 @@
 import os
+import pickle
 import numpy as np
 import matplotlib.pyplot as plt
-from datetime import datetime
 import torch
 from torch.utils.tensorboard import SummaryWriter
 from torch import device as torchDevice
@@ -42,10 +42,14 @@ class Trainer:
         self.data_loaders = {"train": train_loader, "val": validation_loader}
         self.data_lengths = {"train": len(train_loader), "val": len(validation_loader)}
 
-    def train(self):
+        if save:
+            if not os.path.exists(self.log_root):
+                os.makedirs(self.log_root)
 
-        if not os.path.exists(self.log_root):
-            os.makedirs(self.log_root)
+            with open(os.path.join(self.log_root, 'data_loaders.pickle'), 'wb') as handle:
+                pickle.dump(self.data_loaders, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    def train(self):
 
         if self.resume:
             print('Resuming training ...')
