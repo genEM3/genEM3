@@ -25,6 +25,175 @@ class AE(nn.Module):
 
         return x
 
+class Encoder_4_sampling_bn_1px_deep_convonly(nn.Module):
+
+    def __init__(self, input_size, kernel_size, stride, n_fmaps, n_latent):
+        super().__init__()
+
+        self.input_size = input_size
+        self.kernel_size = kernel_size
+        self.stride = stride
+        self.n_fmaps = n_fmaps
+        self.n_latent = n_latent
+
+        self.encoding_conv11 = nn.Sequential(
+            nn.Conv2d(1, n_fmaps, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps),
+            nn.LeakyReLU())
+
+        self.encoding_conv12 = nn.Sequential(
+            nn.Conv2d(n_fmaps, n_fmaps, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps),
+            nn.LeakyReLU(),
+            nn.MaxPool2d(2))
+
+        self.encoding_conv21 = nn.Sequential(
+            nn.Conv2d(n_fmaps, n_fmaps * 2, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps * 2),
+            nn.LeakyReLU())
+
+        self.encoding_conv22 = nn.Sequential(
+            nn.Conv2d(n_fmaps * 2, n_fmaps * 2, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps * 2),
+            nn.LeakyReLU(),
+            nn.MaxPool2d(2))
+
+        self.encoding_conv31 = nn.Sequential(
+            nn.Conv2d(n_fmaps * 2, n_fmaps * 4, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps * 4),
+            nn.LeakyReLU())
+
+        self.encoding_conv32 = nn.Sequential(
+            nn.Conv2d(n_fmaps * 4, n_fmaps * 4, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps * 4),
+            nn.LeakyReLU(),
+            nn.MaxPool2d(2))
+
+        self.encoding_conv41 = nn.Sequential(
+            nn.Conv2d(n_fmaps * 4, n_fmaps * 8, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps * 8),
+            nn.LeakyReLU())
+
+        self.encoding_conv42 = nn.Sequential(
+            nn.Conv2d(n_fmaps * 8, n_fmaps * 8, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps * 8),
+            nn.LeakyReLU(),
+            nn.MaxPool2d(2))
+
+        self.encoding_conv51 = nn.Sequential(
+            nn.Conv2d(n_fmaps * 8, n_fmaps * 16, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps * 16),
+            nn.LeakyReLU())
+
+        self.encoding_conv52 = nn.Sequential(
+            nn.Conv2d(n_fmaps * 16, n_fmaps * 16, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps * 16),
+            nn.LeakyReLU())
+
+        self.encoding_latent = nn.Sequential(
+            nn.Conv2d(n_fmaps * 16, n_latent, 1, stride),
+            nn.BatchNorm2d(n_latent),
+            nn.LeakyReLU())
+
+    def forward(self, x):
+        x = self.encoding_conv11(x)
+        x = self.encoding_conv12(x)
+        x = self.encoding_conv21(x)
+        x = self.encoding_conv22(x)
+        x = self.encoding_conv31(x)
+        x = self.encoding_conv32(x)
+        x = self.encoding_conv41(x)
+        x = self.encoding_conv42(x)
+        x = self.encoding_conv51(x)
+        x = self.encoding_conv52(x)
+        x = self.encoding_latent(x)
+
+        return x
+
+
+class Decoder_4_sampling_bn_1px_deep_convonly(nn.Module):
+
+    def __init__(self, output_size, kernel_size, stride, n_fmaps, n_latent):
+        super().__init__()
+
+        self.output_size = output_size
+        self.kernel_size = kernel_size
+        self.stride = stride
+        self.n_fmaps = n_fmaps
+        self.n_latent = n_latent
+
+        self.decoding_latent = nn.Sequential(
+            nn.ConvTranspose2d(n_latent, n_fmaps * 16, 1, stride),
+            nn.BatchNorm2d(n_fmaps * 16),
+            nn.LeakyReLU())
+
+        self.decoding_convt52 = nn.Sequential(
+            nn.ConvTranspose2d(n_fmaps * 16, n_fmaps * 16, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps * 16),
+            nn.LeakyReLU())
+
+        self.decoding_convt51 = nn.Sequential(
+            nn.ConvTranspose2d(n_fmaps * 16, n_fmaps * 8, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps * 8),
+            nn.LeakyReLU())
+
+        self.decoding_convt42 = nn.Sequential(
+            nn.Upsample(scale_factor=2, mode='nearest'),
+            nn.ConvTranspose2d(n_fmaps * 8, n_fmaps * 8, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps * 8),
+            nn.LeakyReLU())
+
+        self.decoding_convt41 = nn.Sequential(
+            nn.ConvTranspose2d(n_fmaps * 8, n_fmaps * 4, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps * 4),
+            nn.LeakyReLU())
+
+        self.decoding_convt32 = nn.Sequential(
+            nn.Upsample(scale_factor=2, mode='nearest'),
+            nn.ConvTranspose2d(n_fmaps * 4, n_fmaps * 4, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps * 4),
+            nn.LeakyReLU())
+
+        self.decoding_convt31 = nn.Sequential(
+            nn.ConvTranspose2d(n_fmaps * 4, n_fmaps * 2, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps * 2),
+            nn.LeakyReLU())
+
+        self.decoding_convt22 = nn.Sequential(
+            nn.Upsample(scale_factor=2, mode='nearest'),
+            nn.ConvTranspose2d(n_fmaps * 2, n_fmaps * 2, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps * 2),
+            nn.LeakyReLU())
+
+        self.decoding_convt21 = nn.Sequential(
+            nn.ConvTranspose2d(n_fmaps * 2, n_fmaps * 1, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps * 1),
+            nn.LeakyReLU())
+
+        self.decoding_convt12 = nn.Sequential(
+            nn.Upsample(scale_factor=2, mode='nearest'),
+            nn.ConvTranspose2d(n_fmaps, n_fmaps, kernel_size, stride),
+            nn.BatchNorm2d(n_fmaps),
+            nn.LeakyReLU())
+
+        self.decoding_convt11 = nn.Sequential(
+            nn.ConvTranspose2d(n_fmaps, 1, kernel_size, stride))
+
+    def forward(self, x):
+        x = self.decoding_fc(x)
+        x = self.decoding_convt52(x.reshape((-1, self.n_fmaps * 16, 1, 1)))
+        x = self.decoding_convt51(x)
+        x = self.decoding_convt42(x)
+        x = self.decoding_convt41(x)
+        x = self.decoding_convt32(x)
+        x = self.decoding_convt31(x)
+        x = self.decoding_convt22(x)
+        x = self.decoding_convt21(x)
+        x = self.decoding_convt12(x)
+        x = self.decoding_convt11(x)
+
+        return x
+
 class Encoder_4_sampling_bn_1px_deep(nn.Module):
 
     def __init__(self, input_size, kernel_size, stride, n_fmaps, n_latent):

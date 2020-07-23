@@ -1,4 +1,5 @@
 import os
+import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
@@ -40,6 +41,10 @@ class Trainer:
         self.log_root = os.path.join(run_root, '.log')
         self.data_loaders = {"train": train_loader, "val": validation_loader}
         self.data_lengths = {"train": len(train_loader), "val": len(validation_loader)}
+
+        if save:
+            with open(os.path.join(self.log_root, 'data_loaders.pickle'), 'wb') as handle:
+                pickle.dump(self.data_loaders, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     def train(self):
 
