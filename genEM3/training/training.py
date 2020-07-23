@@ -1,4 +1,5 @@
 import os
+import contextlib  # context manager library in python
 import pickle
 import numpy as np
 import matplotlib.pyplot as plt
@@ -36,7 +37,7 @@ class Trainer:
         if device == 'cuda':
             gpu.get_empty_gpu()
             device = torch.device(torch.cuda.current_device())
-        
+
         self.device = torchDevice(device)
         self.log_root = os.path.join(run_root, '.log')
         self.data_loaders = {"train": train_loader, "val": validation_loader}
@@ -68,38 +69,43 @@ class Trainer:
 
             for phase in ['train', 'val']:
                 epoch_loss = 0
-
+                # Set the model and context settings for train vs. test
                 if phase == 'train':
                     self.model.train(True)
-                else:
+                    cm = contextlib.nullcontext()
+                elif phase == 'val':
                     self.model.train(False)
+                    cm = torch.no_grad()
+                else:
+                    raise Exception('Phase name invalid')
 
                 running_loss = 0.0
                 for i, data in enumerate(self.data_loaders[phase]):
-                    it += 1
-                    # copy input and targets to the device object
-                    inputs = data['input'].to(self.device)
-                    targets = data['target'].to(self.device)
-                    # zero the parameter gradients
-                    self.optimizer.zero_grad()
+                    with cm:
+                        it += 1
+                        # copy input and targets to the device object
+                        inputs = data['input'].to(self.device)
+                        targets = data['target'].to(self.device)
 
-                    # forward + backward + optimize
-                    outputs = self.model(inputs)
-                    loss = self.criterion(outputs, targets)
+                        # zero the parameter gradients
+                        self.optimizer.zero_grad()
 
-                    if phase == 'train':
-                        loss.backward()
-                        self.optimizer.step()
+                        # forward + backward + optimize
+                        outputs = self.model(inputs)
+                        loss = self.criterion(outputs, targets)
+                        if phase == 'train':
+                            loss.backward()
+                            self.optimizer.step()
 
-                    # print statistics
-                    running_loss += loss.item()
-                    epoch_loss += loss.item()
-                    if (i + 1) % self.log_int == 0:
-                        running_loss_avg = running_loss/self.log_int
-                        print('Phase: ' + phase + ', epoch: {}, batch {}: running loss: {:0.3f}'.
-                              format(self.model.epoch, i + 1, running_loss_avg))
-                        writer.add_scalars('running_loss', {phase: running_loss_avg}, it)
-                        running_loss = 0.0
+                        # print statistics
+                        running_loss += loss.item()
+                        epoch_loss += loss.item()
+                        if (i + 1) % self.log_int == 0:
+                            running_loss_avg = running_loss/self.log_int
+                            print('Phase: ' + phase + ', epoch: {}, batch {}: running loss: {:0.3f}'.
+                                  format(self.model.epoch, i + 1, running_loss_avg))
+                            writer.add_scalars('running_loss', {phase: running_loss_avg}, it)
+                            running_loss = 0.0
 
                 epoch_loss_avg = epoch_loss / self.data_lengths[phase]
                 print('Phase: ' + phase + ', epoch: {}: epoch loss: {:0.3f}'.
