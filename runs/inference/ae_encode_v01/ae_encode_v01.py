@@ -8,7 +8,7 @@ from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn_1px_deep, Decod
 from genEM3.inference.inference import Predictor
 
 run_root = os.path.dirname(os.path.abspath(__file__))
-datasources_json_path = os.path.join(run_root, 'datasources_distributed.json')
+datasources_json_path = os.path.join(run_root, 'datasources_distributed_test.json')
 state_dict_path = os.path.join(run_root, '../../training/ae_v03/log/torch_model')
 device = 'cpu'
 

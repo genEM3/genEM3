@@ -10,7 +10,7 @@ from genEM3.training.training import Trainer
 
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
-datasources_json_path = os.path.join(run_root, 'datasources_distributed.json')
+datasources_json_path = os.path.join(run_root, 'datasources_distributed_test.json')
 input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
 data_sources = WkwData.datasources_from_json(datasources_json_path)

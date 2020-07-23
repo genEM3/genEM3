@@ -180,8 +180,8 @@ class Decoder_4_sampling_bn_1px_deep_convonly(nn.Module):
             nn.ConvTranspose2d(n_fmaps, 1, kernel_size, stride))
 
     def forward(self, x):
-        x = self.decoding_fc(x)
-        x = self.decoding_convt52(x.reshape((-1, self.n_fmaps * 16, 1, 1)))
+        x = self.decoding_latent(x)
+        x = self.decoding_convt52(x)
         x = self.decoding_convt51(x)
         x = self.decoding_convt42(x)
         x = self.decoding_convt41(x)
