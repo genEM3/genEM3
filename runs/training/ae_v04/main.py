@@ -10,7 +10,7 @@ from genEM3.training.training import Trainer
 
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
-datasources_json_path = os.path.join(run_root, 'datasources_distributed_test.json')
+datasources_json_path = os.path.join(run_root, 'datasources_distributed.json')
 input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
 data_sources = WkwData.datasources_from_json(datasources_json_path)
@@ -50,8 +50,8 @@ output_size = input_size
 valid_size = 2
 kernel_size = 3
 stride = 1
-n_fmaps = 24
-n_latent = 320
+n_fmaps = 32
+n_latent = 384
 model = AE(
     Encoder_4_sampling_bn_1px_deep_convonly(input_size, kernel_size, stride, n_fmaps, n_latent),
     Decoder_4_sampling_bn_1px_deep_convonly(output_size, kernel_size, stride, n_fmaps, n_latent))
