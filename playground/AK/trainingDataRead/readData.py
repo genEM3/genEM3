@@ -18,7 +18,7 @@ skel = wkskel.Skeleton(nmlPath)
 coordsList = [skel.nodes[x].position.values for x in range(skel.num_trees())]
 # Concatenate into a single array of coordinates
 coordArray = np.vstack(coordsList)
-assert coordArray.shape == (111, 3)
+assert coordArray.shape == (115, 3)
 
 
 def bboxFromCenter(center, dims):
