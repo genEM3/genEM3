@@ -51,7 +51,7 @@ valid_size = 2
 kernel_size = 3
 stride = 1
 n_fmaps = 32
-n_latent = 384
+n_latent = 1024
 model = AE(
     Encoder_4_sampling_bn_1px_deep_convonly(input_size, kernel_size, stride, n_fmaps, n_latent),
     Decoder_4_sampling_bn_1px_deep_convonly(output_size, kernel_size, stride, n_fmaps, n_latent))
