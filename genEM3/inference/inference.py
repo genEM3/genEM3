@@ -35,5 +35,12 @@ class Predictor:
             inputs = data['input']
             outputs = self.model(inputs)
 
-            viewData.data2fig_subplot(inputs, outputs, 1)
+            #viewData.data2fig_subplot(inputs, outputs, 1)
 
+    @torch.no_grad()
+    def predictList(self):
+
+        for i, data in enumerate(self.dataloader):
+            inputs = data[0]
+            outputs = self.model(inputs)
+            viewData.data2fig_subplot(inputs, outputs, 1)
