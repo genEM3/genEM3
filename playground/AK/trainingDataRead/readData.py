@@ -4,10 +4,14 @@ import os
 import numpy as np
 from matplotlib import pyplot as plt
 import torch
+from sklearn import decomposition
 
 from genEM3.data.wkwdata import WkwData
 from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn_1px_deep, Decoder_4_sampling_bn_1px_deep
 from genEM3.inference.inference import Predictor
+# seed numpy random number generator
+np.random.seed(5)
+
 # Read the nml and print some basic properties
 nmlDir = '/gaba/u/alik/code/genEM3/playground/AK/trainingDataRead'
 nmlName = 'artefact_trainingData.nml'
@@ -92,6 +96,7 @@ checkpoint = torch.load(state_dict_path, map_location=lambda storage, loc: stora
 state_dict = checkpoint['model_state_dict']
 model.load_state_dict(state_dict)
 
+hidden_dict = {htype: [] for htype in ['clean', 'debris']}
 # predicting for clean data
 predictor_clean = Predictor(
     dataloader=clean_loader,
@@ -101,7 +106,7 @@ predictor_clean = Predictor(
     batch_size=batch_size,
     input_shape=input_shape,
     output_shape=output_shape)
-predictor_clean.predict()
+hidden_dict['clean'] = predictor_clean.encode()
 
 # predicting for debris
 predictor_debris = Predictor(
@@ -112,4 +117,23 @@ predictor_debris = Predictor(
     batch_size=batch_size,
     input_shape=input_shape,
     output_shape=output_shape)
-predictor_debris.predictList()
+hidden_dict['debris'] = predictor_debris.encodeList()
+# Concatenate individual batches into single torch tensors
+hidden_dict_cat = {key: torch.cat(val, dim=0).numpy().squeeze() for key, val in hidden_dict.items()}
+# logical containing the type of image
+numSamples = [x.shape[0] for x in hidden_dict_cat.values()]
+is_debris = np.concatenate([np.ones(numSamples[0]), np.zeros(numSamples[1])]).astype(bool)
+# colors for plot (debris: black, clean: blue)
+colorsForPlot = np.zeros((sum(numSamples), 3), dtype=np.float)
+colorsForPlot[0:numSamples[0], 2] = 1
+# Generate the input
+hiddenMatrix = np.concatenate((hidden_dict_cat["clean"], hidden_dict_cat["debris"]), axis=0)
+
+# perform the principal component analysis using scikitlearn
+pca = decomposition.PCA(n_components=2)
+pca.fit(hiddenMatrix)
+PCs = pca.transform(hiddenMatrix)
+
+# Plot the PCA results
+plt.scatter(PCs[:, 0], PCs[:, 1], c=colorsForPlot)
+plt.show()
