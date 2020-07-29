@@ -12,7 +12,7 @@ datasources_json_path = os.path.join(run_root, 'datasources_distributed.json')
 state_dict_path = os.path.join(run_root, '../../training/ae_v05_skip/.log/torch_model')
 device = 'cpu'
 
-batch_size = 5
+batch_size = 32
 input_shape = (140, 140, 1)
 output_shape = (1, 1, 1)
 num_workers = 0
@@ -32,6 +32,8 @@ dataset = WkwData(
     input_shape=input_shape,
     target_shape=output_shape,
     data_sources=datasources,
+    cache_HDD=True,
+    cache_RAM=True
 )
 
 prediction_loader = torch.utils.data.DataLoader(

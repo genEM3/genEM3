@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 
 from genEM3.data.wkwdata import WkwData, DataSplit
-from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_1px_deep_convonly_skip, Decoder_4_sampling_1px_deep_convonly_skip
+from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn_1px_deep_convonly_skip, Decoder_4_sampling_bn_1px_deep_convonly_skip
 from genEM3.training.training import Trainer
 
 
@@ -15,7 +15,7 @@ input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
 data_sources = WkwData.datasources_from_json(datasources_json_path)
 # data_split = DataSplit(train=[1], validation=[], test=[])
-data_split = DataSplit(train=0.75, validation=0.15, test=0.1)
+data_split = DataSplit(train=0.8, validation=0.1, test=0.1)
 cache_RAM = True
 cache_HDD = False
 cache_root = os.path.join(run_root, '.cache/')
@@ -53,10 +53,10 @@ stride = 1
 n_fmaps = 16  # fixed in model class
 n_latent = 2048
 model = AE(
-    Encoder_4_sampling_1px_deep_convonly_skip(input_size, kernel_size, stride),
-    Decoder_4_sampling_1px_deep_convonly_skip(output_size, kernel_size, stride))
+    Encoder_4_sampling_bn_1px_deep_convonly_skip(input_size, kernel_size, stride),
+    Decoder_4_sampling_bn_1px_deep_convonly_skip(output_size, kernel_size, stride))
 criterion = torch.nn.MSELoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=0.005, momentum=0.8)
+optimizer = torch.optim.SGD(model.parameters(), lr=0.025, momentum=0.8)
 
 num_epoch = 100
 log_int = 100

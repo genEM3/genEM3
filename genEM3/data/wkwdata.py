@@ -41,7 +41,7 @@ class WkwData(Dataset):
                  data_split: DataSplit = None,
                  normalize: bool = True,
                  pad_target: bool = False,
-                 cache_RAM: bool = False,
+                 cache_RAM: bool = True,
                  cache_HDD: bool = False,
                  cache_HDD_root: str = None
                  ):

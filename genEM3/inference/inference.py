@@ -33,6 +33,7 @@ class Predictor:
 
         for i, data in enumerate(self.dataloader):
             inputs = data['input']
+
             outputs = self.model(inputs)
 
             viewData.data2fig_subplot(inputs, outputs, 1)
