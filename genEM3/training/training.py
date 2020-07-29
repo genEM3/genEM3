@@ -46,9 +46,6 @@ class Trainer:
             if not os.path.exists(self.log_root):
                 os.makedirs(self.log_root)
 
-            with open(os.path.join(self.log_root, 'data_loaders.pickle'), 'wb') as handle:
-                pickle.dump(self.data_loaders, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
     def train(self):
 
         if self.resume:
@@ -65,6 +62,9 @@ class Trainer:
         epoch = int(self.model.epoch) + 1
         it = int(self.model.iteration)
         for epoch in range(epoch, epoch + self.num_epoch):
+
+            epoch_root = 'epoch_{:02d}'.format(epoch)
+            os.makedirs(os.path.join(self.log_root, epoch_root))
 
             for phase in ['train', 'val']:
                 epoch_loss = 0
@@ -109,17 +109,22 @@ class Trainer:
                 writer.add_histogram('output histogram', outputs.cpu().data.numpy()[0, 0].flatten(), epoch)
                 figure_inds = list(range(inputs.shape[0]))
                 figure_inds = figure_inds if len(figure_inds) < 4 else list(range(4))
+                fig = Trainer.show_imgs(inputs, outputs, figure_inds)
+                fig.savefig(os.path.join(self.log_root, epoch_root, phase+'.png'))
                 writer.add_figure(
-                    'images ' + phase, Trainer.show_imgs(inputs, outputs, figure_inds), epoch)
+                    'images ' + phase, fig, epoch)
 
                 if self.save & (phase == 'train'):
                     print('Saving model state...')
+
                     self.model.epoch = torch.nn.Parameter(torch.tensor(epoch), requires_grad=False)
                     self.model.iteration = torch.nn.Parameter(torch.tensor(it), requires_grad=False)
                     torch.save({
                         'model_state_dict': self.model.state_dict(),
+                    }, os.path.join(self.log_root, epoch_root, 'model_state_dict'))
+                    torch.save({
                         'optimizer_state_dict': self.optimizer.state_dict()
-                    }, os.path.join(self.log_root, 'torch_model'))
+                    }, os.path.join(self.log_root, 'optimizer_state_dict'))
 
         print('Finished training ...')
 
