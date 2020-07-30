@@ -25,6 +25,64 @@ class AE(nn.Module):
 
         return x
 
+class AE_Encoder_Classifier(nn.Module):
+
+    def __init__(self, encoder, classifier):
+        super().__init__()
+
+        self.encoder = encoder
+        self.classifier = classifier
+        self.iteration = nn.Parameter(torch.tensor(0), requires_grad=False)
+        self.epoch = nn.Parameter(torch.tensor(0), requires_grad=False)
+
+    def load_encoder_state_dict(self, state_dict):
+
+        own_state = self.state_dict()
+        for name, param in state_dict.items():
+            if name not in own_state:
+                continue
+            if isinstance(param, nn.Parameter):
+                # backwards compatibility for serialized parameters
+                param = param.data
+            own_state[name].copy_(param)
+
+    def freeze_encoder_weights(self):
+
+        for name, param in self.named_parameters():
+            if name.find('encoder') == 0:
+                param.requires_grad = False
+
+    def reset_state(self):
+
+        for name, param in self.named_parameters():
+            if name.find('iteration') == 0:
+                param.data = torch.tensor(0)
+            if name.find('epoch') == 0:
+                param.data = torch.tensor(0)
+
+    def forward(self, x):
+
+        x = self.encoder(x)
+        x = self.classifier(x)
+
+        return x
+
+class Classifier(nn.Module):
+
+    def __init__(self, n_latent):
+        super().__init__()
+
+        self.logistic = nn.Sequential(
+            nn.Conv2d(n_latent, 1, kernel_size=1),
+            nn.Sigmoid())
+
+    def forward(self, x):
+
+        x = self.logistic(x)
+
+        return x
+
+
 class Encoder_4_sampling_1px_deep_convonly_skip(nn.Module):
 
     def __init__(self, input_size, kernel_size, stride, n_fmaps=16, n_latent=2048):

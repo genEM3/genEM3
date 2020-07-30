@@ -8,8 +8,9 @@ from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn_1px_deep_convon
 from genEM3.inference.inference import Predictor
 
 run_root = os.path.dirname(os.path.abspath(__file__))
+cache_HDD_root = os.path.join(run_root, '.cache/')
 datasources_json_path = os.path.join(run_root, 'datasources_distributed.json')
-state_dict_path = os.path.join(run_root, '../../training/ae_v05_skip/.log/torch_model')
+state_dict_path = os.path.join(run_root, '../../training/ae_v05_skip/.log/epoch_16//model_state_dict')
 device = 'cpu'
 
 batch_size = 32
@@ -33,7 +34,8 @@ dataset = WkwData(
     target_shape=output_shape,
     data_sources=datasources,
     cache_HDD=True,
-    cache_RAM=True
+    cache_RAM=True,
+    cache_HDD_root=cache_HDD_root
 )
 
 prediction_loader = torch.utils.data.DataLoader(
