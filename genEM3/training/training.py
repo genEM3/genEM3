@@ -64,7 +64,8 @@ class Trainer:
         for epoch in range(epoch, epoch + self.num_epoch):
 
             epoch_root = 'epoch_{:02d}'.format(epoch)
-            os.makedirs(os.path.join(self.log_root, epoch_root))
+            if not os.path.exists(os.path.join(self.log_root, epoch_root)):
+                os.makedirs(os.path.join(self.log_root, epoch_root))
 
             for phase in ['train', 'val']:
                 epoch_loss = 0
