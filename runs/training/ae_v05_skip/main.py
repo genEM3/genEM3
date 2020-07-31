@@ -15,7 +15,7 @@ input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
 data_sources = WkwData.datasources_from_json(datasources_json_path)
 # data_split = DataSplit(train=[1], validation=[], test=[])
-data_split = DataSplit(train=0.8, validation=0.1, test=0.1)
+data_split = DataSplit(train=0.75, validation=0.15, test=0.1)
 cache_RAM = True
 cache_HDD = False
 cache_root = os.path.join(run_root, '.cache/')
@@ -56,9 +56,9 @@ model = AE(
     Encoder_4_sampling_bn_1px_deep_convonly_skip(input_size, kernel_size, stride),
     Decoder_4_sampling_bn_1px_deep_convonly_skip(output_size, kernel_size, stride))
 criterion = torch.nn.MSELoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=0.025, momentum=0.8)
+optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.8)
 
-num_epoch = 100
+num_epoch = 60
 log_int = 100
 device = 'cuda'
 save = True
