@@ -242,7 +242,7 @@ class WkwData(Dataset):
         ]
         bbox_target = origin_target + list(self.output_shape)
 
-        if self.data_sources[source_idx].target_binary:
+        if self.data_sources[source_idx].target_binary != 'NaN':
             target = np.asarray(self.data_sources[source_idx].target_class).reshape(1, 1, 1, 1)
 
         else:
