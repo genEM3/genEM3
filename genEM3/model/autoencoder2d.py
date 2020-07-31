@@ -25,6 +25,18 @@ class AE(nn.Module):
 
         return x
 
+    def encode_input(self, image_input):
+        """ Returns the hidden state representation of the autoencoder bottleneck"""
+        hidden_state = self.encoder(image_input)
+
+        return hidden_state
+
+    def decode_latent(self, hidden_state):
+        """ Returns the reconstructed image from the encoded hidden state. """
+        reconstructed_image = self.decoder(hidden_state)
+
+        return reconstructed_image
+
 class AE_Encoder_Classifier(nn.Module):
 
     def __init__(self, encoder, classifier):
@@ -438,6 +450,7 @@ class Decoder_4_sampling_bn_1px_deep_convonly_skip(nn.Module):
 
         return x
 
+      
 class Encoder_4_sampling_bn_1px_deep_convonly(nn.Module):
 
     def __init__(self, input_size, kernel_size, stride, n_fmaps, n_latent):
@@ -606,6 +619,7 @@ class Decoder_4_sampling_bn_1px_deep_convonly(nn.Module):
         x = self.decoding_convt11(x)
 
         return x
+
 
 class Encoder_4_sampling_bn_1px_deep(nn.Module):
 
