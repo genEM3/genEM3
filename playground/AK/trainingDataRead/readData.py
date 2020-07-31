@@ -63,12 +63,11 @@ dataset = WkwData(
     cache_HDD=False,
     cache_RAM=True,
 )
-dataset[0]
 clean_loader = torch.utils.data.DataLoader(
     dataset=dataset, batch_size=batch_size, num_workers=num_workers)
 # settings for the model to be loaded
 # (Is there a way to save so that you do not need to specify model again?)
-state_dict_path = os.path.join(run_root, './torch_model')
+state_dict_path = os.path.join(run_root, './.log/torch_model')
 device = 'cpu'
 kernel_size = 3
 stride = 1
