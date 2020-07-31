@@ -37,6 +37,7 @@ class AE(nn.Module):
 
         return reconstructed_image
 
+
 class AE_Encoder_Classifier(nn.Module):
 
     def __init__(self, encoder, classifier):

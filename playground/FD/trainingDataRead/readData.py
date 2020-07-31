@@ -8,16 +8,14 @@ from sklearn import decomposition
 
 from genEM3.data.wkwdata import WkwData
 from genEM3.data.skeleton import getAllTreeCoordinates
-from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn_1px_deep, Decoder_4_sampling_bn_1px_deep
+from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn_1px_deep_convonly_skip, Decoder_4_sampling_bn_1px_deep_convonly_skip
 from genEM3.inference.inference import Predictor
 from genEM3.util.image import normalize, readWkwFromCenter
 # seed numpy random number generator
 np.random.seed(5)
 
 # Read the nml and print some basic properties
-nmlDir = '/gaba/u/alik/code/genEM3/playground/AK/trainingDataRead'
-nmlName = 'artefact_trainingData.nml'
-nmlPath = os.path.join(nmlDir, nmlName)
+nmlPath = 'artefact_trainingData.nml'
 skel = wkskel.Skeleton(nmlPath)
 
 # Get coordinates of the debris locations
@@ -65,17 +63,17 @@ clean_loader = torch.utils.data.DataLoader(
     dataset=dataset, batch_size=batch_size, num_workers=num_workers)
 # settings for the model to be loaded
 # (Is there a way to save so that you do not need to specify model again?)
-state_dict_path = os.path.join(run_root, './torch_model')
+state_dict_path = '/home/drawitschf/Code/genEM3/runs/training/ae_classify_v01/.log/ae_v05_skip_weights/epoch_36/model_state_dict'
 device = 'cpu'
 kernel_size = 3
 stride = 1
 n_fmaps = 16
-n_latent = 192
+n_latent = 2048
 input_size = 140
 output_size = input_size
 model = AE(
-    Encoder_4_sampling_bn_1px_deep(input_size, kernel_size, stride, n_fmaps, n_latent),
-    Decoder_4_sampling_bn_1px_deep(output_size, kernel_size, stride, n_fmaps, n_latent))
+    Encoder_4_sampling_bn_1px_deep_convonly_skip(input_size, kernel_size, stride, n_fmaps, n_latent),
+    Decoder_4_sampling_bn_1px_deep_convonly_skip(output_size, kernel_size, stride, n_fmaps, n_latent))
 # loading the model
 checkpoint = torch.load(state_dict_path, map_location=lambda storage, loc: storage)
 state_dict = checkpoint['model_state_dict']
