@@ -1,0 +1,826 @@
+<things>
+  <meta name="writer" content="nml_helpers.js" />
+  <meta name="writerGitCommit" content="57fab01c3225cebe98f1338ca4d033e68df1b5dc" />
+  <meta name="timestamp" content="1595874527168" />
+  <meta name="annotationId" content="5e387a00010000501b1a41bd" />
+  <meta name="username" content="Ali Karimi" />
+  <parameters>
+    <experiment name="2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8" description="Training data for artefact detection&#xa;Channel 1: The debri mask&#xa;Channel 2: Data containing inside&#xa;&#xa;Each Tree contains 1 node at the center of each example. &#xa;Max diameter: 6 um so far (05022020)" organization="Connectomics_Department" />
+    <scale x="32" y="32" z="35" />
+    <offset x="0" y="0" z="0" />
+    <time ms="1580759552201" />
+    <editPosition x="28726" y="18226" z="2337" />
+    <editRotation xRot="0" yRot="0" zRot="0" />
+    <zoomLevel zoom="0.4670922953073804" />
+  </parameters>
+  <thing id="1" color.r="0.6784313917160034" color.g="0.1411764770746231" color.b="0.05098039284348488" color.a="1" name="001" groupId="1">
+    <nodes>
+      <node id="1" radius="320" x="25238" y="20546" z="3546" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580759807888" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="2" color.r="0" color.g="0" color.b="1" color.a="1" name="013" groupId="4">
+    <nodes>
+      <node id="3" radius="320" x="25340" y="20429" z="3531" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580760122984" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="3" color.r="0.8509804010391235" color.g="0.5215686559677124" color.b="0.07058823853731155" color.a="1" name="002" groupId="1">
+    <nodes>
+      <node id="4" radius="320" x="25216" y="20423" z="3579" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580760470913" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="4" color.r="0" color.g="1" color.b="0.7568627595901489" color.a="1" name="003" groupId="1">
+    <nodes>
+      <node id="5" radius="320" x="25133" y="20466" z="3562" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580760674481" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="5" color.r="1" color.g="0.8392156958580017" color.b="0.239215686917305" color.a="1" name="Debris" groupId="2">
+    <nodes>
+      <node id="6" radius="320" x="20845" y="15432" z="3517" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580760893382" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="6" color.r="0.0784313753247261" color.g="0.4000000059604645" color.b="0.4901960790157318" color.a="1" name="004" groupId="1">
+    <nodes>
+      <node id="7" radius="320" x="20555" y="15678" z="3564" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580761049641" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="7" color.r="0.9647058844566345" color.g="0.07058823853731155" color.b="0.3803921639919281" color.a="1" name="005" groupId="1">
+    <nodes>
+      <node id="8" radius="320" x="20443" y="15677" z="3603" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580761230052" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="8" color.r="0.9647058844566345" color.g="0.6196078658103943" color.b="0.8627451062202454" color.a="1" name="006" groupId="1">
+    <nodes>
+      <node id="9" radius="320" x="20450" y="15661" z="3636" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580764717323" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="9" color.r="0.7215686440467834" color.g="0.05882352963089943" color.b="0.8196078538894653" color.a="1" name="007" groupId="1">
+    <nodes>
+      <node id="10" radius="320" x="20392" y="15634" z="3645" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580764756985" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="10" color.r="0.4117647111415863" color.g="0.8313725590705872" color.b="0.0313725508749485" color.a="1" name="008" groupId="1">
+    <nodes>
+      <node id="11" radius="320" x="20208" y="15725" z="3712" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580764956158" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="11" color.r="0.45098039507865906" color.g="0.239215686917305" color.b="1" color.a="1" name="001" groupId="4">
+    <nodes>
+      <node id="12" radius="320" x="19904" y="15582" z="3732" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580765109912" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="12" color.r="0.239215686917305" color.g="0.7803921699523926" color.b="1" color.a="1" name="Debris" groupId="2">
+    <nodes>
+      <node id="13" radius="320" x="19874" y="15446" z="3722" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580765282235" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="13" color.r="1" color.g="1" color.b="0" color.a="1" name="009" groupId="1">
+    <nodes>
+      <node id="14" radius="320" x="20068" y="15324" z="3812" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580765556335" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="14" color.r="0.5490196347236633" color.g="0.2705882489681244" color.b="0.07058823853731155" color.a="1" name="010" groupId="1">
+    <nodes>
+      <node id="15" radius="320" x="20044" y="15320" z="3897" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580765667984" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="15" color.r="0" color.g="0.4000000059604645" color.b="0" color.a="1" name="002" groupId="4">
+    <nodes>
+      <node id="16" radius="320" x="20125" y="15319" z="3911" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580765700807" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="16" color.r="1" color.g="0.239215686917305" color.b="0.5882353186607361" color.a="1" name="Scratch" groupId="2">
+    <nodes>
+      <node id="17" radius="320" x="20088" y="16049" z="3925" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580765820847" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="17" color.r="0.929411768913269" color.g="0.8470588326454163" color.b="0.6784313917160034" color.a="1" name="011" groupId="1">
+    <nodes>
+      <node id="18" radius="320" x="19973" y="15510" z="4010" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580766005239" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="18" color.r="0.5176470875740051" color.g="0.4470588266849518" color.b="0" color.a="1" name="012" groupId="1">
+    <nodes>
+      <node id="19" radius="320" x="19679" y="15588" z="3950" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580766044695" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="19" color.r="0.4470588266849518" color.g="0.9647058844566345" color.b="1" color.a="1" name="013" groupId="1">
+    <nodes>
+      <node id="20" radius="320" x="27051" y="16489" z="4391" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580766198451" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="20" color.r="0.6196078658103943" color.g="0.7568627595901489" color.b="1" color.a="1" name="014" groupId="1">
+    <nodes>
+      <node id="21" radius="320" x="27142" y="16457" z="4394" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580766223001" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="21" color.r="0.4470588266849518" color.g="0.7843137383460999" color.b="0.48235294222831726" color.a="1" name="Scratch" groupId="2">
+    <nodes>
+      <node id="22" radius="320" x="27717" y="16464" z="4495" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580816115701" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="22" color.r="0.6196078658103943" color.g="0" color.b="0" color.a="1" name="Scratch" groupId="2">
+    <nodes>
+      <node id="23" radius="320" x="27565" y="16731" z="4531" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580816163527" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="23" color.r="0" color.g="0.30980393290519714" color.b="1" color.a="1" name="003" groupId="4">
+    <nodes>
+      <node id="134" radius="320" x="27684" y="15982" z="4537" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580934639768" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="24" color.r="0" color.g="0.27450981736183167" color.b="0.5843137502670288" color.a="1" name="004" groupId="4">
+    <nodes>
+      <node id="25" radius="320" x="27618" y="16839" z="4538" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580816257334" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="25" color.r="0.8274509906768799" color.g="1" color.b="0" color.a="1" name="005" groupId="4">
+    <nodes>
+      <node id="27" radius="320" x="27677" y="16760" z="4533" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580816441143" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="26" color.r="0.7254902124404907" color.g="0.30980393290519714" color.b="0.8274509906768799" color.a="1" name="015" groupId="1">
+    <nodes>
+      <node id="26" radius="320" x="27574" y="16848" z="4545" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580816342806" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="27" color.r="0.24313725531101227" color.g="0" color.b="0.10196078568696976" color.a="1" name="016" groupId="1">
+    <nodes>
+      <node id="28" radius="320" x="27661" y="16793" z="4556" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580816529405" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="28" color.r="0.929411768913269" color.g="1" color.b="0.6901960968971252" color.a="1" name="017" groupId="1">
+    <nodes>
+      <node id="29" radius="320" x="27671" y="16939" z="4565" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580822057733" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="29" color.r="1" color.g="0.48235294222831726" color.b="0.3803921639919281" color.a="1" name="Fold" groupId="2">
+    <nodes>
+      <node id="30" radius="320" x="27657" y="16897" z="4618" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580822113622" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="30" color.r="0.27450981736183167" color.g="1" color.b="0.48235294222831726" color.a="1" name="Scratch" groupId="2">
+    <nodes>
+      <node id="31" radius="320" x="27645" y="16902" z="4624" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580822136501" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="31" color.r="0.07058823853731155" color.g="0.6549019813537598" color.b="0.3803921639919281" color.a="1" name="Scratsch" groupId="2">
+    <nodes>
+      <node id="32" radius="320" x="27653" y="16900" z="4635" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580822159606" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="32" color.r="0.8274509906768799" color.g="0.6549019813537598" color.b="0.6549019813537598" color.a="1" name="Scratch" groupId="2">
+    <nodes>
+      <node id="33" radius="320" x="27601" y="16890" z="4657" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580822222286" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="33" color.r="0.8274509906768799" color.g="0.30980393290519714" color.b="0.5176470875740051" color.a="1" name="018" groupId="1">
+    <nodes>
+      <node id="34" radius="320" x="27555" y="16941" z="4595" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580822279677" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="34" color.r="0.4156862795352936" color.g="0" color.b="0.7568627595901489" color.a="1" name="missingTiles (2 nodes)" groupId="2">
+    <nodes>
+      <node id="36" radius="320" x="28145" y="17295" z="4683" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580822412473" />
+      <node id="35" radius="320" x="27489" y="16378" z="4683" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580822394117" />
+    </nodes>
+    <edges>
+      <edge source="35" target="36" />
+    </edges>
+  </thing>
+  <thing id="35" color.r="0.1725490242242813" color.g="0.3803921639919281" color.b="0.27450981736183167" color.a="1" name="006" groupId="4">
+    <nodes>
+      <node id="38" radius="320" x="28096" y="17116" z="4686" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580822582428" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="36" color.r="0" color.g="0.5843137502670288" color.b="0.9647058844566345" color.a="1" name="007" groupId="4">
+    <nodes>
+      <node id="37" radius="320" x="27946" y="17165" z="4707" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580822563927" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="37" color.r="0.03529411926865578" color.g="0.24313725531101227" color.b="0.30980393290519714" color.a="1" name="019" groupId="1">
+    <nodes>
+      <node id="39" radius="320" x="28001" y="16992" z="4733" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580822618459" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="38" color.r="0.6549019813537598" color.g="0.3450980484485626" color.b="0.03529411926865578" color.a="1" name="008" groupId="4">
+    <nodes>
+      <node id="40" radius="320" x="27883" y="17978" z="6929" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580822858327" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="39" color.r="0.4470588266849518" color.g="0.5882353186607361" color.b="0.24313725531101227" color.a="1" name="020" groupId="1">
+    <nodes>
+      <node id="41" radius="320" x="27793" y="17979" z="6917" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580823616401" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="40" color.r="0.03529411926865578" color.g="0.5843137502670288" color.b="0" color.a="1" name="009" groupId="4">
+    <nodes>
+      <node id="42" radius="320" x="27788" y="18016" z="6898" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580823681973" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="41" color.r="0.6196078658103943" color.g="0.19607843458652496" color.b="0.7254902124404907" color.a="1" name="021" groupId="1">
+    <nodes>
+      <node id="43" radius="320" x="28096" y="18117" z="7009" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824111416" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="42" color.r="1" color.g="1" color.b="0.4470588266849518" color.a="1" name="022" groupId="1">
+    <nodes>
+      <node id="44" radius="320" x="27879" y="18344" z="7038" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824245679" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="43" color.r="0.6549019813537598" color.g="0.9647058844566345" color.b="0.7921568751335144" color.a="1" name="023" groupId="1">
+    <nodes>
+      <node id="45" radius="320" x="27657" y="18473" z="7038" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824259223" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="44" color.r="0.5843137502670288" color.g="0.3921568691730499" color.b="0.7254902124404907" color.a="1" name="024" groupId="1">
+    <nodes>
+      <node id="46" radius="320" x="27693" y="18392" z="7051" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824315789" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="46" color.r="0.1725490242242813" color.g="0" color.b="0.30980393290519714" color.a="1" name="025" groupId="1">
+    <nodes>
+      <node id="48" radius="320" x="21891" y="18111" z="6826" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="1" bitDepth="8" interpolation="true" time="1580824380656" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="48" color.r="0.30980393290519714" color.g="0.13725490868091583" color.b="0" color.a="1" name="026" groupId="1">
+    <nodes>
+      <node id="49" radius="320" x="21920" y="18129" z="6811" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824399001" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="49" color.r="0" color.g="0.7254902124404907" color.b="0.6549019813537598" color.a="1" name="027" groupId="1">
+    <nodes>
+      <node id="50" radius="320" x="21691" y="18084" z="6851" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824413002" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="50" color.r="0.6196078658103943" color.g="0" color.b="0.2078431397676468" color.a="1" name="028" groupId="1">
+    <nodes>
+      <node id="51" radius="320" x="21437" y="18157" z="6746" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824485631" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="51" color.r="0.30980393290519714" color.g="0.48235294222831726" color.b="0.6901960968971252" color.a="1" name="029" groupId="1">
+    <nodes>
+      <node id="114" radius="320" x="21453" y="18010" z="6763" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580829630277" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="52" color.r="0.10196078568696976" color.g="0.27450981736183167" color.b="0.7568627595901489" color.a="1" name="030" groupId="1">
+    <nodes>
+      <node id="53" radius="320" x="21569" y="17930" z="6875" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824516823" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="53" color.r="0.3450980484485626" color.g="0.8274509906768799" color.b="0" color.a="1" name="031" groupId="1">
+    <nodes>
+      <node id="54" radius="320" x="21348" y="17927" z="6884" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824525928" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="54" color.r="0.4470588266849518" color.g="0.5843137502670288" color.b="0.2078431397676468" color.a="1" name="032" groupId="1">
+    <nodes>
+      <node id="55" radius="320" x="21553" y="17756" z="6949" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824540064" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="55" color.r="0.8980392217636108" color.g="0.6549019813537598" color.b="0.2078431397676468" color.a="1" name="010" groupId="4">
+    <nodes>
+      <node id="56" radius="320" x="21675" y="17695" z="6953" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824547436" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="56" color.r="0.9647058844566345" color.g="0.5529412031173706" color.b="0.5843137502670288" color.a="1" name="033" groupId="1">
+    <nodes>
+      <node id="57" radius="320" x="21911" y="17766" z="6991" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824558845" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="57" color.r="0.4156862795352936" color.g="0.07058823853731155" color.b="0.5529412031173706" color.a="1" name="016" groupId="4">
+    <nodes>
+      <node id="58" radius="320" x="21091" y="17431" z="6965" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824585750" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="58" color.r="0.8980392217636108" color.g="0.3803921639919281" color.b="0.7568627595901489" color.a="1" name="034" groupId="1">
+    <nodes>
+      <node id="59" radius="320" x="21134" y="17590" z="6926" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824596984" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="59" color.r="0.929411768913269" color.g="0.8274509906768799" color.b="1" color.a="1" name="017" groupId="4">
+    <nodes>
+      <node id="60" radius="320" x="21241" y="17742" z="6873" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824617616" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="60" color.r="0.6196078658103943" color.g="1" color.b="0.6196078658103943" color.a="1" name="018" groupId="4">
+    <nodes>
+      <node id="61" radius="320" x="21139" y="17510" z="6857" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824631446" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="61" color.r="1" color.g="0.30980393290519714" color.b="0.9647058844566345" color.a="1" name="035" groupId="1">
+    <nodes>
+      <node id="62" radius="320" x="21294" y="17502" z="6842" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824638476" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="62" color.r="0.5843137502670288" color.g="0.3803921639919281" color.b="1" color.a="1" name="Scratch" groupId="2">
+    <nodes>
+      <node id="63" radius="320" x="21452" y="17482" z="6832" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824643430" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="63" color.r="0.7568627595901489" color.g="0.7254902124404907" color.b="0.3803921639919281" color.a="1" name="064" groupId="1">
+    <nodes>
+      <node id="126" radius="320" x="21589" y="17530" z="6831" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580933915392" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="64" color.r="0.929411768913269" color.g="0.1725490242242813" color.b="0.2078431397676468" color.a="1" name="019" groupId="4">
+    <nodes>
+      <node id="65" radius="320" x="21426" y="17787" z="6789" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824669327" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="65" color.r="0.6901960968971252" color.g="0.4156862795352936" color.b="0.5176470875740051" color.a="1" name="020" groupId="4">
+    <nodes>
+      <node id="129" radius="320" x="21013" y="17778" z="6709" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580934312004" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="66" color.r="0.27450981736183167" color.g="0.1725490242242813" color.b="0.3450980484485626" color.a="1" name="036" groupId="1">
+    <nodes>
+      <node id="67" radius="320" x="21336" y="17580" z="6733" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824745550" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="67" color.r="0.7254902124404907" color.g="0.5176470875740051" color.b="0.3450980484485626" color.a="1" name="021" groupId="4">
+    <nodes>
+      <node id="130" radius="320" x="21206" y="17440" z="6739" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580934327500" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="68" color.r="0.5529412031173706" color.g="0.03529411926865578" color.b="1" color.a="1" name="022" groupId="4">
+    <nodes>
+      <node id="127" radius="320" x="21038" y="17422" z="6704" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580934219884" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="69" color.r="0.27450981736183167" color.g="0.30980393290519714" color.b="0" color.a="1" name="037" groupId="1">
+    <nodes>
+      <node id="70" radius="320" x="21192" y="17484" z="6631" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824789080" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="70" color.r="0.8627451062202454" color.g="0.8274509906768799" color.b="0.6901960968971252" color.a="1" name="023" groupId="4">
+    <nodes>
+      <node id="128" radius="320" x="21356" y="17268" z="6528" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580934261114" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="71" color.r="0.8980392217636108" color.g="0.5843137502670288" color.b="1" color.a="1" name="038" groupId="1">
+    <nodes>
+      <node id="72" radius="320" x="21467" y="17145" z="6490" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824830587" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="72" color.r="0" color.g="0" color.b="0.03529411926865578" color.a="1" name="Debris" groupId="2">
+    <nodes>
+      <node id="73" radius="320" x="21459" y="17278" z="6475" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824851131" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="73" color.r="0.3803921639919281" color.g="0.24313725531101227" color.b="0.24313725531101227" color.a="1" name="024" groupId="4">
+    <nodes>
+      <node id="74" radius="320" x="21631" y="17103" z="6497" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824866748" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="74" color.r="0.929411768913269" color.g="0" color.b="0.5176470875740051" color.a="1" name="025" groupId="4">
+    <nodes>
+      <node id="75" radius="320" x="21876" y="16873" z="6550" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824887114" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="75" color.r="0.6901960968971252" color.g="0" color.b="0.5843137502670288" color.a="1" name="026" groupId="4">
+    <nodes>
+      <node id="76" radius="320" x="21942" y="16794" z="6529" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824898757" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="76" color.r="0.4156862795352936" color.g="0" color.b="0" color.a="1" name="027" groupId="4">
+    <nodes>
+      <node id="131" radius="320" x="22142" y="16746" z="6452" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580934383596" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="77" color.r="0.7254902124404907" color.g="0.6549019813537598" color.b="1" color.a="1" name="039" groupId="1">
+    <nodes>
+      <node id="78" radius="320" x="21763" y="16855" z="6421" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824934001" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="78" color.r="0.6549019813537598" color.g="0.19607843458652496" color.b="0.7568627595901489" color.a="1" name="040" groupId="1">
+    <nodes>
+      <node id="79" radius="320" x="21940" y="16903" z="6402" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580824946597" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="79" color.r="0.5176470875740051" color.g="0.1725490242242813" color.b="0.30980393290519714" color.a="1" name="041" groupId="1">
+    <nodes>
+      <node id="80" radius="320" x="22968" y="25386" z="6339" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580825009655" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="80" color.r="0.4470588266849518" color.g="0.19607843458652496" color.b="0.4470588266849518" color.a="1" name="042" groupId="1">
+    <nodes>
+      <node id="81" radius="320" x="22898" y="25363" z="6305" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580825024607" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="81" color.r="0.8627451062202454" color.g="0.27450981736183167" color.b="0" color.a="1" name="043" groupId="1">
+    <nodes>
+      <node id="82" radius="320" x="22738" y="25402" z="6280" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580825037679" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="82" color.r="0.03529411926865578" color.g="0.2078431397676468" color.b="0" color.a="1" name="044" groupId="1">
+    <nodes>
+      <node id="83" radius="320" x="22370" y="25586" z="6257" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580825048511" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="83" color.r="0.5843137502670288" color.g="0.7921568751335144" color.b="0.48235294222831726" color.a="1" name="045" groupId="1">
+    <nodes>
+      <node id="84" radius="320" x="22204" y="25790" z="6255" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580825056935" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="84" color.r="0" color.g="0.07058823853731155" color.b="0.8274509906768799" color.a="1" name="028" groupId="4">
+    <nodes>
+      <node id="85" radius="320" x="22246" y="25638" z="6254" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580825062629" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="85" color.r="0.7254902124404907" color.g="0.929411768913269" color.b="1" color.a="1" name="046" groupId="1">
+    <nodes>
+      <node id="86" radius="320" x="21998" y="25836" z="6239" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580825071148" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="86" color.r="0.3450980484485626" color.g="0.24313725531101227" color.b="0.5843137502670288" color.a="1" name="047" groupId="1">
+    <nodes>
+      <node id="87" radius="320" x="22485" y="25501" z="6201" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580825092993" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="87" color.r="0.27450981736183167" color.g="0.5176470875740051" color.b="0.27450981736183167" color.a="1" name="048" groupId="1">
+    <nodes>
+      <node id="125" radius="320" x="22394" y="25704" z="6200" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580933353179" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="88" color.r="0.6901960968971252" color.g="1" color.b="0.30980393290519714" color.a="1" name="049" groupId="1">
+    <nodes>
+      <node id="89" radius="320" x="22361" y="25802" z="6160" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580825114406" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="89" color.r="0.27450981736183167" color.g="0.7921568751335144" color.b="0.3450980484485626" color.a="1" name="050" groupId="1">
+    <nodes>
+      <node id="90" radius="320" x="22654" y="25595" z="6153" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580825123291" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="90" color.r="0.8980392217636108" color.g="0.3450980484485626" color.b="0.4156862795352936" color.a="1" name="029" groupId="4">
+    <nodes>
+      <node id="91" radius="320" x="22666" y="25344" z="6153" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580825127607" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="91" color.r="0.929411768913269" color.g="0.5529412031173706" color.b="0.27450981736183167" color.a="1" name="051" groupId="1">
+    <nodes>
+      <node id="92" radius="320" x="22515" y="25199" z="6120" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580825139954" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="92" color.r="0.48235294222831726" color.g="0.30980393290519714" color.b="0.07058823853731155" color.a="1" name="030" groupId="4">
+    <nodes>
+      <node id="93" radius="320" x="22653" y="25190" z="6119" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580825142604" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="93" color.r="0.3803921639919281" color.g="0.4470588266849518" color.b="0.7921568751335144" color.a="1" name="052" groupId="1">
+    <nodes>
+      <node id="94" radius="320" x="22887" y="25194" z="6113" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580825147996" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="94" color.r="0" color.g="1" color.b="0.929411768913269" color.a="1" name="053" groupId="1">
+    <nodes>
+      <node id="95" radius="320" x="25857" y="25682" z="530" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="1" bitDepth="8" interpolation="true" time="1580825233614" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="95" color.r="0.30980393290519714" color.g="0.5843137502670288" color.b="0.5176470875740051" color.a="1" name="031" groupId="4">
+    <nodes>
+      <node id="132" radius="320" x="26295" y="25779" z="538" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580934422615" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="96" color.r="0.7254902124404907" color.g="0" color.b="0.7921568751335144" color.a="1" name="054" groupId="1">
+    <nodes>
+      <node id="115" radius="320" x="26134" y="25992" z="464" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580928383960" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="97" color.r="1" color.g="0.8627451062202454" color.b="0.4470588266849518" color.a="1" name="055" groupId="1">
+    <nodes>
+      <node id="98" radius="320" x="25909" y="25767" z="458" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="1" bitDepth="8" interpolation="true" time="1580825266859" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="98" color.r="0.07058823853731155" color.g="0.13725490868091583" color.b="0.7254902124404907" color.a="1" name="056" groupId="1">
+    <nodes>
+      <node id="116" radius="320" x="25306" y="26002" z="435" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580928550057" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="99" color.r="0.6549019813537598" color.g="0" color.b="0.4156862795352936" color.a="1" name="032" groupId="4">
+    <nodes>
+      <node id="117" radius="320" x="24401" y="25872" z="416" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580928656897" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="100" color.r="0.6196078658103943" color.g="0.4470588266849518" color.b="0.4156862795352936" color.a="1" name="057" groupId="1">
+    <nodes>
+      <node id="118" radius="320" x="24343" y="25593" z="416" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580928841091" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="102" color.r="0" color.g="0.1725490242242813" color.b="0.13725490868091583" color.a="1" name="058" groupId="1">
+    <nodes>
+      <node id="119" radius="320" x="23334" y="25982" z="398" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580928960987" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="103" color.r="0.5843137502670288" color.g="0.9803921580314636" color.b="0.30980393290519714" color.a="1" name="033" groupId="4">
+    <nodes>
+      <node id="133" radius="320" x="22755" y="25503" z="374" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580934444386" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="104" color.r="0.6901960968971252" color.g="0.8274509906768799" color.b="0.03529411926865578" color.a="1" name="034" groupId="4">
+    <nodes>
+      <node id="104" radius="320" x="23247" y="25631" z="374" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="1" bitDepth="8" interpolation="true" time="1580825314083" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="105" color.r="0.7254902124404907" color.g="0.27450981736183167" color.b="0.2078431397676468" color.a="1" name="059" groupId="1">
+    <nodes>
+      <node id="120" radius="320" x="23307" y="25449" z="373" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580929200127" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="106" color.r="0" color.g="0.4470588266849518" color.b="1" color.a="1" name="060" groupId="1">
+    <nodes>
+      <node id="121" radius="320" x="22815" y="25379" z="373" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580929341607" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="107" color.r="1" color.g="0.9647058844566345" color.b="0" color.a="1" name="061" groupId="1">
+    <nodes>
+      <node id="107" radius="320" x="22612" y="25137" z="372" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="1" bitDepth="8" interpolation="true" time="1580825322362" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="108" color.r="0.3803921639919281" color.g="0.6549019813537598" color.b="0.7921568751335144" color.a="1" name="015" groupId="4">
+    <nodes>
+      <node id="122" radius="320" x="22069" y="25364" z="373" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580929456376" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="109" color.r="0.3450980484485626" color.g="0.8274509906768799" color.b="0.6196078658103943" color.a="1" name="014" groupId="4">
+    <nodes>
+      <node id="109" radius="320" x="21510" y="25256" z="187" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="1" bitDepth="8" interpolation="true" time="1580825358449" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="110" color.r="0.4470588266849518" color.g="0.27450981736183167" color.b="0.7568627595901489" color.a="1" name="012" groupId="4">
+    <nodes>
+      <node id="123" radius="320" x="21252" y="25321" z="143" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580932471996" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="111" color.r="0.5529412031173706" color.g="0.7921568751335144" color.b="0.7254902124404907" color.a="1" name="011" groupId="4">
+    <nodes>
+      <node id="111" radius="320" x="21459" y="24993" z="163" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="1" bitDepth="8" interpolation="true" time="1580825373308" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="112" color.r="0.07058823853731155" color.g="0.2078431397676468" color.b="0.3803921639919281" color.a="1" name="062" groupId="1">
+    <nodes>
+      <node id="124" radius="320" x="20946" y="24710" z="158" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="true" time="1580932562242" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="113" color.r="0.5176470875740051" color.g="1" color.b="0" color.a="1" name="063" groupId="1">
+    <nodes>
+      <node id="113" radius="320" x="21284" y="24341" z="155" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="1" bitDepth="8" interpolation="true" time="1580825384944" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="114" color.r="0.27450981736183167" color.g="0.4156862795352936" color.b="0.48235294222831726" color.a="1" name="001" groupId="5">
+    <nodes>
+      <node id="135" radius="320" x="27772" y="15621" z="2337" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="false" time="1595862240786" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="115" color.r="0" color.g="0.13725490868091583" color.b="0.5176470875740051" color.a="1" name="002" groupId="5">
+    <nodes>
+      <node id="136" radius="320" x="29202" y="17491" z="2337" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="false" time="1595862289325" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="116" color.r="0.27450981736183167" color.g="0" color.b="0.24313725531101227" color.a="1" name="004" groupId="5">
+    <nodes>
+      <node id="137" radius="320" x="28726" y="18226" z="2337" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="false" time="1595862301211" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <thing id="117" color.r="0.6901960968971252" color.g="0.30980393290519714" color.b="0.5843137502670288" color.a="1" name="003" groupId="5">
+    <nodes>
+      <node id="138" radius="320" x="30080" y="19911" z="2340" rotX="0" rotY="0" rotZ="0" inVp="0" inMag="0" bitDepth="8" interpolation="false" time="1595862357943" />
+    </nodes>
+    <edges>
+    </edges>
+  </thing>
+  <branchpoints>
+  </branchpoints>
+  <comments>
+  </comments>
+  <groups>
+    <group id="1" name="circular" />
+    <group id="2" name="otherExamples" />
+    <group id="4" name="solidShape" />
+    <group id="5" name="Additional_Locations" />
+  </groups>
+</things>

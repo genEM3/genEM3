@@ -2,7 +2,7 @@ from ray import tune
 import torch
 import os
 from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn, Decoder_4_sampling_bn
-from genEM3.training.training import Trainer
+from genEM3.training.training import TrainerAE
 
 
 class trainable(tune.Trainable):
@@ -38,16 +38,16 @@ class trainable(tune.Trainable):
         cur_Optimizer = torch.optim.SGD(cur_Model.parameters(), lr=config.get("lr"),
                                         momentum=config.get("momentum"))
 
-        self.trainer = Trainer(run_root=trainer_run_root,
-                               model=cur_Model,
-                               optimizer=cur_Optimizer,
-                               criterion=cur_Criterion,
-                               train_loader=config.get("train_loader"),
-                               validation_loader=config.get("validation_loader"),
-                               num_epoch=num_epoch_perTrain,
-                               log_int=trainer_log_int,
-                               device=device,
-                               save=trainer_save)
+        self.trainer = TrainerAE(run_root=trainer_run_root,
+                                 model=cur_Model,
+                                 optimizer=cur_Optimizer,
+                                 criterion=cur_Criterion,
+                                 train_loader=config.get("train_loader"),
+                                 validation_loader=config.get("validation_loader"),
+                                 num_epoch=num_epoch_perTrain,
+                                 log_int=trainer_log_int,
+                                 device=device,
+                                 save=trainer_save)
 
     def _train(self):
 

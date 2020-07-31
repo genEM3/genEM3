@@ -60,6 +60,8 @@ def data2fig_subplot(inputs, outputs, idx):
     output_cpu = outputs[idx].data.cpu()
     img_output = output_cpu.numpy().squeeze()
     axs[1].imshow(img_output, cmap='gray')
+    # AK: I need this line so that the figure is ported through X11 for me
+    plt.show()
     return fig
 
 # crop the valid part of the image

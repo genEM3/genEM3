@@ -8,7 +8,7 @@ from torch import device as torchDevice
 from genEM3.util import gpu
 
 
-class Trainer:
+class TrainerAE:
 
     def __init__(self,
                  run_root,
@@ -110,7 +110,7 @@ class Trainer:
                 writer.add_histogram('output histogram', outputs.cpu().data.numpy()[0, 0].flatten(), epoch)
                 figure_inds = list(range(inputs.shape[0]))
                 figure_inds = figure_inds if len(figure_inds) < 4 else list(range(4))
-                fig = Trainer.show_imgs(inputs, outputs, figure_inds)
+                fig = TrainerAE.show_imgs(inputs, outputs, figure_inds)
                 fig.savefig(os.path.join(self.log_root, epoch_root, phase+'.png'))
                 writer.add_figure(
                     'images ' + phase, fig, epoch)
@@ -146,7 +146,7 @@ class Trainer:
 
     @staticmethod
     def show_img(inputs, outputs, idx):
-        inputs, outputs = Trainer.copy2cpu(inputs, outputs)
+        inputs, outputs = TrainerAE.copy2cpu(inputs, outputs)
         fig, axs = plt.subplots(1, 2, figsize=(4, 3))
         axs[0].imshow(inputs[idx].data.numpy().squeeze(), cmap='gray')
         axs[1].imshow(outputs[idx].data.numpy().squeeze(), cmap='gray')
@@ -154,11 +154,13 @@ class Trainer:
 
     @staticmethod
     def show_imgs(inputs, outputs, inds):
-        inputs, outputs = Trainer.copy2cpu(inputs, outputs)
+        inputs, outputs = TrainerAE.copy2cpu(inputs, outputs)
         fig, axs = plt.subplots(1, len(inds), figsize=(3*len(inds), 6))
         for i, idx in enumerate(inds):
             input_ = inputs[idx].data.numpy().squeeze()
             output = outputs[idx].data.numpy().squeeze()
+            if input_.shape != output.shape:
+                output = np.tile(output, input_.shape)
             input_output = np.concatenate((input_, output), axis=0)
             axs[i].imshow(input_output, cmap='gray')
             axs[i].axis('off')

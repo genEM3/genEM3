@@ -11,17 +11,22 @@ import wkw
 
 np.random.seed(1337)
 
-# named tuple instantiation. These collections could be accessed by numeric indices and dot notation
-# similar to matlab structures
+DataSourceDefaults = (
+    ("id", str),
+    ("input_path", 'NaN'),
+    ("input_bbox", 'NaN'),
+    ("input_mean", 'NaN'),
+    ("input_std", 'NaN'),
+    ("target_path", 'NaN'),
+    ("target_bbox", 'NaN'),
+    ("target_class", 'NaN'),
+    ("target_binary", 'NaN'),
+)
+
 DataSource = namedtuple(
     'DataSource',
-    ['id',
-     'input_path',
-     'input_bbox',
-     'input_mean',
-     'input_std',
-     'target_path',
-     'target_bbox'])
+    [fields[0] for fields in list(DataSourceDefaults)],
+    defaults=[defaults[1] for defaults in list(DataSourceDefaults)])
 
 DataSplit = namedtuple(
     'DataSplit',
@@ -237,15 +242,19 @@ class WkwData(Dataset):
         ]
         bbox_target = origin_target + list(self.output_shape)
 
-        if (self.data_sources[source_idx].input_path == self.data_sources[source_idx].target_path) & \
-                (bbox_input == bbox_target):
+        if self.data_sources[source_idx].target_binary != 'NaN':
+            target = np.asarray(self.data_sources[source_idx].target_class).reshape(1, 1, 1, 1)
 
-            target = input_
         else:
-            if self.cache_RAM | self.cache_HDD:
-                target = self.wkw_read_cached(source_idx, 'target', bbox_target)
+            if (self.data_sources[source_idx].input_path == self.data_sources[source_idx].target_path) & \
+                    (bbox_input == bbox_target):
+
+                target = input_
             else:
-                target = self.wkw_read(self.data_sources[source_idx].target_path, bbox_target)
+                if self.cache_RAM | self.cache_HDD:
+                    target = self.wkw_read_cached(source_idx, 'target', bbox_target)
+                else:
+                    target = self.wkw_read(self.data_sources[source_idx].target_path, bbox_target)
 
         if self.pad_target is True:
             target = self.pad(target)

@@ -30,11 +30,38 @@ class Predictor:
 
     @torch.no_grad()
     def predict(self):
-
+        """Predict using a dictionary of batches using the key: 'input'"""
+        outputs = []
         for i, data in enumerate(self.dataloader):
             inputs = data['input']
+            outputs.append(self.model(inputs))
+            # viewData.data2fig_subplot(inputs, outputs, 1)
+        return outputs
 
-            outputs = self.model(inputs)
+    @torch.no_grad()
+    def predictList(self):
+        """Predict when input is a list for each Batch"""
+        outputs = []
+        for i, data in enumerate(self.dataloader):
+            inputs = data[0]
+            outputs.append(self.model(inputs))
+            # viewData.data2fig_subplot(inputs, outputs, 1)
+        return outputs
 
-            viewData.data2fig_subplot(inputs, outputs, 1)
+    @torch.no_grad()
+    def encode(self):
+        """encode data into hidden representation and return the result as a list"""
+        outputs = []
+        for i, data in enumerate(self.dataloader):
+            inputs = data['input']
+            outputs.append(self.model.encode_input(inputs))
+        return outputs
 
+    @torch.no_grad()
+    def encodeList(self):
+        """encode list data"""
+        outputs = []
+        for i, data in enumerate(self.dataloader):
+            inputs = data[0]
+            outputs.append(self.model.encode_input(inputs))
+        return outputs
