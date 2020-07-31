@@ -8,7 +8,7 @@ from torch import device as torchDevice
 from genEM3.util import gpu
 
 
-class Trainer:
+class TrainerAE:
 
     def __init__(self,
                  run_root,
@@ -46,9 +46,6 @@ class Trainer:
             if not os.path.exists(self.log_root):
                 os.makedirs(self.log_root)
 
-            with open(os.path.join(self.log_root, 'data_loaders.pickle'), 'wb') as handle:
-                pickle.dump(self.data_loaders, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
     def train(self):
 
         if self.resume:
@@ -65,6 +62,10 @@ class Trainer:
         epoch = int(self.model.epoch) + 1
         it = int(self.model.iteration)
         for epoch in range(epoch, epoch + self.num_epoch):
+
+            epoch_root = 'epoch_{:02d}'.format(epoch)
+            if not os.path.exists(os.path.join(self.log_root, epoch_root)):
+                os.makedirs(os.path.join(self.log_root, epoch_root))
 
             for phase in ['train', 'val']:
                 epoch_loss = 0
@@ -109,17 +110,22 @@ class Trainer:
                 writer.add_histogram('output histogram', outputs.cpu().data.numpy()[0, 0].flatten(), epoch)
                 figure_inds = list(range(inputs.shape[0]))
                 figure_inds = figure_inds if len(figure_inds) < 4 else list(range(4))
+                fig = TrainerAE.show_imgs(inputs, outputs, figure_inds)
+                fig.savefig(os.path.join(self.log_root, epoch_root, phase+'.png'))
                 writer.add_figure(
-                    'images ' + phase, Trainer.show_imgs(inputs, outputs, figure_inds), epoch)
+                    'images ' + phase, fig, epoch)
 
                 if self.save & (phase == 'train'):
                     print('Saving model state...')
+
                     self.model.epoch = torch.nn.Parameter(torch.tensor(epoch), requires_grad=False)
                     self.model.iteration = torch.nn.Parameter(torch.tensor(it), requires_grad=False)
                     torch.save({
                         'model_state_dict': self.model.state_dict(),
+                    }, os.path.join(self.log_root, epoch_root, 'model_state_dict'))
+                    torch.save({
                         'optimizer_state_dict': self.optimizer.state_dict()
-                    }, os.path.join(self.log_root, 'torch_model'))
+                    }, os.path.join(self.log_root, 'optimizer_state_dict'))
 
         print('Finished training ...')
 
@@ -140,7 +146,7 @@ class Trainer:
 
     @staticmethod
     def show_img(inputs, outputs, idx):
-        inputs, outputs = Trainer.copy2cpu(inputs, outputs)
+        inputs, outputs = TrainerAE.copy2cpu(inputs, outputs)
         fig, axs = plt.subplots(1, 2, figsize=(4, 3))
         axs[0].imshow(inputs[idx].data.numpy().squeeze(), cmap='gray')
         axs[1].imshow(outputs[idx].data.numpy().squeeze(), cmap='gray')
@@ -148,11 +154,13 @@ class Trainer:
 
     @staticmethod
     def show_imgs(inputs, outputs, inds):
-        inputs, outputs = Trainer.copy2cpu(inputs, outputs)
+        inputs, outputs = TrainerAE.copy2cpu(inputs, outputs)
         fig, axs = plt.subplots(1, len(inds), figsize=(3*len(inds), 6))
         for i, idx in enumerate(inds):
             input_ = inputs[idx].data.numpy().squeeze()
             output = outputs[idx].data.numpy().squeeze()
+            if input_.shape != output.shape:
+                output = np.tile(output, input_.shape)
             input_output = np.concatenate((input_, output), axis=0)
             axs[i].imshow(input_output, cmap='gray')
             axs[i].axis('off')

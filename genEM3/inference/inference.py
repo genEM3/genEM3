@@ -55,7 +55,6 @@ class Predictor:
         for i, data in enumerate(self.dataloader):
             inputs = data['input']
             outputs.append(self.model.encode_input(inputs))
-
         return outputs
 
     @torch.no_grad()

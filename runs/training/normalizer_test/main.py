@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader
 
 from genEM3.data.wkwdata import WkwData
 from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn, Decoder_4_sampling_bn
-from genEM3.training.training import Trainer
+from genEM3.training.training import TrainerAE
 
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
