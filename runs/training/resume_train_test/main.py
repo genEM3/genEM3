@@ -5,7 +5,7 @@ from torch.utils.data.sampler import SubsetRandomSampler
 
 from genEM3.data.wkwdata import WkwData, DataSplit
 from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn, Decoder_4_sampling_bn
-from genEM3.training.training import TrainerAE
+from genEM3.training.autoencoder import Trainer
 
 
 # Parameters
@@ -65,16 +65,16 @@ device = 'cpu'
 save = True
 resume = True
 
-trainer = TrainerAE(run_root=run_root,
-                    model=model,
-                    optimizer=optimizer,
-                    criterion=criterion,
-                    train_loader=train_loader,
-                    validation_loader=validation_loader,
-                    num_epoch=num_epoch,
-                    log_int=log_int,
-                    device=device,
-                    save=save,
-                    resume=resume)
+trainer = Trainer(run_root=run_root,
+                  model=model,
+                  optimizer=optimizer,
+                  criterion=criterion,
+                  train_loader=train_loader,
+                  validation_loader=validation_loader,
+                  num_epoch=num_epoch,
+                  log_int=log_int,
+                  device=device,
+                  save=save,
+                  resume=resume)
 
 trainer.train()

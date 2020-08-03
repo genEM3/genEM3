@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 from genEM3.data.wkwdata import WkwData
 from genEM3.data.normalize import Normalizer
 from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn, Decoder_4_sampling_bn
-from genEM3.training.training import TrainerAE
+from genEM3.training.autoencoder import Trainer
 
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
@@ -59,13 +59,13 @@ num_epoch = 10
 log_int = 10
 device = 'cpu'
 
-trainer = TrainerAE(run_root,
-                    dataloader,
-                    model,
-                    optimizer,
-                    criterion,
-                    num_epoch,
-                    log_int,
-                    device)
+trainer = Trainer(run_root,
+                  dataloader,
+                  model,
+                  optimizer,
+                  criterion,
+                  num_epoch,
+                  log_int,
+                  device)
 
 trainer.train()

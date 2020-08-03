@@ -8,7 +8,7 @@ from torch import device as torchDevice
 from genEM3.util import gpu
 
 
-class TrainerAE:
+class Trainer:
 
     def __init__(self,
                  run_root,
@@ -22,7 +22,7 @@ class TrainerAE:
                  device='cpu',
                  save=False,
                  resume=False,
-                 GPU_ID: int = None
+                 gpu_id: int = None
                  ):
 
         self.run_root = run_root
@@ -35,7 +35,7 @@ class TrainerAE:
         self.resume = resume
 
         if device == 'cuda':
-            gpu.get_gpu(GPU_ID)
+            gpu.get_gpu(gpu_id)
             device = torch.device(torch.cuda.current_device())
         
         self.device = torchDevice(device)
@@ -111,7 +111,7 @@ class TrainerAE:
                 writer.add_histogram('output histogram', outputs.cpu().data.numpy()[0, 0].flatten(), epoch)
                 figure_inds = list(range(inputs.shape[0]))
                 figure_inds = figure_inds if len(figure_inds) < 4 else list(range(4))
-                fig = TrainerAE.show_imgs(inputs, outputs, figure_inds)
+                fig = Trainer.show_imgs(inputs, outputs, figure_inds)
                 fig.savefig(os.path.join(self.log_root, epoch_root, phase+'.png'))
                 writer.add_figure(
                     'images ' + phase, fig, epoch)
@@ -147,7 +147,7 @@ class TrainerAE:
 
     @staticmethod
     def show_img(inputs, outputs, idx):
-        inputs, outputs = TrainerAE.copy2cpu(inputs, outputs)
+        inputs, outputs = Trainer.copy2cpu(inputs, outputs)
         fig, axs = plt.subplots(1, 2, figsize=(4, 3))
         axs[0].imshow(inputs[idx].data.numpy().squeeze(), cmap='gray')
         axs[1].imshow(outputs[idx].data.numpy().squeeze(), cmap='gray')
@@ -155,7 +155,7 @@ class TrainerAE:
 
     @staticmethod
     def show_imgs(inputs, outputs, inds):
-        inputs, outputs = TrainerAE.copy2cpu(inputs, outputs)
+        inputs, outputs = Trainer.copy2cpu(inputs, outputs)
         fig, axs = plt.subplots(1, len(inds), figsize=(3*len(inds), 6))
         for i, idx in enumerate(inds):
             input_ = inputs[idx].data.numpy().squeeze()
