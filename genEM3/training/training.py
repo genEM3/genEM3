@@ -21,7 +21,8 @@ class TrainerAE:
                  log_int=10,
                  device='cpu',
                  save=False,
-                 resume=False
+                 resume=False,
+                 GPU_ID: int = None
                  ):
 
         self.run_root = run_root
@@ -34,7 +35,7 @@ class TrainerAE:
         self.resume = resume
 
         if device == 'cuda':
-            gpu.get_empty_gpu()
+            gpu.get_gpu(GPU_ID)
             device = torch.device(torch.cuda.current_device())
         
         self.device = torchDevice(device)

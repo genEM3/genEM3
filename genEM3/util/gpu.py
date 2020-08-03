@@ -79,3 +79,26 @@ def get_empty_gpu(random_sleep=False):
                 os.environ['CUDA_VISIBLE_DEVICES'] = str(random_device)
                 print("Empty GPUs: " + str(empty_gpu_ids))
                 print("Assigned GPU %d" % random_device)
+
+
+def get_specific_gpu(deviceId=None):
+    """Set the environment variable which selects GPU device with the give deviceId"""
+    if deviceId is None:
+        raise ValueError('deviceId should be given')
+    # Set the environment variable
+    os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+    os.environ["CUDA_VISIBLE_DEVICES"] = str(deviceId)
+    print(f'Selected GPU: {deviceId}')
+    print(f'CUDA_VISIBLE_DEVICES = {os.environ["CUDA_VISIBLE_DEVICES"]}')
+
+
+def get_gpu(deviceId: int = None, **kwargs):
+    """This function chooses the specifc gpu if not given Id otherwise given the deviceId
+    INPUT:
+        deviceId: integer ID of a GPU device starting at 0. If the device ID is not given
+            get_empty_gpu() is called
+    """
+    if deviceId is None:
+        get_empty_gpu()
+    else:
+        get_specific_gpu(deviceId, **kwargs)
