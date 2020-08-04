@@ -81,9 +81,9 @@ class Trainer:
                 num_items = len(self.data_loaders[phase].dataset)
                 batch_size = self.data_loaders['train'].batch_size
 
-                outputs_phase = np.ones(num_items).dtype(int) * 2
-                targets_phase = np.ones(num_items).dtype(int) * 2
-                correct_phase = np.ones(num_items).dtype(int) * 2
+                outputs_phase = -np.ones(num_items).astype(int)
+                targets_phase = -np.ones(num_items).astype(int)
+                correct_phase = -np.ones(num_items).astype(int)
 
                 if phase == 'train':
                     self.model.train(True)
@@ -132,6 +132,10 @@ class Trainer:
                               format(self.model.epoch, i + 1, running_loss_log, running_accuracy_log))
                         writer.add_scalars('running_loss', {phase: running_loss_log}, it)
                         writer.add_scalars('running_accuracy', {phase: running_accuracy_log}, it)
+
+                targets_phase = targets_phase[targets_phase >= 0]
+                outputs_phase = outputs_phase[outputs_phase >= 0]
+                correct_phase = correct_phase[correct_phase >= 0]
 
                 epoch_loss_log = float(epoch_loss) / num_items
                 epoch_accuracy_log = float(correct_sum) / num_items
@@ -208,15 +212,43 @@ class Trainer:
     @staticmethod
     def show_classification_matrix(targets, outputs, correct):
 
-        mat = np.stack((targets, outputs, correct), axis=0)
-        colors = np.asarray([[0.1, 0.1, 0.1, 1], [0.9, 0.9, 0.9, 1], [0.8, 0.1, 0.3, 1]])
+        targets_pr = targets.copy().astype(int)
+        outputs_pr = outputs.copy().astype(int)
+        correct_pr = correct.copy().astype(int) + 2
+
+        code_pr = targets_pr.copy()
+        code_pr[(outputs_pr == 0) & (targets_pr == 0)] = 4
+        code_pr[(outputs_pr == 1) & (targets_pr == 1)] = 5
+        code_pr[outputs_pr > targets_pr] = 6
+        code_pr[outputs_pr < targets_pr] = 7
+
+        mat = np.stack((targets_pr, outputs_pr, correct_pr, code_pr), axis=0)
+
+        colors = [[0.0, 0.0, 0.0, 1],
+                  [1.0, 1.0, 1.0, 1],
+                  [1.0, 0.0, 0.0, 1],
+                  [0.0, 1.0, 0.0, 1],
+                  [0.4, 0.1, 0.9, 1],
+                  [0.3, 0.5, 0.9, 1],
+                  [0.9, 0.4, 0.1, 1],
+                  [0.9, 0.1, 0.5, 1]]
         cmap = ListedColormap(colors=colors)
-        fig, ax = plt.subplots(1, 1, figsize=(12, 6))
-        ax.matshow(mat, cmap='gray', vmin=0, vmax=2)
-        ax.set_yticks([0, 1, 2])
-        ax.set_yticklabels(['targets', 'outputs', 'correct'])
-        ax.set_aspect(3)
-        plt.tight_layout()
+        fig, axs = plt.subplots(figsize=(12, 6))
+        axs.matshow(mat, cmap=cmap, vmin=0, vmax=7)
+        axs.set_yticks([0, 1, 2, 3])
+        axs.set_yticklabels(['targets', 'outputs', 'correct', 'code'])
+        axs.set_aspect(10)
+        bbox = axs.get_position().bounds
+        axs2 = plt.axes((bbox[0], 0.1, bbox[2], 0.2), sharex=axs)
+        axs2.text(0, 1, 'no artifact in target/output', c=(0.8, 0.8, 0.8), backgroundcolor=colors[0], transform=axs2.transAxes)
+        axs2.text(0.25, 1, 'artifact in target/output', c=(0.2, 0.2, 0.2), backgroundcolor=colors[1], transform=axs2.transAxes)
+        axs2.text(0, 0.65, 'incorrect', c=(0.2, 0.2, 0.2), backgroundcolor=colors[2], transform=axs2.transAxes)
+        axs2.text(0.25, 0.65, 'correct', c=(0.2, 0.2, 0.2), backgroundcolor=colors[3], transform=axs2.transAxes)
+        axs2.text(0, 0.3, 'true negative', c=(0.8, 0.8, 0.8), backgroundcolor=colors[4], transform=axs2.transAxes)
+        axs2.text(0.25, 0.3, 'true positive', c=(0.8, 0.8, 0.8), backgroundcolor=colors[5], transform=axs2.transAxes)
+        axs2.text(0, 0.05, 'false positive', c=(0.2, 0.2, 0.2), backgroundcolor=colors[6], transform=axs2.transAxes)
+        axs2.text(0.25, 0.05, 'false negative', c=(0.2, 0.2, 0.2), backgroundcolor=colors[7], transform=axs2.transAxes)
+        axs2.axis('off')
 
         return fig
 
