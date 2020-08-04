@@ -30,7 +30,7 @@ dataset = WkwData(
     data_split=data_split,
     cache_RAM=cache_RAM,
     cache_HDD=cache_HDD,
-    cache_HDD_root=cache_root
+    cache_HDD_root=cache_HDD_root
 )
 
 train_sampler = SubsetRandomSampler(dataset.data_train_inds)
@@ -64,9 +64,9 @@ for name, param in model.named_parameters():
     print(name, param.requires_grad)
 
 criterion = torch.nn.NLLLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.00001)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.000005)
 
-num_epoch = 10
+num_epoch = 50
 log_int = 1
 device = 'cpu'
 save = True
