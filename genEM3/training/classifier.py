@@ -1,12 +1,14 @@
 import os
-import pickle
+import datetime
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
 import torch
 from torch.utils.tensorboard import SummaryWriter
 from torch import device as torchDevice
 from genEM3.util import gpu
 
+np.seterr(all='raise')
 
 class Trainer:
 
@@ -50,12 +52,12 @@ class Trainer:
     def train(self):
 
         if self.resume:
-            print('Resuming training ...')
+            print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Resuming training ... ')
             checkpoint = torch.load(os.path.join(self.log_root, 'torch_model'))
             self.model.load_state_dict(checkpoint['model_state_dict'])
             self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         else:
-            print('Starting training ...')
+            print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Starting training ... ')
 
         writer = SummaryWriter(self.log_root)
         self.model = self.model.to(self.device)
@@ -69,16 +71,29 @@ class Trainer:
                 os.makedirs(os.path.join(self.log_root, epoch_root))
 
             for phase in ['train', 'val']:
+
                 epoch_loss = 0
+                running_loss = 0.0
+                target_sum = 0
+                predicted_sum = 0
+                correct_sum = 0
+
+                num_items = len(self.data_loaders[phase].dataset)
+                batch_size = self.data_loaders['train'].batch_size
+
+                outputs_phase = np.ones(num_items).dtype(int) * 2
+                targets_phase = np.ones(num_items).dtype(int) * 2
+                correct_phase = np.ones(num_items).dtype(int) * 2
 
                 if phase == 'train':
                     self.model.train(True)
                 else:
                     self.model.train(False)
 
-                running_loss = 0.0
                 for i, data in enumerate(self.data_loaders[phase]):
+
                     it += 1
+
                     # copy input and targets to the device object
                     inputs = data['input'].to(self.device)
                     targets = data['target'].to(self.device)
@@ -86,38 +101,58 @@ class Trainer:
                     self.optimizer.zero_grad()
 
                     # forward + backward + optimize
-                    outputs = self.model(inputs)
+                    outputs = self.model(inputs).squeeze()
                     loss = self.criterion(outputs, targets)
 
                     if phase == 'train':
                         loss.backward()
                         self.optimizer.step()
 
-                    # print statistics
+                    predicted_classes = np.argmax(np.exp(outputs.detach().numpy()), axis=1)
+                    predicted_sum += np.sum(predicted_classes)
+                    target_classes = targets.detach().numpy()
+                    target_sum += np.sum(target_classes)
+                    correct_classes = predicted_classes == target_classes
+                    correct_sum += np.sum(correct_classes)
+
+                    batch_idx_start = i * batch_size
+                    batch_idx_end = batch_idx_start + len(targets)
+                    outputs_phase[batch_idx_start:batch_idx_end] = predicted_classes
+                    targets_phase[batch_idx_start:batch_idx_end] = target_classes
+                    correct_phase[batch_idx_start:batch_idx_end] = correct_classes
+
                     running_loss += loss.item()
                     epoch_loss += loss.item()
-                    if (i + 1) % self.log_int == 0:
-                        running_loss_avg = running_loss/self.log_int
-                        print('Phase: ' + phase + ', epoch: {}, batch {}: running loss: {:0.3f}'.
-                              format(self.model.epoch, i + 1, running_loss_avg))
-                        writer.add_scalars('running_loss', {phase: running_loss_avg}, it)
-                        running_loss = 0.0
 
-                epoch_loss_avg = epoch_loss / self.data_lengths[phase]
-                print('Phase: ' + phase + ', epoch: {}: epoch loss: {:0.3f}'.
-                      format(epoch, epoch_loss_avg))
-                writer.add_scalars('epoch_loss', {phase: epoch_loss_avg}, epoch)
-                writer.add_histogram('input histogram', inputs.cpu().data.numpy()[0, 0].flatten(), epoch)
-                writer.add_histogram('output histogram', outputs.cpu().data.numpy()[0, 0].flatten(), epoch)
+                    if i > 0 & (i % self.log_int == 0):
+                        running_loss_log = float(running_loss) / batch_idx_end
+                        running_accuracy_log = float(correct_sum) / batch_idx_end
+                        print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ')' + ' Phase: ' + phase +
+                              ', epoch: {}, batch: {}, running loss: {:0.3f}, running accuracy: {:0.2f} '.
+                              format(self.model.epoch, i + 1, running_loss_log, running_accuracy_log))
+                        writer.add_scalars('running_loss', {phase: running_loss_log}, it)
+                        writer.add_scalars('running_accuracy', {phase: running_accuracy_log}, it)
+
+                epoch_loss_log = float(epoch_loss) / num_items
+                epoch_accuracy_log = float(correct_sum) / num_items
+                print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ')' + ' Phase: ' + phase +
+                      ', epoch: {}: epoch loss: {:0.3f}, epoch accuracy: {:0.2f} '.
+                      format(epoch, epoch_loss_log, epoch_accuracy_log))
+                writer.add_scalars('epoch_loss', {phase: epoch_loss_log}, epoch)
+                writer.add_scalars('epoch_accuracy', {phase: epoch_accuracy_log}, epoch)
                 figure_inds = list(range(inputs.shape[0]))
                 figure_inds = figure_inds if len(figure_inds) < 4 else list(range(4))
                 fig = Trainer.show_imgs(inputs, outputs, figure_inds)
-                fig.savefig(os.path.join(self.log_root, epoch_root, phase+'.png'))
-                writer.add_figure(
-                    'images ' + phase, fig, epoch)
+                figname = 'image_examples_'
+                fig.savefig(os.path.join(self.log_root, epoch_root, figname + '_' + phase + '.png'))
+                writer.add_figure(figname + phase, fig, epoch)
+                fig = Trainer.show_classification_matrix(targets_phase, outputs_phase, correct_phase)
+                figname = 'targets_outputs_correct_'
+                writer.add_figure(figname + phase, fig, epoch)
+                fig.savefig(os.path.join(self.log_root, epoch_root, figname + '_' + phase + '.png'))
 
                 if self.save & (phase == 'train'):
-                    print('Saving model state...')
+                    print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Saving model state... ')
 
                     self.model.epoch = torch.nn.Parameter(torch.tensor(epoch), requires_grad=False)
                     self.model.iteration = torch.nn.Parameter(torch.tensor(it), requires_grad=False)
@@ -128,10 +163,7 @@ class Trainer:
                         'optimizer_state_dict': self.optimizer.state_dict()
                     }, os.path.join(self.log_root, 'optimizer_state_dict'))
 
-        print('Finished training ...')
-
-        # dictionary of accuracy metrics for tune hyperparameter optimization
-        return {"val_loss_avg": epoch_loss_avg}
+        print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Finished training ... ')
 
     @staticmethod
     def copy2cpu(inputs, outputs):
@@ -154,17 +186,37 @@ class Trainer:
         return fig
 
     @staticmethod
-    def show_imgs(inputs, outputs, inds):
+    def show_imgs(inputs, outputs, inds, class_idx=1):
         inputs, outputs = Trainer.copy2cpu(inputs, outputs)
-        fig, axs = plt.subplots(1, len(inds), figsize=(3*len(inds), 6))
+        fig, axs = plt.subplots(2, len(inds), figsize=(3*len(inds), 6))
         for i, idx in enumerate(inds):
             input_ = inputs[idx].data.numpy().squeeze()
+            axs[0, idx].imshow(input_, cmap='gray')
+            axs[0, idx].axis('off')
             output = outputs[idx].data.numpy().squeeze()
-            if input_.shape != output.shape:
-                output = np.tile(output, input_.shape)
-            input_output = np.concatenate((input_, output), axis=0)
-            axs[i].imshow(input_output, cmap='gray')
-            axs[i].axis('off')
+            im_output = axs[1, idx].imshow(np.tile(np.exp(output[class_idx]), input_.shape),
+                                                  cmap='gray', vmin=0, vmax=1)
+            axs[1, idx].axis('off')
+            fig.colorbar(im_output, ax=axs[1, idx], shrink=0.7)
+            axs[1, idx].text(0.5, 0.5, '{:1.2f}'.format(np.exp(output[class_idx])), horizontalalignment='center',
+                                    verticalalignment='center', transform=axs[1, idx].transAxes)
+
         plt.tight_layout()
 
         return fig
+
+    @staticmethod
+    def show_classification_matrix(targets, outputs, correct):
+
+        mat = np.stack((targets, outputs, correct), axis=0)
+        colors = np.asarray([[0.1, 0.1, 0.1, 1], [0.9, 0.9, 0.9, 1], [0.8, 0.1, 0.3, 1]])
+        cmap = ListedColormap(colors=colors)
+        fig, ax = plt.subplots(1, 1, figsize=(12, 6))
+        ax.matshow(mat, cmap='gray', vmin=0, vmax=2)
+        ax.set_yticks([0, 1, 2])
+        ax.set_yticklabels(['targets', 'outputs', 'correct'])
+        ax.set_aspect(3)
+        plt.tight_layout()
+
+        return fig
+

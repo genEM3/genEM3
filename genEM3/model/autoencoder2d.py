@@ -1,3 +1,4 @@
+import re
 import numpy as np
 import torch
 from torch import nn
@@ -59,10 +60,11 @@ class AE_Encoder_Classifier(nn.Module):
                 param = param.data
             own_state[name].copy_(param)
 
-    def freeze_encoder_weights(self):
+    def freeze_encoder_weights(self, expr='encoder'):
 
         for name, param in self.named_parameters():
-            if name.find('encoder') == 0:
+            match = re.match(expr, name)
+            if match is not None:
                 param.requires_grad = False
 
     def reset_state(self):
@@ -85,13 +87,13 @@ class Classifier(nn.Module):
     def __init__(self, n_latent):
         super().__init__()
 
-        self.logistic = nn.Sequential(
-            nn.Conv2d(n_latent, 1, kernel_size=1),
-            nn.Sigmoid())
+        self.binary = nn.Sequential(
+            nn.Conv2d(n_latent, 2, kernel_size=1),
+            nn.LogSoftmax(dim=1))
 
     def forward(self, x):
 
-        x = self.logistic(x)
+        x = self.binary(x)
 
         return x
 

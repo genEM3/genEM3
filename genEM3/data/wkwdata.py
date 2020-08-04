@@ -242,8 +242,8 @@ class WkwData(Dataset):
         ]
         bbox_target = origin_target + list(self.output_shape)
 
-        if self.data_sources[source_idx].target_binary != 'NaN':
-            target = np.asarray(self.data_sources[source_idx].target_class).reshape(1, 1, 1, 1)
+        if self.data_sources[source_idx].target_binary == 1:
+            target = np.asarray(self.data_sources[source_idx].target_class)
 
         else:
             if (self.data_sources[source_idx].input_path == self.data_sources[source_idx].target_path) & \
@@ -263,9 +263,12 @@ class WkwData(Dataset):
         if self.input_shape[2] == 1:
             input_ = input_.squeeze(3)
 
-        target = torch.from_numpy(target).float()
-        if self.output_shape[2] == 1:
-            target = target.squeeze(3)
+        if self.data_sources[source_idx].target_binary == 1:
+            target = torch.from_numpy(target).long()
+        else:
+            target = torch.from_numpy(target).float()
+            if self.output_shape[2] == 1:
+                target = target.squeeze(3)
 
         return {'input': input_, 'target': target}
 
