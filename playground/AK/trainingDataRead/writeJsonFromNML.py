@@ -44,7 +44,7 @@ for idx, curBbox in enumerate(bboxes_debris):
                            input_std=36.0,
                            target_path=getMag8DatasetDir(),
                            target_bbox=curBbox,
-                           target_class=1,
+                           target_class=1.0,
                            target_binary=1)
     dataSources.append(curSource)
 # Append clean locations
@@ -58,9 +58,9 @@ for idx, curBbox in enumerate(bboxes_clean):
                            input_std=36.0,
                            target_path=getMag8DatasetDir(),
                            target_bbox=curBbox,
-                           target_class=0,
+                           target_class=0.0,
                            target_binary=1)
     dataSources.append(curSource)
 # write to JSON file
-jsonPath = os.path.join(getDataDir(), 'debris_datasource.json')
+jsonPath = os.path.join(getDataDir(), 'debris_clean_datasource.json')
 WkwData.datasources_to_json(dataSources, jsonPath)
