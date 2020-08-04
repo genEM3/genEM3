@@ -8,7 +8,6 @@ from torch.utils.tensorboard import SummaryWriter
 from torch import device as torchDevice
 from genEM3.util import gpu
 
-np.seterr(all='raise')
 
 class Trainer:
 
@@ -64,6 +63,7 @@ class Trainer:
 
         epoch = int(self.model.epoch) + 1
         it = int(self.model.iteration)
+        sample_inds = dict()
         for epoch in range(epoch, epoch + self.num_epoch):
 
             epoch_root = 'epoch_{:02d}'.format(epoch)
@@ -72,23 +72,28 @@ class Trainer:
 
             for phase in ['train', 'val']:
 
-                epoch_loss = 0
-                running_loss = 0.0
-                target_sum = 0
-                predicted_sum = 0
-                correct_sum = 0
-
-                num_items = len(self.data_loaders[phase].dataset)
-                batch_size = self.data_loaders['train'].batch_size
-
-                outputs_phase = -np.ones(num_items).astype(int)
-                targets_phase = -np.ones(num_items).astype(int)
-                correct_phase = -np.ones(num_items).astype(int)
+                if epoch == 1:
+                    sample_inds[phase] = self.data_loaders[phase].batch_sampler.sampler.indices
 
                 if phase == 'train':
                     self.model.train(True)
                 else:
                     self.model.train(False)
+
+                epoch_loss = 0
+                running_loss = 0.0
+                target_sum = 0
+                predicted_sum = 0
+                correct_sum = 0
+                batch_idx_start = 0
+
+                num_items = len(self.data_loaders[phase].batch_sampler.sampler.indices)
+
+                inputs_phase = -np.ones((num_items, 1, 140, 140)).astype(float)
+                outputs_phase = -np.ones((num_items, 2)).astype(float)
+                predictions_phase = -np.ones(num_items).astype(int)
+                targets_phase = -np.ones(num_items).astype(int)
+                correct_phase = -np.ones(num_items).astype(int)
 
                 for i, data in enumerate(self.data_loaders[phase]):
 
@@ -115,45 +120,52 @@ class Trainer:
                     correct_classes = predicted_classes == target_classes
                     correct_sum += np.sum(correct_classes)
 
-                    batch_idx_start = i * batch_size
+                    if i > 0:
+                        batch_idx_start = batch_idx_end
                     batch_idx_end = batch_idx_start + len(targets)
-                    outputs_phase[batch_idx_start:batch_idx_end] = predicted_classes
+                    inputs_phase[batch_idx_start:batch_idx_end, :, :, :] = inputs.detach().numpy()
+                    outputs_phase[batch_idx_start:batch_idx_end, :] = outputs.detach().numpy()
+                    predictions_phase[batch_idx_start:batch_idx_end] = predicted_classes
                     targets_phase[batch_idx_start:batch_idx_end] = target_classes
                     correct_phase[batch_idx_start:batch_idx_end] = correct_classes
 
                     running_loss += loss.item()
                     epoch_loss += loss.item()
 
-                    if i > 0 & (i % self.log_int == 0):
+                    if i % self.log_int == 0:
                         running_loss_log = float(running_loss) / batch_idx_end
                         running_accuracy_log = float(correct_sum) / batch_idx_end
                         print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ')' + ' Phase: ' + phase +
-                              ', epoch: {}, batch: {}, running loss: {:0.3f}, running accuracy: {:0.2f} '.
-                              format(self.model.epoch, i + 1, running_loss_log, running_accuracy_log))
+                              ', epoch: {}, batch: {}, running loss: {:0.4f}, running accuracy: {:0.3f} '.
+                              format(epoch, i, running_loss_log, running_accuracy_log))
                         writer.add_scalars('running_loss', {phase: running_loss_log}, it)
                         writer.add_scalars('running_accuracy', {phase: running_accuracy_log}, it)
-
-                targets_phase = targets_phase[targets_phase >= 0]
-                outputs_phase = outputs_phase[outputs_phase >= 0]
-                correct_phase = correct_phase[correct_phase >= 0]
 
                 epoch_loss_log = float(epoch_loss) / num_items
                 epoch_accuracy_log = float(correct_sum) / num_items
                 print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ')' + ' Phase: ' + phase +
-                      ', epoch: {}: epoch loss: {:0.3f}, epoch accuracy: {:0.2f} '.
+                      ', epoch: {}: epoch loss: {:0.4f}, epoch accuracy: {:0.3f} '.
                       format(epoch, epoch_loss_log, epoch_accuracy_log))
+
+                metrics = Trainer.compute_metrics(targets=targets_phase, predictions=predictions_phase)
+
                 writer.add_scalars('epoch_loss', {phase: epoch_loss_log}, epoch)
                 writer.add_scalars('epoch_accuracy', {phase: epoch_accuracy_log}, epoch)
-                figure_inds = list(range(inputs.shape[0]))
-                figure_inds = figure_inds if len(figure_inds) < 4 else list(range(4))
-                fig = Trainer.show_imgs(inputs, outputs, figure_inds)
+                writer.add_scalars('precision', {phase: metrics['precision']}, epoch)
+                writer.add_scalars('recall', {phase: metrics['recall']}, epoch)
+
+                sample_inds_epoch = [
+                    self.data_loaders[phase].batch_sampler.sampler.indices.index(ind) for ind in sample_inds[phase][0:4]]
+                fig = Trainer.show_imgs(inputs=inputs_phase, outputs=outputs_phase, predictions=predictions_phase,
+                                        targets=targets_phase, inds=sample_inds_epoch)
                 figname = 'image_examples_'
                 fig.savefig(os.path.join(self.log_root, epoch_root, figname + '_' + phase + '.png'))
                 writer.add_figure(figname + phase, fig, epoch)
-                fig = Trainer.show_classification_matrix(targets_phase, outputs_phase, correct_phase)
+
+                fig = Trainer.show_classification_matrix(targets=targets_phase, predictions=predictions_phase, metrics=metrics)
                 figname = 'targets_outputs_correct_'
-                writer.add_figure(figname + phase, fig, epoch)
                 fig.savefig(os.path.join(self.log_root, epoch_root, figname + '_' + phase + '.png'))
+                writer.add_figure(figname + phase, fig, epoch)
 
                 if self.save & (phase == 'train'):
                     print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Saving model state... ')
@@ -190,39 +202,83 @@ class Trainer:
         return fig
 
     @staticmethod
-    def show_imgs(inputs, outputs, inds, class_idx=1):
-        inputs, outputs = Trainer.copy2cpu(inputs, outputs)
+    def show_imgs(inputs, outputs, predictions, targets, inds, class_idx=1):
         fig, axs = plt.subplots(2, len(inds), figsize=(3*len(inds), 6))
         for i, idx in enumerate(inds):
-            input_ = inputs[idx].data.numpy().squeeze()
-            axs[0, idx].imshow(input_, cmap='gray')
+            input = inputs[i, 0, :, :].squeeze()
+            axs[0, idx].imshow(input, cmap='gray')
             axs[0, idx].axis('off')
-            output = outputs[idx].data.numpy().squeeze()
-            im_output = axs[1, idx].imshow(np.tile(np.exp(output[class_idx]), input_.shape),
-                                                  cmap='gray', vmin=0, vmax=1)
+            output = np.tile(np.exp((outputs[i][class_idx])), (int(input.shape[0]/3), int(input.shape[1])))
+            prediction = np.tile(int(predictions[i]), (int(input.shape[0]/3), int(input.shape[1])))
+            target = np.tile(int(targets[i]), (int(input.shape[0]/3), int(input.shape[1])))
+            fused = np.concatenate((output, prediction, target), axis=0)
+            axs[1, idx].imshow(fused, cmap='gray', vmin=0, vmax=1)
+            axs[1, idx].text(0.5, 0.8, 'output (class {:d}): {:01.2f}'.format(class_idx, np.exp((outputs[i][class_idx]))),
+                             transform=axs[1, idx].transAxes, ha='center', va='center', c=[0.8, 0.8, 0.2])
+            axs[1, idx].text(0.5, 0.5, 'prediction class: {:d}'.format(int(predictions[i])),
+                             transform=axs[1, idx].transAxes, ha='center', va='center', c=[0.5, 0.5, 0.5])
+            axs[1, idx].text(0.5, 0.2, 'target class: {:d}'.format(int(targets[i])),
+                             transform=axs[1, idx].transAxes, ha='center', va='center', c=[0.5, 0.5, 0.5])
             axs[1, idx].axis('off')
-            fig.colorbar(im_output, ax=axs[1, idx], shrink=0.7)
-            axs[1, idx].text(0.5, 0.5, '{:1.2f}'.format(np.exp(output[class_idx])), horizontalalignment='center',
-                                    verticalalignment='center', transform=axs[1, idx].transAxes)
 
         plt.tight_layout()
 
         return fig
 
     @staticmethod
-    def show_classification_matrix(targets, outputs, correct):
+    def compute_metrics(targets, predictions):
+
+        metrics = dict()
+        metrics['inds_true_pos'] = (predictions == 1) & (targets == 1)
+        metrics['sum_true_pos'] = sum(metrics['inds_true_pos'])
+        metrics['inds_false_pos'] = (predictions == 1) & (targets == 0)
+        metrics['sum_false_pos'] = sum(metrics['inds_false_pos'])
+        metrics['inds_true_neg'] = (predictions == 0) & (targets == 0)
+        metrics['sum_true_neg'] = sum(metrics['inds_true_neg'])
+        metrics['inds_false_neg'] = (predictions == 0) & (targets == 1)
+        metrics['sum_false_neg'] = sum(metrics['inds_false_neg'])
+
+        metrics['accuracy'] = (metrics['sum_true_pos'] + metrics['sum_true_neg']) / len(targets)
+
+        if metrics['sum_true_pos'] + metrics['sum_true_neg'] > 0:
+            metrics['true_pos_rate'] = metrics['sum_true_pos'] / (metrics['sum_true_pos'] + metrics['sum_true_neg'])
+            metrics['true_neg_rate'] = metrics['sum_true_neg'] / (metrics['sum_true_pos'] + metrics['sum_true_neg'])
+        else:
+            metrics['true_pos_rate'] = np.NaN
+            metrics['true_neg_rate'] = np.NaN
+
+        if metrics['sum_true_pos'] + metrics['sum_true_neg'] > 0:
+            metrics['false_pos_rate'] = metrics['sum_false_pos'] / (metrics['sum_false_pos'] + metrics['sum_false_neg'])
+            metrics['false_neg_rate'] = metrics['sum_false_neg'] / (metrics['sum_false_pos'] + metrics['sum_false_neg'])
+        else:
+            metrics['false_pos_rate'] = np.NaN
+            metrics['false_neg_rate'] = np.NaN
+
+        if (metrics['sum_true_pos'] + metrics['sum_false_pos']) > 0:
+            metrics['precision'] = metrics['sum_true_pos'] / (metrics['sum_true_pos'] + metrics['sum_false_pos'])
+        else:
+            metrics['precision'] = np.NaN
+
+        if (metrics['sum_true_pos'] + metrics['sum_false_neg']) > 0:
+            metrics['recall'] = metrics['sum_true_pos'] / (metrics['sum_true_pos'] + metrics['sum_false_neg'])
+        else:
+            metrics['recall'] = np.NaN
+
+        return metrics
+
+    @staticmethod
+    def show_classification_matrix(targets, predictions, metrics):
 
         targets_pr = targets.copy().astype(int)
-        outputs_pr = outputs.copy().astype(int)
-        correct_pr = correct.copy().astype(int) + 2
-
+        predictions_pr = predictions.copy().astype(int)
+        correct_pr = ((targets_pr == 0) == (predictions_pr == 0)) | ((targets_pr == 1) == (predictions_pr == 1)) + 2
         code_pr = targets_pr.copy()
-        code_pr[(outputs_pr == 0) & (targets_pr == 0)] = 4
-        code_pr[(outputs_pr == 1) & (targets_pr == 1)] = 5
-        code_pr[outputs_pr > targets_pr] = 6
-        code_pr[outputs_pr < targets_pr] = 7
+        code_pr[metrics['inds_true_neg']] = 4
+        code_pr[metrics['inds_true_pos']] = 5
+        code_pr[predictions_pr > targets_pr] = 6
+        code_pr[predictions_pr < targets_pr] = 7
 
-        mat = np.stack((targets_pr, outputs_pr, correct_pr, code_pr), axis=0)
+        mat = np.stack((targets_pr, predictions_pr, correct_pr, code_pr), axis=0)
 
         colors = [[0.0, 0.0, 0.0, 1],
                   [1.0, 1.0, 1.0, 1],
@@ -236,19 +292,39 @@ class Trainer:
         fig, axs = plt.subplots(figsize=(12, 6))
         axs.matshow(mat, cmap=cmap, vmin=0, vmax=7)
         axs.set_yticks([0, 1, 2, 3])
-        axs.set_yticklabels(['targets', 'outputs', 'correct', 'code'])
+        axs.set_yticklabels(['targets', 'outputs', 'accuracy', 'confusion'])
         axs.set_aspect(10)
         bbox = axs.get_position().bounds
         axs2 = plt.axes((bbox[0], 0.1, bbox[2], 0.2), sharex=axs)
-        axs2.text(0, 1, 'no artifact in target/output', c=(0.8, 0.8, 0.8), backgroundcolor=colors[0], transform=axs2.transAxes)
-        axs2.text(0.25, 1, 'artifact in target/output', c=(0.2, 0.2, 0.2), backgroundcolor=colors[1], transform=axs2.transAxes)
-        axs2.text(0, 0.65, 'incorrect', c=(0.2, 0.2, 0.2), backgroundcolor=colors[2], transform=axs2.transAxes)
-        axs2.text(0.25, 0.65, 'correct', c=(0.2, 0.2, 0.2), backgroundcolor=colors[3], transform=axs2.transAxes)
-        axs2.text(0, 0.3, 'true negative', c=(0.8, 0.8, 0.8), backgroundcolor=colors[4], transform=axs2.transAxes)
-        axs2.text(0.25, 0.3, 'true positive', c=(0.8, 0.8, 0.8), backgroundcolor=colors[5], transform=axs2.transAxes)
-        axs2.text(0, 0.05, 'false positive', c=(0.2, 0.2, 0.2), backgroundcolor=colors[6], transform=axs2.transAxes)
-        axs2.text(0.25, 0.05, 'false negative', c=(0.2, 0.2, 0.2), backgroundcolor=colors[7], transform=axs2.transAxes)
+        axs2.text(0.00, 1.00, 'target|output', c=(0.2, 0.2, 0.2), weight='bold', transform=axs2.transAxes)
+        axs2.text(0.017, 0.75, 'artifact', c=(0.2, 0.2, 0.2), backgroundcolor=colors[1], transform=axs2.transAxes)
+        axs2.text(0.017, 0.50, 'no artifact', c=(0.8, 0.8, 0.8), backgroundcolor=colors[0], transform=axs2.transAxes)
+        axs2.text(0.27, 1.00, 'accuracy', c=(0.2, 0.2, 0.2), weight='bold', transform=axs2.transAxes)
+        axs2.text(0.20, 0.75, 'frac correct:   {:03d}/{:03d}={:01.2f}'.format(metrics['sum_true_pos'] +
+                  metrics['sum_true_neg'], len(targets), (metrics['sum_true_pos'] +
+                  metrics['sum_true_neg'])/len(targets)), c=(0.2, 0.2, 0.2), backgroundcolor=colors[3],
+                  transform=axs2.transAxes)
+        axs2.text(0.20, 0.50, 'frac incorrect: {:03d}/{:03d}={:01.2f}'.format(metrics['sum_false_pos'] +
+                  metrics['sum_false_neg'], len(targets), (metrics['sum_false_pos'] +
+                  metrics['sum_false_neg'])/len(targets)), c=(0.2, 0.2, 0.2), backgroundcolor=colors[2],
+                  transform=axs2.transAxes)
+        axs2.text(0.60, 1.00, 'confusion', c=(0.2, 0.2, 0.2), weight='bold', transform=axs2.transAxes)
+        axs2.text(0.50, 0.75, 'TP: {:01.2f}'.format(metrics['true_pos_rate']), c=(0.8, 0.8, 0.8),
+                  backgroundcolor=colors[5], transform=axs2.transAxes)
+        axs2.text(0.50, 0.50, 'TN: {:01.2f}'.format(metrics['true_neg_rate']), c=(0.8, 0.8, 0.8),
+                  backgroundcolor=colors[4], transform=axs2.transAxes)
+        axs2.text(0.60, 0.75, 'FP: {:01.2f}'.format(metrics['false_pos_rate']), c=(0.2, 0.2, 0.2),
+                  backgroundcolor=colors[6], transform=axs2.transAxes)
+        axs2.text(0.60, 0.50, 'FN: {:01.2f}'.format(metrics['false_neg_rate']), c=(0.2, 0.2, 0.2),
+                  backgroundcolor=colors[7], transform=axs2.transAxes)
+        axs2.text(0.70, 0.75, 'Precision: {:01.2f}'.format(metrics['precision']), c=(0.2, 0.2, 0.2),
+                  backgroundcolor=(0.7, 0.7, 0.7), transform=axs2.transAxes)
+        axs2.text(0.70, 0.50, 'Recall:    {:01.2f}'.format(metrics['recall']), c=(0.2, 0.2, 0.2),
+                  backgroundcolor=(0.7, 0.7, 0.7), transform=axs2.transAxes)
         axs2.axis('off')
 
         return fig
+
+
+
 

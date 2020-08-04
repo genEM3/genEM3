@@ -4,12 +4,12 @@ from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 
 from genEM3.data.wkwdata import WkwData, DataSplit
-from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_1px_deep_convonly_skip, AE_Encoder_Classifier, Classifier
+from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn_1px_deep_convonly_skip, AE_Encoder_Classifier, Classifier
 from genEM3.training.classifier import Trainer
 
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
-cache_HDD_root = os.path.join(run_root, '../ae_classify_v01_1unit/.cache/')
+cache_HDD_root = os.path.join(run_root, '../ae_classify_v01_1layer/.cache/')
 datasources_json_path = os.path.join(run_root, 'datasources_classifier_v01.json')
 state_dict_path = os.path.join(run_root, '../ae_v05_skip/.log/epoch_60/model_state_dict')
 input_shape = (140, 140, 1)
@@ -19,7 +19,7 @@ data_split = DataSplit(train=0.85, validation=0.15, test=0.0)
 cache_RAM = True
 cache_HDD = True
 cache_root = os.path.join(run_root, '.cache/')
-batch_size = 32
+batch_size = 64
 num_workers = 0
 
 data_sources = WkwData.datasources_from_json(datasources_json_path)
@@ -51,7 +51,7 @@ stride = 1
 n_fmaps = 16  # fixed in model class
 n_latent = 2048
 model = AE_Encoder_Classifier(
-    Encoder_4_sampling_1px_deep_convonly_skip(input_size, kernel_size, stride, n_latent=n_latent),
+    Encoder_4_sampling_bn_1px_deep_convonly_skip(input_size, kernel_size, stride, n_latent=n_latent),
     Classifier(n_latent=n_latent))
 
 checkpoint = torch.load(state_dict_path, map_location=lambda storage, loc: storage)
@@ -64,9 +64,9 @@ for name, param in model.named_parameters():
     print(name, param.requires_grad)
 
 criterion = torch.nn.NLLLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.000005)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
 
-num_epoch = 50
+num_epoch = 35
 log_int = 1
 device = 'cpu'
 save = True
