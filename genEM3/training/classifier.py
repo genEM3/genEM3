@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 import torch
+from torch import nn
 from torch.utils.tensorboard import SummaryWriter
 from torch import device as torchDevice
 from genEM3.util import gpu
@@ -12,20 +13,21 @@ from genEM3.util import gpu
 class Trainer:
 
     def __init__(self,
-                 run_root,
-                 model,
-                 optimizer,
-                 criterion,
-                 train_loader,
-                 validation_loader=None,
-                 num_epoch=100,
-                 log_int=10,
-                 device='cpu',
-                 save=False,
-                 resume=False,
+                 run_name: str,
+                 run_root: str,
+                 model: nn.Module,
+                 optimizer: torch.optim.Optimizer,
+                 criterion: nn.MSELoss,
+                 data_loaders: {},
+                 num_epoch: int = 100,
+                 log_int: int = 10,
+                 device: str = 'cpu',
+                 save: bool = False,
+                 resume: bool = False,
                  gpu_id: int = None
                  ):
 
+        self.run_name = run_name
         self.run_root = run_root
         self.model = model
         self.optimizer = optimizer
@@ -40,9 +42,9 @@ class Trainer:
             device = torch.device(torch.cuda.current_device())
         
         self.device = torchDevice(device)
-        self.log_root = os.path.join(run_root, '.log')
-        self.data_loaders = {"train": train_loader, "val": validation_loader}
-        self.data_lengths = {"train": len(train_loader), "val": len(validation_loader)}
+        self.log_root = os.path.join(run_root, '.log', run_name)
+        self.data_loaders = data_loaders
+        self.data_lengths = dict(zip(self.data_loaders.keys(), [len(loader) for loader in self.data_loaders]))
 
         if save:
             if not os.path.exists(self.log_root):
@@ -70,7 +72,7 @@ class Trainer:
             if not os.path.exists(os.path.join(self.log_root, epoch_root)):
                 os.makedirs(os.path.join(self.log_root, epoch_root))
 
-            for phase in ['train', 'val']:
+            for phase in self.data_loaders.keys():
 
                 if epoch == 1:
                     sample_inds[phase] = self.data_loaders[phase].batch_sampler.sampler.indices
@@ -141,6 +143,7 @@ class Trainer:
                         writer.add_scalars('running_loss', {phase: running_loss_log}, it)
                         writer.add_scalars('running_accuracy', {phase: running_accuracy_log}, it)
 
+
                 epoch_loss_log = float(epoch_loss) / num_items
                 epoch_accuracy_log = float(correct_sum) / num_items
                 print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ')' + ' Phase: ' + phase +
@@ -168,8 +171,10 @@ class Trainer:
                 writer.add_figure(figname + phase, fig, epoch)
 
                 if self.save & (phase == 'train'):
-                    print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Saving model state... ')
+                    print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Writing model graph ... ')
+                    writer.add_graph(self.model, inputs)
 
+                    print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Saving model state... ')
                     self.model.epoch = torch.nn.Parameter(torch.tensor(epoch), requires_grad=False)
                     self.model.iteration = torch.nn.Parameter(torch.tensor(it), requires_grad=False)
                     torch.save({
@@ -179,7 +184,17 @@ class Trainer:
                         'optimizer_state_dict': self.optimizer.state_dict()
                     }, os.path.join(self.log_root, 'optimizer_state_dict'))
 
+                if phase == 'test':
+                    writer.add_pr_curve(
+                        'pr_curve_test', labels=targets_phase, predictions=np.exp(outputs_phase[:, 1]), global_step=it,
+                        num_thresholds=50)
+
+
+
         print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Finished training ... ')
+
+        writer.close()
+        print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Closed writer ... ')
 
     @staticmethod
     def copy2cpu(inputs, outputs):

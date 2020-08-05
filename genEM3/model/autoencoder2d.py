@@ -342,13 +342,13 @@ class Encoder_4_sampling_bn_1px_deep_convonly_skip(nn.Module):
         x = self.max_pool2(x)
         x = self.encoding_conv31(x)
         x = self.encoding_conv32(x)
-        x_split = torch.split(x, int(x.shape[1]/3*2), dim=1)
+        x_split = torch.split(x, self.encoding_conv32._modules['0'].in_channels, dim=1)
         x = x_split[0]
         x_skip_3 = x_split[1].reshape((x_split[1].shape[0], -1, 1, 1))
         x = self.max_pool2(x)
         x = self.encoding_conv41(x)
         x = self.encoding_conv42(x)
-        x_split = torch.split(x, int(x.shape[1]/3*2), dim=1)
+        x_split = torch.split(x, self.encoding_conv42._modules['0'].in_channels, dim=1)
         x = x_split[0]
         x_skip_4 = x_split[1].reshape((x_split[1].shape[0], -1, 1, 1))
         x = self.max_pool2(x)

@@ -3,6 +3,7 @@ import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
+from torch import nn
 from torch.utils.tensorboard import SummaryWriter
 from torch import device as torchDevice
 from genEM3.util import gpu
@@ -11,18 +12,17 @@ from genEM3.util import gpu
 class Trainer:
 
     def __init__(self,
-                 run_root,
-                 model,
-                 optimizer,
-                 criterion,
-                 train_loader,
-                 validation_loader=None,
-                 num_epoch=100,
-                 log_int=10,
-                 device='cpu',
-                 save=False,
-                 resume=False,
-                 GPU_ID: int = None
+                 run_root: str,
+                 model: nn.Module,
+                 optimizer: torch.optim.Optimizer,
+                 criterion: nn.MSELoss,
+                 data_loaders: {},
+                 num_epoch: int = 100,
+                 log_int: int = 10,
+                 device: str = 'cpu',
+                 save: bool = False,
+                 resume: bool = False,
+                 gpu_id: int = None
                  ):
 
         self.run_root = run_root
@@ -35,13 +35,13 @@ class Trainer:
         self.resume = resume
 
         if device == 'cuda':
-            gpu.get_gpu(GPU_ID)
+            gpu.get_gpu(gpu_id)
             device = torch.device(torch.cuda.current_device())
         
         self.device = torchDevice(device)
         self.log_root = os.path.join(run_root, '.log')
-        self.data_loaders = {"train": train_loader, "val": validation_loader}
-        self.data_lengths = {"train": len(train_loader), "val": len(validation_loader)}
+        self.data_loaders = data_loaders
+        self.data_lengths = dict(zip(self.data_loaders.keys(), [len(loader) for loader in self.data_loaders]))
 
         if save:
             if not os.path.exists(self.log_root):
@@ -68,7 +68,7 @@ class Trainer:
             if not os.path.exists(os.path.join(self.log_root, epoch_root)):
                 os.makedirs(os.path.join(self.log_root, epoch_root))
 
-            for phase in ['train', 'val']:
+            for phase in self.data_loaders.keys():
                 epoch_loss = 0
 
                 if phase == 'train':
@@ -103,22 +103,26 @@ class Trainer:
                         writer.add_scalars('running_loss', {phase: running_loss_avg}, it)
                         running_loss = 0.0
 
-                epoch_loss_avg = epoch_loss / self.data_lengths[phase]
-                print('Phase: ' + phase + ', epoch: {}: epoch loss: {:0.3f}'.
-                      format(epoch, epoch_loss_avg))
-                writer.add_scalars('epoch_loss', {phase: epoch_loss_avg}, epoch)
-                writer.add_histogram('input histogram', inputs.cpu().data.numpy()[0, 0].flatten(), epoch)
-                writer.add_histogram('output histogram', outputs.cpu().data.numpy()[0, 0].flatten(), epoch)
-                figure_inds = list(range(inputs.shape[0]))
-                figure_inds = figure_inds if len(figure_inds) < 4 else list(range(4))
-                fig = Trainer.show_imgs(inputs, outputs, figure_inds)
-                fig.savefig(os.path.join(self.log_root, epoch_root, phase+'.png'))
-                writer.add_figure(
-                    'images ' + phase, fig, epoch)
+                if phase in ['train', 'val']:
+                    epoch_loss_avg = epoch_loss / self.data_lengths[phase]
+                    print('Phase: ' + phase + ', epoch: {}: epoch loss: {:0.3f}'.
+                          format(epoch, epoch_loss_avg))
+                    writer.add_scalars('epoch_loss', {phase: epoch_loss_avg}, epoch)
+                    writer.add_histogram('input histogram', inputs.cpu().data.numpy()[0, 0].flatten(), epoch)
+                    writer.add_histogram('output histogram', outputs.cpu().data.numpy()[0, 0].flatten(), epoch)
+                    figure_inds = list(range(inputs.shape[0]))
+                    figure_inds = figure_inds if len(figure_inds) < 4 else list(range(4))
+                    fig = Trainer.show_imgs(inputs, outputs, figure_inds)
+                    fig.savefig(os.path.join(self.log_root, epoch_root, phase+'.png'))
+                    writer.add_figure(
+                        'images ' + phase, fig, epoch)
 
                 if self.save & (phase == 'train'):
-                    print('Saving model state...')
 
+                    print('Writing model graph...')
+                    writer.add_graph(self.model, inputs)
+
+                    print('Saving model state...')
                     self.model.epoch = torch.nn.Parameter(torch.tensor(epoch), requires_grad=False)
                     self.model.iteration = torch.nn.Parameter(torch.tensor(it), requires_grad=False)
                     torch.save({
@@ -129,6 +133,8 @@ class Trainer:
                     }, os.path.join(self.log_root, 'optimizer_state_dict'))
 
         print('Finished training ...')
+        writer.close()
+        print('Writer closed ...')
 
         # dictionary of accuracy metrics for tune hyperparameter optimization
         return {"val_loss_avg": epoch_loss_avg}
