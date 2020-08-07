@@ -97,7 +97,7 @@ class Trainer:
                 targets_phase = -np.ones(num_items).astype(int)
                 correct_phase = -np.ones(num_items).astype(int)
 
-                for i, data in enumerate(self.data_loaders[phase]):
+                for i, (data, index) in enumerate(self.data_loaders[phase]):
 
                     it += 1
 

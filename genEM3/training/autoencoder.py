@@ -77,7 +77,7 @@ class Trainer:
                     self.model.train(False)
 
                 running_loss = 0.0
-                for i, data in enumerate(self.data_loaders[phase]):
+                for i, (data, index) in enumerate(self.data_loaders[phase]):
                     it += 1
                     # copy input and targets to the device object
                     inputs = data['input'].to(self.device)

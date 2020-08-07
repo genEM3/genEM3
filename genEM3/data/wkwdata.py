@@ -1,7 +1,7 @@
 import os
 import json
 import random
-from typing import Tuple, Sequence, Optional
+from typing import Tuple, Sequence, List
 from collections import namedtuple
 
 import numpy as np
@@ -44,6 +44,7 @@ class WkwData(Dataset):
                  target_shape: Tuple[int, int, int],
                  data_sources: Sequence[DataSource],
                  data_split: DataSplit = None,
+                 stride: Tuple[int, int, int] = None,
                  normalize: bool = True,
                  pad_target: bool = False,
                  cache_RAM: bool = True,
@@ -107,6 +108,12 @@ class WkwData(Dataset):
         self.output_shape = target_shape
         self.data_sources = data_sources
         self.data_split = data_split
+
+        if stride is None:
+            self.stride = target_shape
+        else:
+            self.stride = stride
+
         self.normalize = normalize
         self.pad_target = pad_target
         self.cache_RAM = cache_RAM
@@ -114,7 +121,8 @@ class WkwData(Dataset):
 
         self.cache_HDD_root = cache_HDD_root
 
-        self.data_cache = dict()
+        self.data_cache_input = dict()
+        self.data_cache_output = dict()
         self.data_meshes = []
         self.data_inds_min = []
         self.data_inds_max = []
@@ -146,11 +154,11 @@ class WkwData(Dataset):
         corner_min_target = np.ceil(np.asarray(self.data_sources[data_source_idx].input_bbox[0:3]) +
                                     np.asarray(self.input_shape) / 2 - np.asarray(self.output_shape) / 2).astype(int)
         n_fits = np.floor(np.asarray(self.data_sources[data_source_idx].input_bbox[3:6]) /
-                                    np.asarray(self.output_shape)).astype(int)
-        corner_max_target = corner_min_target + n_fits * np.asarray(self.output_shape)
-        x = np.arange(corner_min_target[0], corner_max_target[0], self.output_shape[0])
-        y = np.arange(corner_min_target[1], corner_max_target[1], self.output_shape[1])
-        z = np.arange(corner_min_target[2], corner_max_target[2], self.output_shape[2])
+                                    np.asarray(self.stride)).astype(int)
+        corner_max_target = corner_min_target + n_fits * np.asarray(self.stride)
+        x = np.arange(corner_min_target[0], corner_max_target[0], self.stride[0])
+        y = np.arange(corner_min_target[1], corner_max_target[1], self.stride[1])
+        z = np.arange(corner_min_target[2], corner_max_target[2], self.stride[2])
         xm, ym, zm = np.meshgrid(x, y, z)
         mesh_target = {'x': xm, 'y': ym, 'z': zm}
         mesh_input = {'x': xm, 'y': ym, 'z': zm}
@@ -270,7 +278,54 @@ class WkwData(Dataset):
             if self.output_shape[2] == 1:
                 target = target.squeeze(3)
 
-        return {'input': input_, 'target': target}
+        return {'input': input_, 'target': target}, sample_idx
+
+    def write_output_to_cache(self,
+                              outputs: List[np.ndarray],
+                              sample_inds: List[int],
+                              output_label: str,
+                              dtype: np.dtype):
+
+        if type(sample_inds) is torch.Tensor:
+            sample_inds = sample_inds.data.numpy().tolist()
+
+        for output_idx, sample_idx in enumerate(sample_inds):
+            source_idx, mesh_idx = self.get_source_mesh_for_sample_idx(sample_idx)
+            wkw_path = self.data_sources[source_idx].input_path
+            wkw_bbox = self.data_sources[source_idx].input_bbox
+
+            if wkw_path not in self.data_cache_output:
+                self.data_cache_output[wkw_path] = {}
+
+            if str(wkw_bbox) not in self.data_cache_output[wkw_path]:
+                self.data_cache_output[wkw_path][str(wkw_bbox)] = {}
+
+            if output_label not in self.data_cache_output[wkw_path][str(wkw_bbox)]:
+                data = np.zeros(wkw_bbox[3:6], dtype=dtype)
+                self.data_cache_output[wkw_path][str(wkw_bbox)][output_label] = data
+
+            mesh_inds = np.unravel_index(sample_idx - self.data_inds_min[source_idx],
+                                         dims=self.data_meshes[source_idx]['target']['x'].shape)
+
+            # Get input sample
+            origin_input = [
+                int(self.data_meshes[source_idx]['input']['x'][mesh_inds[0], mesh_inds[1], mesh_inds[2]]),
+                int(self.data_meshes[source_idx]['input']['y'][mesh_inds[0], mesh_inds[1], mesh_inds[2]]),
+                int(self.data_meshes[source_idx]['input']['z'][mesh_inds[0], mesh_inds[1], mesh_inds[2]]),
+            ]
+
+            bbox_output_corner = np.asarray(origin_input[0:3]) + np.floor(np.asarray(self.input_shape)/2 - np.asarray(self.input_shape)/2).astype(int)
+            bbox_output_extent = np.asarray(self.output_shape).astype(int)
+
+            bbox_output = list(np.concatenate((bbox_output_corner, bbox_output_extent)))
+
+            data_min = np.asarray(bbox_output[0:3]) - np.asarray(wkw_bbox[0:3])
+            data_max = data_min + bbox_output_extent
+
+            data = self.data_cache_output[wkw_path][str(wkw_bbox)][output_label]
+            data[data_min[0]:data_max[0], data_min[1]:data_max[1], data_min[2]:data_max[2]] = outputs[output_idx].reshape(self.output_shape)
+            self.data_cache_output[wkw_path][str(wkw_bbox)][output_label] = data
+
 
     def get_random_sample(self):
 
@@ -310,10 +365,10 @@ class WkwData(Dataset):
 
         # If cache to RAM is true, save to RAM
         if self.cache_RAM:
-            if wkw_path not in self.data_cache:
-                self.data_cache[wkw_path] = {str(wkw_bbox): data}
+            if wkw_path not in self.data_cache_input:
+                self.data_cache_input[wkw_path] = {str(wkw_bbox): data}
             else:
-                self.data_cache[wkw_path][str(wkw_bbox)] = data
+                self.data_cache_input[wkw_path][str(wkw_bbox)] = data
 
         # If cache to HDD is true, save to HDD
         if self.cache_HDD:
@@ -336,10 +391,10 @@ class WkwData(Dataset):
         abs_pos = self.data_sources[source_idx][key_idx]
 
         # Attempt to load bbox from RAM cache
-        if (wkw_path in self.data_cache) & (str(abs_pos) in self.data_cache[wkw_path]):
+        if (wkw_path in self.data_cache_input) & (str(abs_pos) in self.data_cache_input[wkw_path]):
 
             rel_pos = np.asarray(wkw_bbox[0:3]) - np.asarray(abs_pos[0:3])
-            data = self.data_cache[wkw_path][str(abs_pos)][
+            data = self.data_cache_input[wkw_path][str(abs_pos)][
                 :,
                 rel_pos[0]:rel_pos[0] + wkw_bbox[3],
                 rel_pos[1]:rel_pos[1] + wkw_bbox[4],
@@ -356,6 +411,15 @@ class WkwData(Dataset):
                 data = self.wkw_read(wkw_path, wkw_bbox)
 
         return data
+
+    def get_source_mesh_for_sample_idx(self, sample_idx):
+        # Get appropriate training data cube sample_idx based on global linear sample_idx
+        source_idx = int(np.argmax(np.asarray(self.data_inds_max) >= sample_idx))
+        # Get appropriate subscript index for the respective training data cube, given the global linear index
+        mesh_idx = np.unravel_index(sample_idx - self.data_inds_min[source_idx],
+                                     dims=self.data_meshes[source_idx]['target']['x'].shape)
+
+        return source_idx, mesh_idx
 
     def get_datasources_stats(self, num_samples=30):
         return [self.get_datasource_stats(i, num_samples) for i in range(len(self.data_sources))]
