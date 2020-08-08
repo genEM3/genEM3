@@ -8,6 +8,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 import wkw
+from wkcuber import metadata
 
 np.random.seed(1337)
 
@@ -410,6 +411,57 @@ class WkwData(Dataset):
                 data = self.wkw_read(wkw_path, wkw_bbox)
 
         return data
+
+    def wkw_write_cached(self,
+                         wkw_path,
+                         wkw_bbox,
+                         output_wkw_root,
+                         output_label,
+                         output_dtype=None,
+                         output_dtype_fn=None):
+
+        if output_dtype is None:
+            output_dtype = np.float
+
+        if output_dtype_fn is None:
+            output_dtype_fn = lambda x: x
+
+        tmp, wkw_mag = os.path.split(wkw_path)
+        wkw_root = os.path.split(tmp)[0]
+        data = np.expand_dims(output_dtype_fn(self.data_cache_output[wkw_path][wkw_bbox][output_label])
+                              .astype(output_dtype), axis=0)
+
+        if os.path.exists(output_wkw_root):
+            output_wkw_path = os.path.join(output_wkw_root, output_label, wkw_mag)
+            if not os.path.exists(output_wkw_path):
+                os.makedirs(output_wkw_path)
+
+            wkw_header = self.wkw_header(wkw_path)
+
+            if not os.path.exists(os.path.join(output_wkw_path, 'header.wkw')):
+                self.wkw_create(output_wkw_path, wkw_header)
+
+            print('Writing cache to wkw ... ' + output_wkw_path + ' | ' + wkw_bbox)
+            bbox_from_str = [int(x) for x in wkw_bbox[2:-2].split(',')]
+            self.wkw_write(output_wkw_path, bbox_from_str, data)
+
+            if os.path.exists(os.path.join(output_wkw_root, 'datasource-properties.json')):
+                datasource = metadata.read_datasource_properties(output_wkw_root)
+            else:
+                datasource = metadata.read_datasource_properties(wkw_root)
+                datasource['id']['name'] = os.path.split(output_wkw_root)[1]
+
+            layers = datasource['dataLayers']
+            layer_old = layers[0]
+            layer_new = dict.fromkeys(layer_old)
+            layer_new['boundingBox'] = layer_old['boundingBox']
+            layer_new['wkwResolutions'] = [layer_old['wkwResolutions'][0]]
+            layer_new['dataFormat'] = layer_old['dataFormat']
+            layer_new['name'] = output_label
+            layer_new['elementClass'] = np.dtype(output_dtype).name
+            layer_new['category'] = 'color'
+            layers.append([layer_new])
+            metadata.write_datasource_properties(output_wkw_root, datasource)
 
     def get_source_mesh_for_sample_idx(self, sample_idx):
         # Get appropriate training data cube sample_idx based on global linear sample_idx

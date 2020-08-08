@@ -18,6 +18,8 @@ datasources_json_path = os.path.join(run_root, 'datasources_distributed_test.jso
 state_dict_path = os.path.join(run_root, '../../training/ae_classify_v03_1layer_unfreeze_latent_debris_clean/.log/run_w_pr/epoch_30/model_state_dict')
 device = 'cpu'
 
+output_wkw_root = '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8_artifact_pred'
+
 batch_size = 16
 input_shape = (140, 140, 1)
 output_shape = (1, 1, 1)
@@ -57,22 +59,22 @@ def prob_collate_fn(outputs):
 
 output_dtype = np.uint8
 output_dtype_fn = lambda x: (logit(x) + 6) * 256 / 12
-output_dtype_fni = lambda x: expit(x * 12 / 256) - 6
+output_dtype_fni = lambda x: expit(x / 256 * 12 - 6)
 
 datawriter_prob = DataWriter(
     dataloader=prediction_loader,
     output_collate_fn=prob_collate_fn,
     output_label='prediction_probabilities',
-    output_path=run_root,
+    output_path=output_wkw_root,
     output_dtype=output_dtype,
     output_dtype_fn=output_dtype_fn
 )
 
-data_writers = {'prediction_probabilities': datawriter_prob}
+datawriters = {'prediction_probabilities': datawriter_prob}
 
 predictor = Predictor(
     dataloader=prediction_loader,
-    datawriters=data_writers,
+    datawriters=datawriters,
     model=model,
     state_dict=state_dict,
     device=device,

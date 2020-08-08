@@ -34,9 +34,11 @@ class DataWriter:
                     data_dense = griddata(points, values, (grid_x, grid_y), method=method)
                     cache[:, :, z] = data_dense
 
-    def cache_to_wkw(self):
+    def cache_to_wkw(self, output_wkw_root):
         for wkw_path in self.dataloader.dataset.data_cache_output.keys():
             for wkw_bbox in self.dataloader.dataset.data_cache_output[wkw_path].keys():
-                cache = self.dataloader.dataset.data_cache_output[wkw_path][wkw_bbox][self.output_label]
-                cache_logit = self.output_dtype_fn(cache)
-                cache_expit = cache_logit
+                self.dataloader.dataset.wkw_write_cached(wkw_path, wkw_bbox,
+                                                         output_wkw_root=output_wkw_root,
+                                                         output_label=self.output_label,
+                                                         output_dtype=self.output_dtype,
+                                                         output_dtype_fn=self.output_dtype_fn)

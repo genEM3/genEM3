@@ -51,6 +51,6 @@ class Predictor:
             if self.interpolate is not None:
                 datawriter.interpolate_sparse_cache(method=self.interpolate)
 
-            datawriter.cache_to_wkw()
+            datawriter.cache_to_wkw(output_wkw_root=datawriter.output_path)
 
 
