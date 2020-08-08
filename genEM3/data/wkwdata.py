@@ -283,8 +283,7 @@ class WkwData(Dataset):
     def write_output_to_cache(self,
                               outputs: List[np.ndarray],
                               sample_inds: List[int],
-                              output_label: str,
-                              dtype: np.dtype):
+                              output_label: str):
 
         if type(sample_inds) is torch.Tensor:
             sample_inds = sample_inds.data.numpy().tolist()
@@ -301,7 +300,7 @@ class WkwData(Dataset):
                 self.data_cache_output[wkw_path][str(wkw_bbox)] = {}
 
             if output_label not in self.data_cache_output[wkw_path][str(wkw_bbox)]:
-                data = np.zeros(wkw_bbox[3:6], dtype=dtype)
+                data = np.full(wkw_bbox[3:6], np.nan, dtype=np.float32)
                 self.data_cache_output[wkw_path][str(wkw_bbox)][output_label] = data
 
             mesh_inds = np.unravel_index(sample_idx - self.data_inds_min[source_idx],

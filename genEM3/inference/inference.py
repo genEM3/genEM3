@@ -20,7 +20,8 @@ class Predictor:
                  device: Optional[str] = None,
                  batch_size: Optional[int] = None,
                  input_shape: Optional[Tuple[int, ...]] = None,
-                 output_shape: Optional[Tuple[int, ...]] = None):
+                 output_shape: Optional[Tuple[int, ...]] = None,
+                 interpolate: str = None):
 
         self.dataloader = dataloader
         self.datawriters = datawriters
@@ -30,6 +31,7 @@ class Predictor:
         self.batch_size = batch_size
         self.input_shape = input_shape
         self.out_shape = output_shape
+        self.interpolate = interpolate
 
     @torch.no_grad()
     def predict(self):
@@ -42,10 +44,13 @@ class Predictor:
             inputs = data['input']
             outputs = self.model(inputs)
 
-            for datawriter in self.datawriters:
+            for datawriter in self.datawriters.values():
                 datawriter.batch_to_cache(outputs, index)
 
-        for datawriter in self.datawriters:
+        for datawriter in self.datawriters.values():
+            if self.interpolate is not None:
+                datawriter.interpolate_sparse_cache(method=self.interpolate)
+
             datawriter.cache_to_wkw()
 
 

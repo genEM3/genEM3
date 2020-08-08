@@ -1,6 +1,8 @@
 import os
 
 import numpy as np
+from scipy.special import logit, expit
+
 import torch
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
@@ -53,37 +55,31 @@ def prob_collate_fn(outputs):
     outputs_collate = list(np.exp(outputs.detach().numpy())[:, 0, :, :])
     return outputs_collate
 
+output_dtype = np.uint8
+output_dtype_fn = lambda x: (logit(x) + 6) * 256 / 12
+output_dtype_fni = lambda x: expit(x * 12 / 256) - 6
+
 datawriter_prob = DataWriter(
     dataloader=prediction_loader,
     output_collate_fn=prob_collate_fn,
     output_label='prediction_probabilities',
     output_path=run_root,
-    output_dtype=np.float16
+    output_dtype=output_dtype,
+    output_dtype_fn=output_dtype_fn
 )
 
-def class_collate_fn(outputs):
-    outputs_collate = list(np.argmax(np.exp(outputs.detach().numpy()), axis=1))
-    return outputs_collate
-
-datawriter_class = DataWriter(
-    dataloader=prediction_loader,
-    output_collate_fn=prob_collate_fn,
-    output_label='prediction_class',
-    output_path=run_root,
-    output_dtype=np.bool
-)
-
-datawriters = [datawriter_prob, datawriter_class]
+data_writers = {'prediction_probabilities': datawriter_prob}
 
 predictor = Predictor(
     dataloader=prediction_loader,
-    datawriters=datawriters,
+    datawriters=data_writers,
     model=model,
     state_dict=state_dict,
     device=device,
     batch_size=batch_size,
     input_shape=input_shape,
-    output_shape=output_shape)
+    output_shape=output_shape,
+    interpolate='nearest')
 
 predictor.predict()
 
