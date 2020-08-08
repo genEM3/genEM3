@@ -86,7 +86,7 @@ def save_checkpoint(state, is_best, outdir='results'):
 
 def main():
     parser = argparse.ArgumentParser(description='Convolutional VAE MNIST Example')
-    parser.add_argument('--result_dir', type=str, default='results', metavar='DIR',
+    parser.add_argument('--result_dir', type=str, default='.log', metavar='DIR',
                         help='output directory')
     parser.add_argument('--batch_size', type=int, default=100, metavar='N',
                         help='input batch size for training (default: 128)')
@@ -102,6 +102,10 @@ def main():
                         help='latent vector size of encoder')
 
     args = parser.parse_args()
+    
+    # Make the directory for the result output
+    if not os.path.isdir(args.result_dir):
+        os.makedirs(args.result_dir)
 
     torch.manual_seed(args.seed)
 
