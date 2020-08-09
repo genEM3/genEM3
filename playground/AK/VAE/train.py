@@ -4,6 +4,7 @@ import torch.optim as optim
 from torch.nn import functional as F
 from torchvision import datasets, transforms
 from torchvision.utils import save_image, make_grid
+from torch.utils.data.sampler import SubsetRandomSampler
 
 import os
 import shutil
@@ -13,7 +14,8 @@ from tqdm import tqdm
 
 from model import ConvVAE
 
-
+from genEM3.data.wkwdata import WkwData, DataSplit
+from genEM3.util.path import mkdir, getAbsPathRepository
 cuda = False 
 if cuda:
     print('cuda available')
@@ -35,8 +37,8 @@ def train(epoch, model, train_loader, optimizer, args):
     model.train()
     train_loss = 0
 
-    for batch_idx, (data, _) in tqdm(enumerate(train_loader), total=len(train_loader), desc='train'):
-        data = data.to(device)
+    for batch_idx, data in tqdm(enumerate(train_loader), total=len(train_loader), desc='train'):
+        data = data['input'].to(device)
 
         optimizer.zero_grad()
         recon_batch, mu, logvar = model(data)
@@ -57,8 +59,8 @@ def test(epoch, model, test_loader, writer, args):
     test_loss = 0
 
     with torch.no_grad():
-        for batch_idx, (data, _) in tqdm(enumerate(test_loader), total=len(test_loader), desc='test'):
-            data = data.to(device)
+        for batch_idx, data in tqdm(enumerate(test_loader), total=len(test_loader), desc='test'):
+            data = data['input'].to(device)
 
             recon_batch, mu, logvar = model(data)
 
@@ -76,7 +78,7 @@ def test(epoch, model, test_loader, writer, args):
     return test_loss
 
 
-def save_checkpoint(state, is_best, outdir='results'):
+def save_checkpoint(state, is_best, outdir='.log'):
     checkpoint_file = os.path.join(outdir, 'checkpoint.pth')
     best_file = os.path.join(outdir, 'model_best.pth')
     torch.save(state, checkpoint_file)
@@ -88,7 +90,7 @@ def main():
     parser = argparse.ArgumentParser(description='Convolutional VAE MNIST Example')
     parser.add_argument('--result_dir', type=str, default='.log', metavar='DIR',
                         help='output directory')
-    parser.add_argument('--batch_size', type=int, default=100, metavar='N',
+    parser.add_argument('--batch_size', type=int, default=128, metavar='N',
                         help='input batch size for training (default: 128)')
     parser.add_argument('--epochs', type=int, default=10, metavar='N',
                         help='number of epochs to train (default: 10)')
@@ -109,16 +111,42 @@ def main():
 
     torch.manual_seed(args.seed)
 
-    kwargs = {'num_workers': 1, 'pin_memory': True} if cuda else {}
+#     kwargs = {'num_workers': 1, 'pin_memory': True} if cuda else {}
 
+    # Parameters
+    json_dir = os.path.join(getAbsPathRepository(),'runs/training/ae_v06_skip/')
+    datasources_json_path = os.path.join(json_dir, 'datasources_distributed_test.json')
+    input_shape = (28, 28, 1)
+    output_shape = (28, 28, 1)
+    data_sources = WkwData.datasources_from_json(datasources_json_path)
+    data_split = DataSplit(train=0.70, validation=0.00, test=0.30)
+    cache_RAM = True
+    cache_HDD = True
+    cache_root = os.path.join('/conndata/alik/genEM3_runs/VAE/', '.cache/')
+    mkdir(cache_root)
+    
+    num_workers = 8
+    
+    dataset = WkwData(
+        input_shape=input_shape,
+        target_shape=output_shape,
+        data_sources=data_sources,
+        data_split=data_split,
+        cache_RAM=cache_RAM,
+        cache_HDD=cache_HDD,
+        cache_HDD_root=cache_root
+    )
+    
+    train_sampler = SubsetRandomSampler(dataset.data_train_inds)
     train_loader = torch.utils.data.DataLoader(
-        datasets.MNIST('./data', train=True, download=True, transform=transforms.ToTensor()),
-        batch_size=args.batch_size, shuffle=True, **kwargs)
-
+        dataset=dataset, batch_size=args.batch_size, num_workers=num_workers, sampler=train_sampler,
+        collate_fn=dataset.collate_fn)
+    
+    test_sampler = SubsetRandomSampler(dataset.data_test_inds)
     test_loader = torch.utils.data.DataLoader(
-        datasets.MNIST('./data', train=False, transform=transforms.ToTensor()),
-        batch_size=args.batch_size, shuffle=True, **kwargs)
-
+        dataset=dataset, batch_size=args.batch_size, num_workers=num_workers, sampler=test_sampler,
+        collate_fn=dataset.collate_fn)
+    # Model and optimizer definition
     model = ConvVAE(args.latent_size).to(device)
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
 
