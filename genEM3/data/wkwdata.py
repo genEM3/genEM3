@@ -435,7 +435,7 @@ class WkwData(Dataset):
             self.wkw_create(output_wkw_path)
 
         print('Writing cache to wkw ... ' + output_wkw_path + ' | ' + wkw_bbox)
-        bbox_from_str = [int(x) for x in wkw_bbox[2:-1].split(',')]
+        bbox_from_str = [int(x) for x in wkw_bbox[1:-1].split(',')]
         self.wkw_write(output_wkw_path, bbox_from_str, data)
 
     def get_source_mesh_for_sample_idx(self, sample_idx):
