@@ -1,6 +1,10 @@
 """ This module contains the functionality related to filesystem directories"""
 import os
 
+def mkdir(dir2Make):
+    """Make the directory if already not made"""
+    if not os.path.isdir(dir2Make):
+        os.makedirs(dir2Make)
 
 def getAbsPathRepository():
     """ Return the absolute directory of the genEM3 to use for navigation"""

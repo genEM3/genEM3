@@ -180,14 +180,15 @@ class WkwData(Dataset):
     def get_data_ind_splits(self):
 
         if type(self.data_split.train) is float:
-
-            data_inds_all = list(range(self.data_inds_max[-1]+1))
+            # Create variable for the maximum index of training examples 
+            maxIndex = self.data_inds_max[-1]
+            data_inds_all = list(range(maxIndex+1))
             data_inds_all_rand = np.random.permutation(data_inds_all)
-            train_idx_max = int(self.data_split.train*self.data_inds_max[-1])
+            train_idx_max = int(self.data_split.train*maxIndex)
             data_train_inds = list(data_inds_all_rand[0:train_idx_max])
-            validation_idx_max = train_idx_max + int(self.data_split.validation * self.data_inds_max[-1])
+            validation_idx_max = train_idx_max + int(self.data_split.validation * maxIndex)
             data_validation_inds = list(data_inds_all_rand[train_idx_max+1:validation_idx_max])
-            test_idx_max = validation_idx_max + int(self.data_split.validation * self.data_inds_max[-1])
+            test_idx_max = validation_idx_max + int(self.data_split.test * maxIndex)
             data_test_inds = list(data_inds_all_rand[validation_idx_max+1:test_idx_max])
 
         else:
