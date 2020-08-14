@@ -14,13 +14,13 @@ from genEM3.inference.writer import DataWriter
 
 run_root = os.path.dirname(os.path.abspath(__file__))
 cache_HDD_root = os.path.join(run_root, '.cache/')
-datasources_json_path = os.path.join(run_root, 'datasources_distributed_test.json')
+datasources_json_path = os.path.join(run_root, 'datasources_distributed_test2.json')
 state_dict_path = os.path.join(run_root, '../../training/ae_classify_v03_1layer_unfreeze_latent_debris_clean/.log/run_w_pr/epoch_30/model_state_dict')
 device = 'cpu'
 
 output_wkw_root = '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8_artifact_pred'
 
-batch_size = 16
+batch_size = 64
 input_shape = (140, 140, 1)
 output_shape = (1, 1, 1)
 num_workers = 0
@@ -40,7 +40,7 @@ dataset = WkwData(
     input_shape=input_shape,
     target_shape=output_shape,
     data_sources=datasources,
-    stride=(140, 140, 1),
+    stride=(70, 70, 1),
     cache_HDD=True,
     cache_RAM=True,
     cache_HDD_root=cache_HDD_root
@@ -54,7 +54,7 @@ state_dict = checkpoint['model_state_dict']
 model.load_state_dict(state_dict)
 
 def prob_collate_fn(outputs):
-    outputs_collate = list(np.exp(outputs.detach().numpy())[:, 0, :, :])
+    outputs_collate = list(np.exp(outputs.detach().numpy())[:, 1, :, :])
     return outputs_collate
 
 output_dtype = np.uint8
@@ -70,7 +70,7 @@ datawriter_prob = DataWriter(
     output_dtype_fn=output_dtype_fn
 )
 
-datawriters = {'prediction_probabilities': datawriter_prob}
+datawriters = {'probs_wkw': datawriter_prob}
 
 predictor = Predictor(
     dataloader=prediction_loader,

@@ -147,14 +147,14 @@ class WkwData(Dataset):
         return self.get_ordered_sample(idx)
 
     def get_data_meshes(self):
-        [self.data_meshes.append(self._get_data_mesh(i)) for i in range(len(self.data_sources))]
+        [self.data_meshes.append(self.get_data_mesh(i)) for i in range(len(self.data_sources))]
 
-    def _get_data_mesh(self, data_source_idx):
+    def get_data_mesh(self, data_source_idx):
 
-        corner_min_target = np.ceil(np.asarray(self.data_sources[data_source_idx].input_bbox[0:3]) +
-                                    np.asarray(self.input_shape) / 2 - np.asarray(self.output_shape) / 2).astype(int)
-        n_fits = np.floor(np.asarray(self.data_sources[data_source_idx].input_bbox[3:6]) /
-                                    np.asarray(self.stride)).astype(int)
+        corner_min_target = np.floor(np.asarray(self.data_sources[data_source_idx].input_bbox[0:3]) +
+                                    np.asarray(self.input_shape) / 2).astype(int)
+        n_fits = np.ceil((np.asarray(self.data_sources[data_source_idx].input_bbox[3:6]) -
+                           np.asarray(self.input_shape) / 2) / np.asarray(self.stride)).astype(int)
         corner_max_target = corner_min_target + n_fits * np.asarray(self.stride)
         x = np.arange(corner_min_target[0], corner_max_target[0], self.stride[0])
         y = np.arange(corner_min_target[1], corner_max_target[1], self.stride[1])
@@ -190,9 +190,7 @@ class WkwData(Dataset):
             data_validation_inds = list(data_inds_all_rand[train_idx_max+1:validation_idx_max])
             test_idx_max = validation_idx_max + int(self.data_split.test * maxIndex)
             data_test_inds = list(data_inds_all_rand[validation_idx_max+1:test_idx_max])
-
         else:
-
             data_train_inds = []
             for i, id in enumerate(self.data_split.train):
                 idx = self.datasource_id_to_idx(id)
@@ -220,20 +218,7 @@ class WkwData(Dataset):
         if normalize is None:
             normalize = self.normalize
 
-        # Get appropriate training data cube sample_idx based on global linear sample_idx
-        source_idx = int(np.argmax(np.asarray(self.data_inds_max) >= sample_idx))
-        # Get appropriate subscript index for the respective training data cube, given the global linear index
-        mesh_inds = np.unravel_index(sample_idx - self.data_inds_min[source_idx],
-                                     dims=self.data_meshes[source_idx]['target']['x'].shape)
-
-        # Get input sample
-        origin_input = [
-            int(self.data_meshes[source_idx]['input']['x'][mesh_inds[0], mesh_inds[1], mesh_inds[2]]),
-            int(self.data_meshes[source_idx]['input']['y'][mesh_inds[0], mesh_inds[1], mesh_inds[2]]),
-            int(self.data_meshes[source_idx]['input']['z'][mesh_inds[0], mesh_inds[1], mesh_inds[2]]),
-        ]
-        bbox_input = origin_input + list(self.input_shape)
-
+        source_idx, bbox_input = self.get_bbox_for_sample_idx(sample_idx, sample_type='input')
         if self.cache_RAM | self.cache_HDD:
             input_ = self.wkw_read_cached(source_idx, 'input', bbox_input)
         else:
@@ -243,21 +228,12 @@ class WkwData(Dataset):
             input_ = WkwData.normalize(input_, self.data_sources[source_idx].input_mean,
                                     self.data_sources[source_idx].input_std)
 
-        # Get target sample
-        origin_target = [
-            self.data_meshes[source_idx]['target']['x'][mesh_inds[0], mesh_inds[1], mesh_inds[2]],
-            self.data_meshes[source_idx]['target']['y'][mesh_inds[0], mesh_inds[1], mesh_inds[2]],
-            self.data_meshes[source_idx]['target']['z'][mesh_inds[0], mesh_inds[1], mesh_inds[2]],
-        ]
-        bbox_target = origin_target + list(self.output_shape)
-
+        source_idx, bbox_target = self.get_bbox_for_sample_idx(sample_idx, sample_type='target')
         if self.data_sources[source_idx].target_binary == 1:
             target = np.asarray(self.data_sources[source_idx].target_class)
-
         else:
             if (self.data_sources[source_idx].input_path == self.data_sources[source_idx].target_path) & \
                     (bbox_input == bbox_target):
-
                 target = input_
             else:
                 if self.cache_RAM | self.cache_HDD:
@@ -290,7 +266,9 @@ class WkwData(Dataset):
             sample_inds = sample_inds.data.numpy().tolist()
 
         for output_idx, sample_idx in enumerate(sample_inds):
-            source_idx, mesh_idx = self.get_source_mesh_for_sample_idx(sample_idx)
+            source_idx, bbox = self.get_bbox_for_sample_idx(sample_idx, 'target')
+            print(bbox)
+
             wkw_path = self.data_sources[source_idx].input_path
             wkw_bbox = self.data_sources[source_idx].input_bbox
 
@@ -304,23 +282,8 @@ class WkwData(Dataset):
                 data = np.full(wkw_bbox[3:6], np.nan, dtype=np.float32)
                 self.data_cache_output[wkw_path][str(wkw_bbox)][output_label] = data
 
-            mesh_inds = np.unravel_index(sample_idx - self.data_inds_min[source_idx],
-                                         dims=self.data_meshes[source_idx]['target']['x'].shape)
-
-            # Get input sample
-            origin_input = [
-                int(self.data_meshes[source_idx]['input']['x'][mesh_inds[0], mesh_inds[1], mesh_inds[2]]),
-                int(self.data_meshes[source_idx]['input']['y'][mesh_inds[0], mesh_inds[1], mesh_inds[2]]),
-                int(self.data_meshes[source_idx]['input']['z'][mesh_inds[0], mesh_inds[1], mesh_inds[2]]),
-            ]
-
-            bbox_output_corner = np.asarray(origin_input[0:3]) + np.floor(np.asarray(self.input_shape)/2 - np.asarray(self.input_shape)/2).astype(int)
-            bbox_output_extent = np.asarray(self.output_shape).astype(int)
-
-            bbox_output = list(np.concatenate((bbox_output_corner, bbox_output_extent)))
-
-            data_min = np.asarray(bbox_output[0:3]) - np.asarray(wkw_bbox[0:3])
-            data_max = data_min + bbox_output_extent
+            data_min = np.asarray(bbox[0:3]) - np.asarray(wkw_bbox[0:3])
+            data_max = data_min + np.asarray(bbox[3:6])
 
             data = self.data_cache_output[wkw_path][str(wkw_bbox)][output_label]
             data[data_min[0]:data_max[0], data_min[1]:data_max[1], data_min[2]:data_max[2]] = outputs[output_idx].reshape(self.output_shape)
@@ -439,14 +402,29 @@ class WkwData(Dataset):
         bbox_from_str = [int(x) for x in wkw_bbox[1:-1].split(',')]
         self.wkw_write(output_wkw_path, bbox_from_str, data)
 
+    def get_bbox_for_sample_idx(self, sample_idx, sample_type='input'):
+        source_idx, mesh_inds = self.get_source_mesh_for_sample_idx(sample_idx)
+        if sample_type == 'input':
+            shape = self.input_shape
+        else:
+            shape = self.output_shape
+        origin = [
+            int(self.data_meshes[source_idx][sample_type]['x'][mesh_inds[0], mesh_inds[1], mesh_inds[2]] - np.floor(shape[0] / 2)),
+            int(self.data_meshes[source_idx][sample_type]['y'][mesh_inds[0], mesh_inds[1], mesh_inds[2]] - np.floor(shape[1] / 2)),
+            int(self.data_meshes[source_idx][sample_type]['z'][mesh_inds[0], mesh_inds[1], mesh_inds[2]] - np.floor(shape[2] / 2)),
+        ]
+        bbox = origin + list(shape)
+
+        return source_idx, bbox
+
     def get_source_mesh_for_sample_idx(self, sample_idx):
         # Get appropriate training data cube sample_idx based on global linear sample_idx
-        source_idx = int(np.argmax(np.asarray(self.data_inds_max) >= sample_idx))
+        source_idx = int(np.argmax(np.asarray(self.data_inds_max) >= int(sample_idx)))
         # Get appropriate subscript index for the respective training data cube, given the global linear index
-        mesh_idx = np.unravel_index(sample_idx - self.data_inds_min[source_idx],
+        mesh_inds = np.unravel_index(sample_idx - self.data_inds_min[source_idx],
                                      dims=self.data_meshes[source_idx]['target']['x'].shape)
 
-        return source_idx, mesh_idx
+        return source_idx, mesh_inds
 
     def get_datasources_stats(self, num_samples=30):
         return [self.get_datasource_stats(i, num_samples) for i in range(len(self.data_sources))]
@@ -512,9 +490,7 @@ class WkwData(Dataset):
 
     @staticmethod
     def wkw_create(wkw_path, wkw_dtype=np.uint8):
-        with wkw.Dataset.create(wkw_path, wkw.Header(wkw_dtype)) as dataset:
-            assert dataset.header.voxel_type == wkw_dtype
-            assert os.path.exists(os.path.join(wkw_path, "header.wkw"))
+        wkw.Dataset.create(wkw_path, wkw.Header(np.uint8))
 
     @staticmethod
     def assert_data_completeness(data):

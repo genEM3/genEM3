@@ -3,22 +3,22 @@
         "id": 0,
         "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
         "input_bbox": [
-                21000,
+                20950,
                 17500,
-                6450,
-                500,
-                500,
+                6451,
+                560,
+                560,
                 100
         ],
         "input_mean": 148.0,
         "input_std": 36.0,
         "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
         "target_bbox": [
-                21000,
+                20950,
                 17500,
-                6450,
-                500,
-                500,
+                6451,
+                560,
+                560,
                 100
         ]
     }
