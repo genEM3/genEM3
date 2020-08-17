@@ -86,7 +86,7 @@ for name, param in model.named_parameters():
 criterion = torch.nn.NLLLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.000002)
 
-num_epoch = 30
+num_epoch = 100
 log_int = 2
 device = 'cpu'
 save = True
