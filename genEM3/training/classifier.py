@@ -97,13 +97,14 @@ class Trainer:
                 targets_phase = -np.ones(num_items).astype(int)
                 correct_phase = -np.ones(num_items).astype(int)
 
-                for i, (data, index) in enumerate(self.data_loaders[phase]):
+                for i, data in enumerate(self.data_loaders[phase]):
 
                     it += 1
 
                     # copy input and targets to the device object
                     inputs = data['input'].to(self.device)
                     targets = data['target'].to(self.device)
+                    index = data['sample_idx']
                     # zero the parameter gradients
                     self.optimizer.zero_grad()
 

@@ -3,10 +3,10 @@ import torch
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 
+from genEM3.data import transforms
 from genEM3.data.wkwdata import WkwData, DataSplit
 from genEM3.model.autoencoder2d import AE, Encoder_4_sampling_bn_1px_deep_convonly_skip, AE_Encoder_Classifier, Classifier
 from genEM3.training.classifier import Trainer
-from genEM3.data.transform.augment import Augment
 
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
@@ -25,14 +25,19 @@ batch_size = 64
 num_workers = 0
 
 data_sources = WkwData.datasources_from_json(datasources_json_path)
-transforms = Augment(p_flip=0.5, p_rot=1.0)
-x = transforms(torch.randn((10,10)))
+
+transforms = transforms.Compose([
+    transforms.RandomFlip(p=0.5, flip_plane=(1,2)),
+    transforms.RandomFlip(p=0.5, flip_plane=(2,1)),
+    transforms.RandomRotation90(p=1.0, mult_90=[0, 1, 2, 3], rot_plane=(1,2))
+])
+
 dataset = WkwData(
     input_shape=input_shape,
     target_shape=output_shape,
     data_sources=data_sources,
     data_split=data_split,
-    transforms=transforms(),
+    transforms=transforms,
     cache_RAM=cache_RAM,
     cache_HDD=cache_HDD,
     cache_HDD_root=cache_HDD_root

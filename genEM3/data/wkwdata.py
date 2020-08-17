@@ -1,10 +1,10 @@
 import os
 import json
 import random
-from typing import Tuple, Sequence, List, Callable
-from collections import namedtuple
-
 import numpy as np
+from collections import namedtuple
+from typing import Tuple, Sequence, List, Callable
+import matplotlib.pyplot as plt
 import torch
 from torch.utils.data import Dataset
 import wkw
@@ -251,7 +251,7 @@ class WkwData(Dataset):
             input_ = input_.squeeze(3)
 
         if self.transforms:
-            input_ = self.transforms(input)
+            input_ = self.transforms(input_)
 
         if self.data_sources[source_idx].target_binary == 1:
             target = torch.from_numpy(target).long()
@@ -262,7 +262,7 @@ class WkwData(Dataset):
             if self.transforms:
                 target = self.transforms(target)
 
-        return {'input': input_, 'target': target}, sample_idx
+        return {'input': input_, 'target': target, 'sample_idx': sample_idx}
 
     def write_output_to_cache(self,
                               outputs: List[np.ndarray],
@@ -298,13 +298,11 @@ class WkwData(Dataset):
 
 
     def get_random_sample(self):
-
         """ Retrieves a random pair of input and target tensors from all available training cubes"""
 
-        idx = random.sample(range(self.data_inds_max[-1]), 1)
-        input_, target = self.get_ordered_sample(idx)
+        sample_idx = random.sample(range(self.data_inds_max[-1]), 1)
 
-        return {'input': input_, 'target': target}
+        return self.get_ordered_sample(sample_idx)
 
     def pad(self, target):
         pad_shape = np.floor((np.asarray(self.input_shape) - np.asarray(self.output_shape)) / 2).astype(int)
@@ -466,11 +464,22 @@ class WkwData(Dataset):
         id = self.data_sources[idx].id
         return id
 
+    def show_sample(self, sample_idx):
+        (data, index) = self.__getitem__(sample_idx)
+        fig, axs = plt.subplots(1,2)
+        input_ = data['input'].data.numpy().squeeze()
+        axs[0].imshow(input_, cmap='gray')
+        target = data['target'].data.numpy().squeeze()
+        while target.ndim < 2:
+            target = np.expand_dims(target, 0)
+        axs[1].imshow(target, cmap='gray')
+
     @staticmethod
     def collate_fn(batch):
         input_ = torch.cat([torch.unsqueeze(item['input'], dim=0) for item in batch], dim=0)
         target = torch.cat([torch.unsqueeze(item['target'], dim=0) for item in batch], dim=0)
-        return {'input': input_, 'target': target}
+        sample_idx = [item['sample_idx'] for item in batch]
+        return {'input': input_, 'target': target, 'sample_idx': sample_idx}
 
     @staticmethod
     def normalize(data, mean, std):
