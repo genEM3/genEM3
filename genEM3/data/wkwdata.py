@@ -1,7 +1,7 @@
 import os
 import json
 import random
-from typing import Tuple, Sequence, List
+from typing import Tuple, Sequence, List, Callable
 from collections import namedtuple
 
 import numpy as np
@@ -46,6 +46,7 @@ class WkwData(Dataset):
                  data_split: DataSplit = None,
                  stride: Tuple[int, int, int] = None,
                  normalize: bool = True,
+                 transforms: Callable = None,
                  pad_target: bool = False,
                  cache_RAM: bool = True,
                  cache_HDD: bool = False,
@@ -115,6 +116,7 @@ class WkwData(Dataset):
             self.stride = stride
 
         self.normalize = normalize
+        self.transforms = transforms
         self.pad_target = pad_target
         self.cache_RAM = cache_RAM
         self.cache_HDD = cache_HDD
@@ -248,12 +250,17 @@ class WkwData(Dataset):
         if self.input_shape[2] == 1:
             input_ = input_.squeeze(3)
 
+        if self.transforms:
+            input_ = self.transforms(input)
+
         if self.data_sources[source_idx].target_binary == 1:
             target = torch.from_numpy(target).long()
         else:
             target = torch.from_numpy(target).float()
             if self.output_shape[2] == 1:
                 target = target.squeeze(3)
+            if self.transforms:
+                target = self.transforms(target)
 
         return {'input': input_, 'target': target}, sample_idx
 
