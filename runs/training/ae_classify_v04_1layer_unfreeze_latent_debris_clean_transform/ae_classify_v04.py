@@ -19,10 +19,10 @@ output_shape = (140, 140, 1)
 
 data_split = DataSplit(train=0.75, validation=0.15, test=0.1)
 cache_RAM = True
-cache_HDD = True
+cache_HDD = False
 cache_root = os.path.join(run_root, '.cache/')
-batch_size = 64
-num_workers = 0
+batch_size = 128
+num_workers = 8
 
 data_sources = WkwData.datasources_from_json(datasources_json_path)
 
