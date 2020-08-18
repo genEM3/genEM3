@@ -3,8 +3,8 @@ import numpy as np
 from genEM3.data.wkwdata import WkwData, DataSource
 
 run_root = os.path.dirname(os.path.abspath(__file__))
-datasources_json_path = os.path.join(run_root, '../../data/debris_clean_datasource.json')
-datasources_json_path_out = os.path.join(run_root, '../../data/debris_clean_wiggle_datasource.json')
+datasources_json_path = os.path.join(run_root, '../../data/debris_clean_added_bboxes_datasource.json')
+datasources_json_path_out = os.path.join(run_root, '../../data/debris_clean_added_bboxes_wiggle_datasource.json')
 
 
 wiggles = [
@@ -20,8 +20,8 @@ data_sources_out = []
 for data_source in data_sources:
     data_sources_out.append(data_source)
     id = data_source.id
-    if data_source.target_binary == 1:
-        bbox = data_source.input_bbox
+    bbox = data_source.input_bbox
+    if (data_source.target_class == 1) & (bbox[3:] == [140, 140, 1]):
         for wiggle_idx, wiggle in enumerate(wiggles):
             id_out = '{:05.0f}'.format(int(id)+(wiggle_idx+1)*1E4)
             bbox_out = [bbox[0] + wiggle[0], bbox[1] + wiggle[1], *bbox[2:]]

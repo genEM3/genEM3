@@ -98,6 +98,30 @@ class Classifier(nn.Module):
         return x
 
 
+class Classifier3Layered(nn.Module):
+
+    def __init__(self, n_latent):
+        super().__init__()
+
+        self.input = nn.Sequential(
+            nn.Conv2d(n_latent, 256, kernel_size=1),
+            nn.LeakyReLU())
+        self.hidden = nn.Sequential(
+            nn.Conv2d(256, 24, kernel_size=1),
+            nn.LeakyReLU())
+        self.output = nn.Sequential(
+            nn.Conv2d(24, 2, kernel_size=1),
+            nn.LogSoftmax(dim=1))
+
+    def forward(self, x):
+
+        x = self.input(x)
+        x = self.binary(x)
+        x = self.output(x)
+
+        return x
+
+
 class Encoder_4_sampling_1px_deep_convonly_skip(nn.Module):
 
     def __init__(self, input_size, kernel_size, stride, n_fmaps=16, n_latent=2048):
