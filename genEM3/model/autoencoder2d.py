@@ -116,7 +116,7 @@ class Classifier3Layered(nn.Module):
     def forward(self, x):
 
         x = self.input(x)
-        x = self.binary(x)
+        x = self.hidden(x)
         x = self.output(x)
 
         return x
