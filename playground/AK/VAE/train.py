@@ -125,18 +125,20 @@ def main():
     cache_root = os.path.join('/conndata/alik/genEM3_runs/VAE/', '.cache/')
     mkdir(cache_root)
     
-    num_workers = 8
+    num_workers = 0
     
     dataset = WkwData(
         input_shape=input_shape,
         target_shape=output_shape,
         data_sources=data_sources,
         data_split=data_split,
+        normalize=True,
+        normalize_fn='normalize_to_0_1',
         cache_RAM=cache_RAM,
         cache_HDD=cache_HDD,
         cache_HDD_root=cache_root
     )
-    
+    # Data loaders for training and test
     train_sampler = SubsetRandomSampler(dataset.data_train_inds)
     train_loader = torch.utils.data.DataLoader(
         dataset=dataset, batch_size=args.batch_size, num_workers=num_workers, sampler=train_sampler,
