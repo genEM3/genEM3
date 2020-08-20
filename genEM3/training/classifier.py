@@ -8,6 +8,7 @@ from torch import nn
 from torch.utils.tensorboard import SummaryWriter
 from torch import device as torchDevice
 from genEM3.util import gpu
+from genEM3.training.metrics import Metrics
 
 
 class Trainer:
@@ -151,12 +152,18 @@ class Trainer:
                       ', epoch: {}: epoch loss: {:0.4f}, epoch accuracy: {:0.3f} '.
                       format(epoch, epoch_loss_log, epoch_accuracy_log))
 
-                metrics = Trainer.compute_metrics(targets=targets_phase, predictions=predictions_phase)
+                metrics = Metrics(
+                    targets=targets_phase, outputs=outputs_phase, output_prob_fn=lambda x: np.exp(x[:, 1]),
+                    sample_ind=self.data_loaders[phase].batch_sampler.sampler.indices)
+                metrics.confusion_table(
+                    path_out=os.path.join(self.log_root, epoch_root, 'confusion_table.csv'))
+                metrics.prediction_table(
+                    path_out=os.path.join(self.log_root, epoch_root, 'prediction_table.csv'))
 
                 writer.add_scalars('epoch_loss', {phase: epoch_loss_log}, epoch)
                 writer.add_scalars('epoch_accuracy', {phase: epoch_accuracy_log}, epoch)
-                writer.add_scalars('precision', {phase: metrics['precision']}, epoch)
-                writer.add_scalars('recall', {phase: metrics['recall']}, epoch)
+                writer.add_scalars('precision/PPV', {phase: metrics['PPV']}, epoch)
+                writer.add_scalars('recall/TPR', {phase: metrics['TPR']}, epoch)
 
                 sample_inds_epoch = [
                     self.data_loaders[phase].batch_sampler.sampler.indices.index(ind) for ind in sample_inds[phase][0:4]]
@@ -166,10 +173,16 @@ class Trainer:
                 fig.savefig(os.path.join(self.log_root, epoch_root, figname + '_' + phase + '.png'))
                 writer.add_figure(figname + phase, fig, epoch)
 
-                fig = Trainer.show_classification_matrix(targets=targets_phase, predictions=predictions_phase, metrics=metrics)
+                fig = Trainer.show_classification_matrix(targets=targets_phase, predictions=predictions_phase,
+                                                         metrics=metrics)
                 figname = 'targets_outputs_correct_'
                 fig.savefig(os.path.join(self.log_root, epoch_root, figname + '_' + phase + '.png'))
+                fig.savefig(os.path.join(self.log_root, epoch_root, figname + '_' + phase + '.eps'))
                 writer.add_figure(figname + phase, fig, epoch)
+
+                writer.add_pr_curve(
+                    'pr_curve_'+phase, labels=targets_phase, predictions=np.exp(outputs_phase[:, 1]), global_step=it,
+                    num_thresholds=50)
 
                 if self.save & (phase == 'train'):
                     print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Writing model graph ... ')
@@ -184,13 +197,6 @@ class Trainer:
                     torch.save({
                         'optimizer_state_dict': self.optimizer.state_dict()
                     }, os.path.join(self.log_root, 'optimizer_state_dict'))
-
-                if phase == 'test':
-                    writer.add_pr_curve(
-                        'pr_curve_test', labels=targets_phase, predictions=np.exp(outputs_phase[:, 1]), global_step=it,
-                        num_thresholds=50)
-
-
 
         print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Finished training ... ')
 
@@ -242,55 +248,14 @@ class Trainer:
         return fig
 
     @staticmethod
-    def compute_metrics(targets, predictions):
-
-        metrics = dict()
-        metrics['inds_true_pos'] = (predictions == 1) & (targets == 1)
-        metrics['sum_true_pos'] = sum(metrics['inds_true_pos'])
-        metrics['inds_false_pos'] = (predictions == 1) & (targets == 0)
-        metrics['sum_false_pos'] = sum(metrics['inds_false_pos'])
-        metrics['inds_true_neg'] = (predictions == 0) & (targets == 0)
-        metrics['sum_true_neg'] = sum(metrics['inds_true_neg'])
-        metrics['inds_false_neg'] = (predictions == 0) & (targets == 1)
-        metrics['sum_false_neg'] = sum(metrics['inds_false_neg'])
-
-        metrics['accuracy'] = (metrics['sum_true_pos'] + metrics['sum_true_neg']) / len(targets)
-
-        if metrics['sum_true_pos'] + metrics['sum_true_neg'] > 0:
-            metrics['true_pos_rate'] = metrics['sum_true_pos'] / (metrics['sum_true_pos'] + metrics['sum_true_neg'])
-            metrics['true_neg_rate'] = metrics['sum_true_neg'] / (metrics['sum_true_pos'] + metrics['sum_true_neg'])
-        else:
-            metrics['true_pos_rate'] = np.NaN
-            metrics['true_neg_rate'] = np.NaN
-
-        if metrics['sum_true_pos'] + metrics['sum_true_neg'] > 0:
-            metrics['false_pos_rate'] = metrics['sum_false_pos'] / (metrics['sum_false_pos'] + metrics['sum_false_neg'])
-            metrics['false_neg_rate'] = metrics['sum_false_neg'] / (metrics['sum_false_pos'] + metrics['sum_false_neg'])
-        else:
-            metrics['false_pos_rate'] = np.NaN
-            metrics['false_neg_rate'] = np.NaN
-
-        if (metrics['sum_true_pos'] + metrics['sum_false_pos']) > 0:
-            metrics['precision'] = metrics['sum_true_pos'] / (metrics['sum_true_pos'] + metrics['sum_false_pos'])
-        else:
-            metrics['precision'] = np.NaN
-
-        if (metrics['sum_true_pos'] + metrics['sum_false_neg']) > 0:
-            metrics['recall'] = metrics['sum_true_pos'] / (metrics['sum_true_pos'] + metrics['sum_false_neg'])
-        else:
-            metrics['recall'] = np.NaN
-
-        return metrics
-
-    @staticmethod
     def show_classification_matrix(targets, predictions, metrics):
 
         targets_pr = targets.copy().astype(int)
         predictions_pr = predictions.copy().astype(int)
         correct_pr = ((targets_pr == 0) == (predictions_pr == 0)) | ((targets_pr == 1) == (predictions_pr == 1)) + 2
         code_pr = targets_pr.copy()
-        code_pr[metrics['inds_true_neg']] = 4
-        code_pr[metrics['inds_true_pos']] = 5
+        code_pr[metrics['TN_idx']] = 4
+        code_pr[metrics['TP_idx']] = 5
         code_pr[predictions_pr > targets_pr] = 6
         code_pr[predictions_pr < targets_pr] = 7
 
@@ -316,26 +281,26 @@ class Trainer:
         axs2.text(0.017, 0.75, 'artifact', c=(0.2, 0.2, 0.2), backgroundcolor=colors[1], transform=axs2.transAxes)
         axs2.text(0.017, 0.50, 'no artifact', c=(0.8, 0.8, 0.8), backgroundcolor=colors[0], transform=axs2.transAxes)
         axs2.text(0.27, 1.00, 'accuracy', c=(0.2, 0.2, 0.2), weight='bold', transform=axs2.transAxes)
-        axs2.text(0.20, 0.75, 'frac correct:   {:03d}/{:03d}={:01.2f}'.format(metrics['sum_true_pos'] +
-                  metrics['sum_true_neg'], len(targets), (metrics['sum_true_pos'] +
-                  metrics['sum_true_neg'])/len(targets)), c=(0.2, 0.2, 0.2), backgroundcolor=colors[3],
+        axs2.text(0.20, 0.75, 'frac correct:   {:03d}/{:03d}={:01.2f}'.format(metrics['TP'] +
+                  metrics['TN'], len(targets), (metrics['TP'] +
+                  metrics['TN'])/len(targets)), c=(0.2, 0.2, 0.2), backgroundcolor=colors[3],
                   transform=axs2.transAxes)
-        axs2.text(0.20, 0.50, 'frac incorrect: {:03d}/{:03d}={:01.2f}'.format(metrics['sum_false_pos'] +
-                  metrics['sum_false_neg'], len(targets), (metrics['sum_false_pos'] +
-                  metrics['sum_false_neg'])/len(targets)), c=(0.2, 0.2, 0.2), backgroundcolor=colors[2],
+        axs2.text(0.20, 0.50, 'frac incorrect: {:03d}/{:03d}={:01.2f}'.format(metrics['FP'] +
+                  metrics['FN'], len(targets), (metrics['FP'] +
+                  metrics['FN'])/len(targets)), c=(0.2, 0.2, 0.2), backgroundcolor=colors[2],
                   transform=axs2.transAxes)
         axs2.text(0.60, 1.00, 'confusion', c=(0.2, 0.2, 0.2), weight='bold', transform=axs2.transAxes)
-        axs2.text(0.50, 0.75, 'TP: {:01.2f}'.format(metrics['true_pos_rate']), c=(0.8, 0.8, 0.8),
+        axs2.text(0.50, 0.75, 'TP: {:01.2f}'.format(metrics['TP']), c=(0.8, 0.8, 0.8),
                   backgroundcolor=colors[5], transform=axs2.transAxes)
-        axs2.text(0.50, 0.50, 'TN: {:01.2f}'.format(metrics['true_neg_rate']), c=(0.8, 0.8, 0.8),
+        axs2.text(0.50, 0.50, 'TN: {:01.2f}'.format(metrics['TN']), c=(0.8, 0.8, 0.8),
                   backgroundcolor=colors[4], transform=axs2.transAxes)
-        axs2.text(0.60, 0.75, 'FP: {:01.2f}'.format(metrics['false_pos_rate']), c=(0.2, 0.2, 0.2),
+        axs2.text(0.60, 0.75, 'FP: {:01.2f}'.format(metrics['FP']), c=(0.2, 0.2, 0.2),
                   backgroundcolor=colors[6], transform=axs2.transAxes)
-        axs2.text(0.60, 0.50, 'FN: {:01.2f}'.format(metrics['false_neg_rate']), c=(0.2, 0.2, 0.2),
+        axs2.text(0.60, 0.50, 'FN: {:01.2f}'.format(metrics['FN']), c=(0.2, 0.2, 0.2),
                   backgroundcolor=colors[7], transform=axs2.transAxes)
-        axs2.text(0.70, 0.75, 'Precision: {:01.2f}'.format(metrics['precision']), c=(0.2, 0.2, 0.2),
+        axs2.text(0.70, 0.75, 'Precision: {:01.2f}'.format(metrics['PPV']), c=(0.2, 0.2, 0.2),
                   backgroundcolor=(0.7, 0.7, 0.7), transform=axs2.transAxes)
-        axs2.text(0.70, 0.50, 'Recall:    {:01.2f}'.format(metrics['recall']), c=(0.2, 0.2, 0.2),
+        axs2.text(0.70, 0.50, 'Recall:    {:01.2f}'.format(metrics['TPR']), c=(0.2, 0.2, 0.2),
                   backgroundcolor=(0.7, 0.7, 0.7), transform=axs2.transAxes)
         axs2.axis('off')
 

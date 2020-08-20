@@ -222,6 +222,7 @@ class WkwData(Dataset):
         if normalize is None:
             normalize = self.normalize
 
+        # Inputs
         source_idx, bbox_input = self.get_bbox_for_sample_idx(sample_idx, sample_type='input')
         if self.cache_RAM | self.cache_HDD:
             input_ = self.wkw_read_cached(source_idx, 'input', bbox_input)
@@ -232,6 +233,14 @@ class WkwData(Dataset):
             input_ = self.normalize_fn(input_, self.data_sources[source_idx].input_mean,
                                     self.data_sources[source_idx].input_std)
 
+        input_ = torch.from_numpy(input_).float()
+        if self.input_shape[2] == 1:
+            input_ = input_.squeeze(3)
+
+        if self.transforms:
+            input_ = self.transforms(input_)
+
+        # Targets
         source_idx, bbox_target = self.get_bbox_for_sample_idx(sample_idx, sample_type='target')
         if self.data_sources[source_idx].target_binary == 1:
             target = np.asarray(self.data_sources[source_idx].target_class)
@@ -247,13 +256,6 @@ class WkwData(Dataset):
 
         if self.pad_target is True:
             target = self.pad(target)
-
-        input_ = torch.from_numpy(input_).float()
-        if self.input_shape[2] == 1:
-            input_ = input_.squeeze(3)
-
-        if self.transforms:
-            input_ = self.transforms(input_)
 
         if self.data_sources[source_idx].target_binary == 1:
             target = torch.from_numpy(target).long()
