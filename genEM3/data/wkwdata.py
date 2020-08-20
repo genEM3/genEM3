@@ -469,14 +469,14 @@ class WkwData(Dataset):
         return id
 
     def show_sample(self, sample_idx):
-        (data, index) = self.__getitem__(sample_idx)
+        data = self.__getitem__(sample_idx)
         fig, axs = plt.subplots(1,2)
         input_ = data['input'].data.numpy().squeeze()
         axs[0].imshow(input_, cmap='gray')
         target = data['target'].data.numpy().squeeze()
         while target.ndim < 2:
             target = np.expand_dims(target, 0)
-        axs[1].imshow(target, cmap='gray')
+        axs[1].imshow(target, cmap='gray', vmin=0, vmax=1)
 
     @staticmethod
     def collate_fn(batch):

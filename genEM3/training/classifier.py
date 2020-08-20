@@ -75,9 +75,6 @@ class Trainer:
 
             for phase in self.data_loaders.keys():
 
-                if epoch == 1:
-                    sample_inds[phase] = self.data_loaders[phase].batch_sampler.sampler.indices
-
                 if phase == 'train':
                     self.model.train(True)
                 else:
@@ -98,6 +95,7 @@ class Trainer:
                 targets_phase = -np.ones(num_items).astype(int)
                 correct_phase = -np.ones(num_items).astype(int)
 
+                sample_ind_phase = []
                 for i, data in enumerate(self.data_loaders[phase]):
 
                     it += 1
@@ -105,7 +103,9 @@ class Trainer:
                     # copy input and targets to the device object
                     inputs = data['input'].to(self.device)
                     targets = data['target'].to(self.device)
-                    index = data['sample_idx']
+                    sample_ind_batch = data['sample_idx']
+                    sample_ind_phase.extend(sample_ind_batch)
+
                     # zero the parameter gradients
                     self.optimizer.zero_grad()
 
@@ -154,7 +154,7 @@ class Trainer:
 
                 metrics = Metrics(
                     targets=targets_phase, outputs=outputs_phase, output_prob_fn=lambda x: np.exp(x[:, 1]),
-                    sample_ind=self.data_loaders[phase].batch_sampler.sampler.indices)
+                    sample_ind=sample_ind_phase)
                 metrics.confusion_table(
                     path_out=os.path.join(self.log_root, epoch_root, 'confusion_table_' + phase + '.csv'))
                 metrics.prediction_table(
@@ -162,19 +162,18 @@ class Trainer:
 
                 writer.add_scalars('epoch_loss', {phase: epoch_loss_log}, epoch)
                 writer.add_scalars('epoch_accuracy', {phase: epoch_accuracy_log}, epoch)
-                writer.add_scalars('precision/PPV', {phase: metrics['PPV']}, epoch)
-                writer.add_scalars('recall/TPR', {phase: metrics['TPR']}, epoch)
+                writer.add_scalars('precision/PPV', {phase: metrics.metrics['PPV']}, epoch)
+                writer.add_scalars('recall/TPR', {phase: metrics.metrics['TPR']}, epoch)
 
-                sample_inds_epoch = [
-                    self.data_loaders[phase].batch_sampler.sampler.indices.index(ind) for ind in sample_inds[phase][0:4]]
                 fig = Trainer.show_imgs(inputs=inputs_phase, outputs=outputs_phase, predictions=predictions_phase,
-                                        targets=targets_phase, inds=sample_inds_epoch)
+                                        targets=targets_phase,
+                                        sample_ind=sample_ind_phase)
                 figname = 'image_examples_'
                 fig.savefig(os.path.join(self.log_root, epoch_root, figname + '_' + phase + '.png'))
                 writer.add_figure(figname + phase, fig, epoch)
 
                 fig = Trainer.show_classification_matrix(targets=targets_phase, predictions=predictions_phase,
-                                                         metrics=metrics)
+                                                         metrics=metrics.metrics)
                 figname = 'targets_outputs_correct_'
                 fig.savefig(os.path.join(self.log_root, epoch_root, figname + '_' + phase + '.png'))
                 fig.savefig(os.path.join(self.log_root, epoch_root, figname + '_' + phase + '.eps'))
@@ -183,6 +182,9 @@ class Trainer:
                 writer.add_pr_curve(
                     'pr_curve_'+phase, labels=targets_phase, predictions=np.exp(outputs_phase[:, 1]), global_step=it,
                     num_thresholds=50)
+
+                if epoch == 5:
+                    a = 1
 
                 if self.save & (phase == 'train'):
                     print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Writing model graph ... ')
@@ -224,24 +226,31 @@ class Trainer:
         return fig
 
     @staticmethod
-    def show_imgs(inputs, outputs, predictions, targets, inds, class_idx=1):
-        fig, axs = plt.subplots(2, len(inds), figsize=(3*len(inds), 6))
-        for i, idx in enumerate(inds):
+    def show_imgs(inputs, outputs, predictions, targets, sample_ind, class_idx=1, plot_ind = None):
+
+        if plot_ind is None:
+            plot_ind = list(range(5))
+
+        fig, axs = plt.subplots(2, len(plot_ind), figsize=(3 * len(plot_ind), 6))
+        for i, sample_idx in enumerate(np.asarray(sample_ind)[plot_ind]):
             input = inputs[i, 0, :, :].squeeze()
-            axs[0, idx].imshow(input, cmap='gray')
-            axs[0, idx].axis('off')
+            axs[0, i].imshow(input, cmap='gray')
+            axs[0, i].axis('off')
             output = np.tile(np.exp((outputs[i][class_idx])), (int(input.shape[0]/3), int(input.shape[1])))
             prediction = np.tile(int(predictions[i]), (int(input.shape[0]/3), int(input.shape[1])))
             target = np.tile(int(targets[i]), (int(input.shape[0]/3), int(input.shape[1])))
             fused = np.concatenate((output, prediction, target), axis=0)
-            axs[1, idx].imshow(fused, cmap='gray', vmin=0, vmax=1)
-            axs[1, idx].text(0.5, 0.8, 'output (class {:d}): {:01.2f}'.format(class_idx, np.exp((outputs[i][class_idx]))),
-                             transform=axs[1, idx].transAxes, ha='center', va='center', c=[0.8, 0.8, 0.2])
-            axs[1, idx].text(0.5, 0.5, 'prediction class: {:d}'.format(int(predictions[i])),
-                             transform=axs[1, idx].transAxes, ha='center', va='center', c=[0.5, 0.5, 0.5])
-            axs[1, idx].text(0.5, 0.2, 'target class: {:d}'.format(int(targets[i])),
-                             transform=axs[1, idx].transAxes, ha='center', va='center', c=[0.5, 0.5, 0.5])
-            axs[1, idx].axis('off')
+            axs[1, i].imshow(fused, cmap='gray', vmin=0, vmax=1)
+            axs[1, i].text(0.5, 0.875, 'sample_idx: {}'.format(sample_idx),
+                           transform=axs[1, i].transAxes, ha='center', va='center', c=[0.8, 0.8, 0.2])
+            axs[1, i].text(0.5, 0.75, 'output (class {:d}): {:01.2f}'.format(class_idx, np.exp((outputs[i][class_idx]))),
+                             transform=axs[1, i].transAxes, ha='center', va='center', c=[0.8, 0.8, 0.2])
+            axs[1, i].text(0.5, 0.5, 'prediction class: {:d}'.format(int(predictions[i])),
+                             transform=axs[1, i].transAxes, ha='center', va='center', c=[0.5, 0.5, 0.5])
+            axs[1, i].text(0.5, 0.2, 'target class: {:d}'.format(int(targets[i])),
+                             transform=axs[1, i].transAxes, ha='center', va='center', c=[0.5, 0.5, 0.5])
+            axs[1, i].axis('off')
+            axs[0, i].set_ylabel('sample_idx: {}'.format(sample_idx))
 
         plt.tight_layout()
 

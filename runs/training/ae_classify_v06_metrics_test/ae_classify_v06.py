@@ -11,17 +11,17 @@ from genEM3.training.classifier import Trainer
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
 run_name = 'run_w_pr'
-cache_HDD_root = os.path.join(run_root, '../../../data/.cache/')
-datasources_json_path = os.path.join(run_root, '../../../data/debris_clean_datasource.json')
+cache_HDD_root = os.path.join(run_root, '.cache/')
+datasources_json_path = os.path.join(run_root, 'datasources_classifier_v01.json')
 state_dict_path = os.path.join(run_root, '../ae_v05_skip/.log/epoch_60/model_state_dict')
 input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
 
-data_split = DataSplit(train=0.8, validation=0.1, test=0.1)
+data_split = DataSplit(train=0.9, validation=0.05, test=0.05)
 cache_RAM = True
 cache_HDD = True
 cache_root = os.path.join(run_root, '.cache/')
-batch_size = 128
+batch_size = 8
 num_workers = 8
 
 data_sources = WkwData.datasources_from_json(datasources_json_path)
@@ -59,9 +59,7 @@ test_loader = torch.utils.data.DataLoader(
     collate_fn=dataset.collate_fn)
 
 data_loaders = {
-    "train": train_loader,
-    "val": validation_loader,
-    "test": test_loader}
+    "train": train_loader}
 
 input_size = 140
 output_size = input_size
@@ -87,7 +85,7 @@ criterion = torch.nn.NLLLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.000002)
 
 num_epoch = 100
-log_int = 5
+log_int = 1
 device = 'cpu'
 save = True
 resume = False
