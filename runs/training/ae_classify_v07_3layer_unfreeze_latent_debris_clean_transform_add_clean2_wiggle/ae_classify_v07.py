@@ -12,24 +12,24 @@ from genEM3.training.classifier import Trainer
 run_root = os.path.dirname(os.path.abspath(__file__))
 run_name = 'run_w_pr'
 cache_HDD_root = os.path.join(run_root, '../../../data/.cache/')
-datasources_json_path = os.path.join(run_root, '../../../data/debris_clean_datasource.json')
+datasources_json_path = os.path.join(run_root, '../../../data/debris_clean_added_bboxes2_wiggle_datasource.json')
 state_dict_path = os.path.join(run_root, '../ae_v05_skip/.log/epoch_60/model_state_dict')
 input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
 
-data_split = DataSplit(train=0.9, validation=0.05, test=0.05)
+data_split = DataSplit(train=0.8, validation=0.1, test=0.1)
 cache_RAM = True
-cache_HDD = True
+cache_HDD = False
 cache_root = os.path.join(run_root, '.cache/')
-batch_size = 8
-num_workers = 8
+batch_size = 128
+num_workers = 12
 
 data_sources = WkwData.datasources_from_json(datasources_json_path)
 
 transforms = transforms.Compose([
-    transforms.RandomFlip(p=0.5, flip_plane=(1,2)),
-    transforms.RandomFlip(p=0.5, flip_plane=(2,1)),
-    transforms.RandomRotation90(p=1.0, mult_90=[0, 1, 2, 3], rot_plane=(1,2))
+    transforms.RandomFlip(p=0.5, flip_plane=(1, 2)),
+    transforms.RandomFlip(p=0.5, flip_plane=(2, 1)),
+    transforms.RandomRotation90(p=1.0, mult_90=[0, 1, 2, 3], rot_plane=(1, 2))
 ])
 
 dataset = WkwData(
@@ -59,7 +59,9 @@ test_loader = torch.utils.data.DataLoader(
     collate_fn=dataset.collate_fn)
 
 data_loaders = {
-    "train": train_loader}
+    "train": train_loader,
+    "val": validation_loader,
+    "test": test_loader}
 
 input_size = 140
 output_size = input_size
@@ -82,12 +84,13 @@ for name, param in model.named_parameters():
     print(name, param.requires_grad)
 
 criterion = torch.nn.NLLLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.000002)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.000001)
 
-num_epoch = 100
-log_int = 1
+num_epoch = 200
+log_int = 10
 device = 'cpu'
 save = True
+save_int = 10
 resume = False
 
 trainer = Trainer(run_name=run_name,
@@ -100,6 +103,7 @@ trainer = Trainer(run_name=run_name,
                   log_int=log_int,
                   device=device,
                   save=save,
+                  save_int=save_int,
                   resume=resume)
 
 trainer.train()

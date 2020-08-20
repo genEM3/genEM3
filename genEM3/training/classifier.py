@@ -24,6 +24,7 @@ class Trainer:
                  log_int: int = 10,
                  device: str = 'cpu',
                  save: bool = False,
+                 save_int: int = 1,
                  resume: bool = False,
                  gpu_id: int = None
                  ):
@@ -36,6 +37,7 @@ class Trainer:
         self.num_epoch = num_epoch
         self.log_int = log_int
         self.save = save
+        self.save_int = save_int
         self.resume = resume
 
         if device == 'cuda':
@@ -180,13 +182,13 @@ class Trainer:
                 writer.add_figure(figname + phase, fig, epoch)
 
                 writer.add_pr_curve(
-                    'pr_curve_'+phase, labels=targets_phase, predictions=np.exp(outputs_phase[:, 1]), global_step=it,
+                    'pr_curve_', labels=targets_phase, predictions=np.exp(outputs_phase[:, 1]), global_step=epoch,
                     num_thresholds=50)
 
                 if epoch == 5:
                     a = 1
 
-                if self.save & (phase == 'train'):
+                if self.save & (phase == 'train') & (epoch % self.save_int == 0):
                     print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Writing model graph ... ')
                     writer.add_graph(self.model, inputs)
 
@@ -279,16 +281,17 @@ class Trainer:
                   [0.9, 0.4, 0.1, 1],
                   [0.9, 0.1, 0.5, 1]]
         cmap = ListedColormap(colors=colors)
-        fig, axs = plt.subplots(figsize=(12, 6))
+        fig_width_mult = max([0.5, len(targets)/1000])
+        fig, axs = plt.subplots(figsize=(12*fig_width_mult, 6))
         axs.matshow(mat, cmap=cmap, vmin=0, vmax=7)
         axs.set_yticks([0, 1, 2, 3])
         axs.set_yticklabels(['targets', 'outputs', 'accuracy', 'confusion'])
         axs.set_aspect(10)
         bbox = axs.get_position().bounds
         axs2 = plt.axes((bbox[0], 0.1, bbox[2], 0.2), sharex=axs)
-        axs2.text(0.00, 1.00, 'target|output', c=(0.2, 0.2, 0.2), weight='bold', transform=axs2.transAxes)
-        axs2.text(0.017, 0.75, 'artifact', c=(0.2, 0.2, 0.2), backgroundcolor=colors[1], transform=axs2.transAxes)
-        axs2.text(0.017, 0.50, 'no artifact', c=(0.8, 0.8, 0.8), backgroundcolor=colors[0], transform=axs2.transAxes)
+        axs2.text(0.010, 1.00, 'target|output', c=(0.2, 0.2, 0.2), weight='bold', transform=axs2.transAxes)
+        axs2.text(0.017, 0.75, 'artifact: {}'.format(metrics['P']), c=(0.2, 0.2, 0.2), backgroundcolor=colors[1], transform=axs2.transAxes)
+        axs2.text(0.017, 0.50, 'no artifact: {}'.format(metrics['N']), c=(0.8, 0.8, 0.8), backgroundcolor=colors[0], transform=axs2.transAxes)
         axs2.text(0.27, 1.00, 'accuracy', c=(0.2, 0.2, 0.2), weight='bold', transform=axs2.transAxes)
         axs2.text(0.20, 0.75, 'frac correct:   {:03d}/{:03d}={:01.2f}'.format(metrics['TP'] +
                   metrics['TN'], len(targets), (metrics['TP'] +
@@ -299,17 +302,17 @@ class Trainer:
                   metrics['FN'])/len(targets)), c=(0.2, 0.2, 0.2), backgroundcolor=colors[2],
                   transform=axs2.transAxes)
         axs2.text(0.60, 1.00, 'confusion', c=(0.2, 0.2, 0.2), weight='bold', transform=axs2.transAxes)
-        axs2.text(0.50, 0.75, 'TP: {:01.2f}'.format(metrics['TP']), c=(0.8, 0.8, 0.8),
+        axs2.text(0.50, 0.75, 'TP: {:01.0f}'.format(metrics['TP']).ljust(12), c=(0.8, 0.8, 0.8),
                   backgroundcolor=colors[5], transform=axs2.transAxes)
-        axs2.text(0.50, 0.50, 'TN: {:01.2f}'.format(metrics['TN']), c=(0.8, 0.8, 0.8),
-                  backgroundcolor=colors[4], transform=axs2.transAxes)
-        axs2.text(0.60, 0.75, 'FP: {:01.2f}'.format(metrics['FP']), c=(0.2, 0.2, 0.2),
+        axs2.text(0.60, 0.75, 'FP: {:01.0f}'.format(metrics['FP']).ljust(12), c=(0.2, 0.2, 0.2),
                   backgroundcolor=colors[6], transform=axs2.transAxes)
-        axs2.text(0.60, 0.50, 'FN: {:01.2f}'.format(metrics['FN']), c=(0.2, 0.2, 0.2),
+        axs2.text(0.50, 0.50, 'FN: {:01.0f}'.format(metrics['FN']).ljust(12), c=(0.2, 0.2, 0.2),
                   backgroundcolor=colors[7], transform=axs2.transAxes)
-        axs2.text(0.70, 0.75, 'Precision: {:01.2f}'.format(metrics['PPV']), c=(0.2, 0.2, 0.2),
+        axs2.text(0.60, 0.50, 'TN: {:01.0f}'.format(metrics['TN']).ljust(12), c=(0.8, 0.8, 0.8),
+                  backgroundcolor=colors[4], transform=axs2.transAxes)
+        axs2.text(0.70, 0.75, 'Precision: {:01.2f}'.format(metrics['PPV']).ljust(20), c=(0.2, 0.2, 0.2),
                   backgroundcolor=(0.7, 0.7, 0.7), transform=axs2.transAxes)
-        axs2.text(0.70, 0.50, 'Recall:    {:01.2f}'.format(metrics['TPR']), c=(0.2, 0.2, 0.2),
+        axs2.text(0.70, 0.50, 'Recall: {:01.2f}'.format(metrics['TPR']).ljust(20), c=(0.2, 0.2, 0.2),
                   backgroundcolor=(0.7, 0.7, 0.7), transform=axs2.transAxes)
         axs2.axis('off')
 
