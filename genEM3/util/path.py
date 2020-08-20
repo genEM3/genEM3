@@ -1,10 +1,14 @@
 """ This module contains the functionality related to filesystem directories"""
 import os
+from socket import gethostname
+from datetime import datetime
+
 
 def mkdir(dir2Make):
     """Make the directory if already not made"""
     if not os.path.isdir(dir2Make):
         os.makedirs(dir2Make)
+
 
 def getAbsPathRepository():
     """ Return the absolute directory of the genEM3 to use for navigation"""
@@ -27,3 +31,13 @@ def getMag8DatasetDir():
     """return string for mag8 dataset we work with"""
     wkwDir = '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1'
     return wkwDir
+
+
+def gethostnameTimeString():
+    """return the current hostname-date string used for naming logging directories"""
+    hname = gethostname().upper()
+    now = datetime.now()
+    # dd/mm/YY H:M:S
+    dt_string = now.strftime("%d_%b_%Y-%H_%M_%S")
+    return '-'.join([hname, dt_string]) 
+

@@ -15,13 +15,18 @@ from tqdm import tqdm
 from model import ConvVAE
 
 from genEM3.data.wkwdata import WkwData, DataSplit
-from genEM3.util.path import mkdir, getAbsPathRepository
-cuda = False 
+import genEM3.util.path as gpath
+from genEM3.util import gpu
+
+# set the proper device (GPU with a specific ID or cpu)
+cuda = True
+gpu_id = 0
 if cuda:
-    print('cuda available')
-
-device = torch.device("cuda" if cuda else "cpu")
-
+    print(f'Using GPU: {gpu_id}')
+    gpu.get_gpu(gpu_id)
+    device = torch.device(torch.cuda.current_device())
+else:
+    device = torch.device("cpu")
 
 def loss_function(recon_x, x, mu, logvar):
     # reconstruction loss
@@ -92,7 +97,7 @@ def main():
                         help='output directory')
     parser.add_argument('--batch_size', type=int, default=128, metavar='N',
                         help='input batch size for training (default: 128)')
-    parser.add_argument('--epochs', type=int, default=10, metavar='N',
+    parser.add_argument('--epochs', type=int, default=1000, metavar='N',
                         help='number of epochs to train (default: 10)')
     parser.add_argument('--seed', type=int, default=1, metavar='S',
                         help='random seed (default: 1)')
@@ -114,7 +119,8 @@ def main():
 #     kwargs = {'num_workers': 1, 'pin_memory': True} if cuda else {}
 
     # Parameters
-    json_dir = os.path.join(getAbsPathRepository(),'runs/training/ae_v06_skip/')
+    connDataDir = '/conndata/alik/genEM3_runs/VAE/'
+    json_dir = os.path.join(gpath.getAbsPathRepository(),'runs/training/ae_v06_skip/')
     datasources_json_path = os.path.join(json_dir, 'datasources_distributed_test.json')
     input_shape = (28, 28, 1)
     output_shape = (28, 28, 1)
@@ -122,8 +128,8 @@ def main():
     data_split = DataSplit(train=0.70, validation=0.00, test=0.30)
     cache_RAM = True
     cache_HDD = True
-    cache_root = os.path.join('/conndata/alik/genEM3_runs/VAE/', '.cache/')
-    mkdir(cache_root)
+    cache_root = os.path.join(connDataDir, '.cache/')
+    gpath.mkdir(cache_root)
     
     num_workers = 0
     
@@ -167,8 +173,8 @@ def main():
             print('=> loaded checkpoint %s' % args.resume)
         else:
             print('=> no checkpoint found at %s' % args.resume)
-
-    writer = SummaryWriter()
+    tensorBoardDir = os.path.join(connDataDir, gpath.gethostnameTimeString())
+    writer = SummaryWriter(logdir=tensorBoardDir)
 
     for epoch in range(start_epoch, args.epochs):
         train_loss = train(epoch, model, train_loader, optimizer, args)
@@ -190,7 +196,7 @@ def main():
         }, is_best)
 
         with torch.no_grad():
-            sample = torch.randn(64, 32).to(device)
+            sample = torch.randn(64, args.latent_size).to(device)
             sample = model.decode(sample).cpu()
             img = make_grid(sample)
             writer.add_image('sampling', img, epoch)
