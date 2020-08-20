@@ -156,9 +156,9 @@ class Trainer:
                     targets=targets_phase, outputs=outputs_phase, output_prob_fn=lambda x: np.exp(x[:, 1]),
                     sample_ind=self.data_loaders[phase].batch_sampler.sampler.indices)
                 metrics.confusion_table(
-                    path_out=os.path.join(self.log_root, epoch_root, 'confusion_table.csv'))
+                    path_out=os.path.join(self.log_root, epoch_root, 'confusion_table_' + phase + '.csv'))
                 metrics.prediction_table(
-                    path_out=os.path.join(self.log_root, epoch_root, 'prediction_table.csv'))
+                    path_out=os.path.join(self.log_root, epoch_root, 'prediction_table_' + phase + '.csv'))
 
                 writer.add_scalars('epoch_loss', {phase: epoch_loss_log}, epoch)
                 writer.add_scalars('epoch_accuracy', {phase: epoch_accuracy_log}, epoch)
