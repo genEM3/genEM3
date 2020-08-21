@@ -1,7 +1,7 @@
 import os
 import time
 import datetime
-from typing import Optional, Tuple, Sequence
+from typing import Sequence, Callable
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
@@ -14,25 +14,21 @@ from genEM3.inference.writer import DataWriter
 class Predictor:
 
     def __init__(self,
+                 model: torch.nn.Module,
                  dataloader: DataLoader,
                  datawriters: Sequence[DataWriter],
-                 model: torch.nn.Module,
-                 state_dict: Optional[dict] = None,
-                 device: Optional[str] = None,
-                 batch_size: Optional[int] = None,
-                 input_shape: Optional[Tuple[int, ...]] = None,
-                 output_shape: Optional[Tuple[int, ...]] = None,
+                 output_prob_fn: Callable = None,
                  interpolate: str = None):
 
+        self.model = model
         self.dataloader = dataloader
         self.datawriters = datawriters
-        self.model = model
-        self.state_dict = state_dict
-        self.device = device
-        self.batch_size = batch_size
-        self.input_shape = input_shape
-        self.out_shape = output_shape
+
+        if output_prob_fn is None:
+            output_prob_fn = lambda x: np.exp(x[:, 1, 0, 0])
+        self.output_prob_fn = output_prob_fn
         self.interpolate = interpolate
+
 
     @torch.no_grad()
     def predict(self):
@@ -43,8 +39,9 @@ class Predictor:
             print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Predicting batch {}/{} ... '
                   .format(batch_idx, len(self.dataloader)))
 
-            inputs = data['input'].to(self.device)
+            inputs = data['input']
             outputs = self.model(inputs)
+            outputs_prob = np.round(self.output_prob_fn(outputs), 3)
             sample_ind_batch = data['sample_idx']
             sample_ind_phase.extend(sample_ind_batch)
 

@@ -159,10 +159,10 @@ class WkwData(Dataset):
                                     np.asarray(self.input_shape) / 2).astype(int)
         n_fits = np.ceil((np.asarray(self.data_sources[data_source_idx].input_bbox[3:6]) -
                            np.asarray(self.input_shape) / 2) / np.asarray(self.stride)).astype(int)
-        corner_max_target = corner_min_target + n_fits * np.asarray(self.stride)
-        x = np.arange(corner_min_target[0], corner_max_target[0], self.stride[0])
-        y = np.arange(corner_min_target[1], corner_max_target[1], self.stride[1])
-        z = np.arange(corner_min_target[2], corner_max_target[2], self.stride[2])
+        corner_max_target = corner_min_target + (n_fits - 1) * np.asarray(self.stride)
+        x = np.arange(corner_min_target[0], corner_max_target[0] + self.stride[0], self.stride[0])
+        y = np.arange(corner_min_target[1], corner_max_target[1] + self.stride[1], self.stride[1])
+        z = np.arange(corner_min_target[2], corner_max_target[2] + self.stride[2], self.stride[2])
         xm, ym, zm = np.meshgrid(x, y, z)
         mesh_target = {'x': xm, 'y': ym, 'z': zm}
         mesh_input = {'x': xm, 'y': ym, 'z': zm}
@@ -179,7 +179,7 @@ class WkwData(Dataset):
                 self.data_inds_min.append(self.data_inds_max[source_idx - 1] + 1)
 
             self.data_inds_max.append(self.data_inds_min[source_idx] +
-                                      self.data_meshes[source_idx]['target']['x'].size - 1)
+                                      self.data_meshes[source_idx]['target']['x'].size)
 
     def get_data_ind_splits(self):
 
@@ -468,14 +468,18 @@ class WkwData(Dataset):
         id = self.data_sources[idx].id
         return id
 
-    def show_sample(self, sample_idx):
+    def show_sample(self, sample_idx, orient_wkw=False):
+
         data = self.__getitem__(sample_idx)
-        fig, axs = plt.subplots(1,2)
         input_ = data['input'].data.numpy().squeeze()
-        axs[0].imshow(input_, cmap='gray')
         target = data['target'].data.numpy().squeeze()
+        if orient_wkw:
+            input_ = np.rot90(np.flipud(input_), k=-1)
+        fig, axs = plt.subplots(1,2)
+        axs[0].imshow(input_, cmap='gray')
         while target.ndim < 2:
             target = np.expand_dims(target, 0)
+        target = np.rot90(np.flipud(target), k=-1)
         axs[1].imshow(target, cmap='gray', vmin=0, vmax=1)
 
     @staticmethod
