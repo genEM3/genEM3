@@ -189,7 +189,7 @@ class Trainer:
 
                 if self.save & (phase == 'train') & (epoch % self.save_int == 0):
                     print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Writing model graph ... ')
-                    writer.add_graph(self.model, inputs)
+                    # writer.add_graph(self.model, inputs)
 
                     print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Saving model state... ')
                     self.model.epoch = torch.nn.Parameter(torch.tensor(epoch), requires_grad=False)
