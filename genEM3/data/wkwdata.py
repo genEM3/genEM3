@@ -158,8 +158,8 @@ class WkwData(Dataset):
 
         corner_min_target = np.floor(np.asarray(self.data_sources[data_source_idx].input_bbox[0:3]) +
                                     np.asarray(self.input_shape) / 2).astype(int)
-        n_fits = np.ceil((np.asarray(self.data_sources[data_source_idx].input_bbox[3:6]) -
-                           np.asarray(self.input_shape) / 2) / np.asarray(self.stride)).astype(int)
+        n_fits = np.floor((np.asarray(self.data_sources[data_source_idx].input_bbox[3:6]) -
+                           np.asarray(self.input_shape)) / np.asarray(self.stride)).astype(int) + 1
         corner_max_target = corner_min_target + (n_fits - 1) * np.asarray(self.stride)
         x = np.arange(corner_min_target[0], corner_max_target[0] + self.stride[0], self.stride[0])
         y = np.arange(corner_min_target[1], corner_max_target[1] + self.stride[1], self.stride[1])
@@ -279,9 +279,6 @@ class WkwData(Dataset):
 
         for output_idx, sample_idx in enumerate(sample_inds):
             source_idx, bbox = self.get_bbox_for_sample_idx(sample_idx, 'target')
-
-            if bbox == [21910, 17070, 6895, 1, 1, 1]:
-                pdb.set_trace()
 
             wkw_path = self.data_sources[source_idx].input_path
             wkw_bbox = self.data_sources[source_idx].input_bbox
@@ -428,12 +425,6 @@ class WkwData(Dataset):
         bbox = origin + list(shape)
 
         return source_idx, bbox
-
-    def get_sample_idx_for_bbox(self, source_idx, sample_type, bbox):
-
-        #np.where(self.data_meshes[source_idx][sample_type]['x'] == bbox[0])
-        pass
-
 
     def get_source_mesh_for_sample_idx(self, sample_idx):
         # Get appropriate training data cube sample_idx based on global linear sample_idx

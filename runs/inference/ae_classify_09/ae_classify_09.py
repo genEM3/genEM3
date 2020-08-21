@@ -23,7 +23,7 @@ output_wkw_root = '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scM
 batch_size = 128
 input_shape = (140, 140, 1)
 output_shape = (1, 1, 1)
-num_workers = 0
+num_workers = 8
 
 kernel_size = 3
 stride = 1
@@ -41,12 +41,10 @@ dataset = WkwData(
     target_shape=output_shape,
     data_sources=datasources,
     stride=(35, 35, 1),
-    cache_HDD=True,
-    cache_RAM=True,
+    cache_HDD=False,
+    cache_RAM=False,
     cache_HDD_root=cache_HDD_root
 )
-bbox = [21910, 17070, 6895, 1, 1, 1]
-dataset.get_sample_idx_for_bbox(source_idx=0, sample_type='target', bbox=bbox)
 
 prediction_loader = torch.utils.data.DataLoader(
     dataset=dataset, batch_size=batch_size, num_workers=num_workers)
