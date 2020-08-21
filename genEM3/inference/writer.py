@@ -31,7 +31,7 @@ class DataWriter:
                     points = np.argwhere(~np.isnan(data))
                     values = data[points[:, 0], points[:, 1]]
                     grid_x, grid_y = np.mgrid[0:data.shape[0], 0:data.shape[1]]
-                    data_dense = griddata(points, values, (grid_x, grid_y))
+                    data_dense = griddata(points, values, (grid_x, grid_y), method='nearest')
                     cache[:, :, z] = data_dense
 
     def cache_to_wkw(self, output_wkw_root):

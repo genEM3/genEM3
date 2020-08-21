@@ -8,14 +8,14 @@ from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 
 from genEM3.data.wkwdata import WkwData, DataSplit
-from genEM3.model.autoencoder2d import AE_Encoder_Classifier, Encoder_4_sampling_bn_1px_deep_convonly_skip, Classifier
+from genEM3.model.autoencoder2d import Encoder_4_sampling_bn_1px_deep_convonly_skip, AE_Encoder_Classifier, Classifier3Layered
 from genEM3.inference.inference import Predictor
 from genEM3.inference.writer import DataWriter
 
 run_root = os.path.dirname(os.path.abspath(__file__))
 cache_HDD_root = os.path.join(run_root, '.cache/')
 datasources_json_path = os.path.join(run_root, 'datasources_distributed_test2.json')
-state_dict_path = os.path.join(run_root, '../../training/ae_classify_v03_1layer_unfreeze_latent_debris_clean/.log/run_w_pr/epoch_30/model_state_dict')
+state_dict_path = os.path.join(run_root, '../../training/ae_classify_v08_3layer_unfreeze_latent_debris_clean_transform_add_clean2_wiggle/.log/run_w_pr/epoch_400/model_state_dict')
 device = 'cpu'
 
 output_wkw_root = '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8_artifact_pred'
@@ -33,7 +33,7 @@ input_size = 140
 output_size = input_size
 model = AE_Encoder_Classifier(
     Encoder_4_sampling_bn_1px_deep_convonly_skip(input_size, kernel_size, stride, n_latent=n_latent),
-    Classifier(n_latent=n_latent))
+    Classifier3Layered(n_latent=n_latent))
 
 datasources = WkwData.datasources_from_json(datasources_json_path)
 dataset = WkwData(
@@ -64,7 +64,7 @@ output_dtype_fni = lambda x: expit(x / 256 * 12 - 6)
 datawriter_prob = DataWriter(
     dataloader=prediction_loader,
     output_collate_fn=prob_collate_fn,
-    output_label='probs_ae_classify_03',
+    output_label='probs_ae_classify_08',
     output_path=output_wkw_root,
     output_dtype=output_dtype,
     output_dtype_fn=output_dtype_fn
