@@ -1,4 +1,5 @@
 import os
+import pdb
 import json
 import random
 import numpy as np
@@ -155,12 +156,12 @@ class WkwData(Dataset):
 
         corner_min_target = np.floor(np.asarray(self.data_sources[data_source_idx].input_bbox[0:3]) +
                                     np.asarray(self.input_shape) / 2).astype(int)
-        n_fits = np.ceil((np.asarray(self.data_sources[data_source_idx].input_bbox[3:6]) -
-                           np.asarray(self.input_shape) / 2) / np.asarray(self.stride)).astype(int)
-        corner_max_target = corner_min_target + n_fits * np.asarray(self.stride)
-        x = np.arange(corner_min_target[0], corner_max_target[0], self.stride[0])
-        y = np.arange(corner_min_target[1], corner_max_target[1], self.stride[1])
-        z = np.arange(corner_min_target[2], corner_max_target[2], self.stride[2])
+        n_fits = np.floor((np.asarray(self.data_sources[data_source_idx].input_bbox[3:6]) -
+                           np.asarray(self.input_shape)) / np.asarray(self.stride)).astype(int) + 1
+        corner_max_target = corner_min_target + (n_fits - 1) * np.asarray(self.stride)
+        x = np.arange(corner_min_target[0], corner_max_target[0] + self.stride[0], self.stride[0])
+        y = np.arange(corner_min_target[1], corner_max_target[1] + self.stride[1], self.stride[1])
+        z = np.arange(corner_min_target[2], corner_max_target[2] + self.stride[2], self.stride[2])
         xm, ym, zm = np.meshgrid(x, y, z)
         mesh_target = {'x': xm, 'y': ym, 'z': zm}
         mesh_input = {'x': xm, 'y': ym, 'z': zm}
@@ -177,7 +178,7 @@ class WkwData(Dataset):
                 self.data_inds_min.append(self.data_inds_max[source_idx - 1] + 1)
 
             self.data_inds_max.append(self.data_inds_min[source_idx] +
-                                      self.data_meshes[source_idx]['target']['x'].size - 1)
+                                      self.data_meshes[source_idx]['target']['x'].size)
 
     def get_data_ind_splits(self):
 
@@ -220,6 +221,7 @@ class WkwData(Dataset):
         if normalize is None:
             normalize = self.normalize
 
+        # Inputs
         source_idx, bbox_input = self.get_bbox_for_sample_idx(sample_idx, sample_type='input')
         if self.cache_RAM | self.cache_HDD:
             input_ = self.wkw_read_cached(source_idx, 'input', bbox_input)
@@ -230,6 +232,14 @@ class WkwData(Dataset):
             input_ = self.normalize(input_, self.data_sources[source_idx].input_mean,
                                     self.data_sources[source_idx].input_std)
 
+        input_ = torch.from_numpy(input_).float()
+        if self.input_shape[2] == 1:
+            input_ = input_.squeeze(3)
+
+        if self.transforms:
+            input_ = self.transforms(input_)
+
+        # Targets
         source_idx, bbox_target = self.get_bbox_for_sample_idx(sample_idx, sample_type='target')
         if self.data_sources[source_idx].target_binary == 1:
             target = np.asarray(self.data_sources[source_idx].target_class)
@@ -245,13 +255,6 @@ class WkwData(Dataset):
 
         if self.pad_target is True:
             target = self.pad(target)
-
-        input_ = torch.from_numpy(input_).float()
-        if self.input_shape[2] == 1:
-            input_ = input_.squeeze(3)
-
-        if self.transforms:
-            input_ = self.transforms(input_)
 
         if self.data_sources[source_idx].target_binary == 1:
             target = torch.from_numpy(target).long()
@@ -274,7 +277,6 @@ class WkwData(Dataset):
 
         for output_idx, sample_idx in enumerate(sample_inds):
             source_idx, bbox = self.get_bbox_for_sample_idx(sample_idx, 'target')
-            print(bbox)
 
             wkw_path = self.data_sources[source_idx].input_path
             wkw_bbox = self.data_sources[source_idx].input_bbox
@@ -464,15 +466,19 @@ class WkwData(Dataset):
         id = self.data_sources[idx].id
         return id
 
-    def show_sample(self, sample_idx):
-        (data, index) = self.__getitem__(sample_idx)
-        fig, axs = plt.subplots(1,2)
+    def show_sample(self, sample_idx, orient_wkw=False):
+
+        data = self.__getitem__(sample_idx)
         input_ = data['input'].data.numpy().squeeze()
-        axs[0].imshow(input_, cmap='gray')
         target = data['target'].data.numpy().squeeze()
+        if orient_wkw:
+            input_ = np.rot90(np.flipud(input_), k=-1)
+        fig, axs = plt.subplots(1,2)
+        axs[0].imshow(input_, cmap='gray')
         while target.ndim < 2:
             target = np.expand_dims(target, 0)
-        axs[1].imshow(target, cmap='gray')
+        target = np.rot90(np.flipud(target), k=-1)
+        axs[1].imshow(target, cmap='gray', vmin=0, vmax=1)
 
     @staticmethod
     def collate_fn(batch):

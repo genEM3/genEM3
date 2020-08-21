@@ -3,8 +3,8 @@ import numpy as np
 from genEM3.data.wkwdata import WkwData, DataSource
 
 run_root = os.path.dirname(os.path.abspath(__file__))
-datasources_json_path = os.path.join(run_root, '../../data/debris_clean_added_bboxes_datasource.json')
-datasources_json_path_out = os.path.join(run_root, '../../data/debris_clean_added_bboxes_wiggle_datasource.json')
+datasources_json_path = os.path.join(run_root, '../../data/debris_clean_added_bboxes2_datasource.json')
+datasources_json_path_out = os.path.join(run_root, '../../data/debris_clean_added_bboxes2_wiggle_datasource.json')
 
 
 wiggles = [

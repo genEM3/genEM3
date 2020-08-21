@@ -4,7 +4,7 @@ from genEM3.data.wkwdata import WkwData, DataSource
 
 run_root = os.path.dirname(os.path.abspath(__file__))
 datasources_json_path = os.path.join(run_root, '../../data/debris_clean_datasource.json')
-datasources_json_path_out = os.path.join(run_root, '../../data/debris_clean_added_bboxes_datasource.json')
+datasources_json_path_out = os.path.join(run_root, '../../data/debris_clean_added_bboxes2_datasource.json')
 
 bboxes_add = [
     [25000, 20000, 3510, 560, 560, 5],
@@ -14,8 +14,24 @@ bboxes_add = [
     [25000, 20000, 3680, 560, 560, 13],
     [25000, 20000, 3696, 560, 560, 11],
     [25000, 20000, 3776, 560, 560, 4],
-    [25000, 20000, 3810, 560, 560, 40]
+    [25000, 20000, 3810, 560, 560, 40],
+    [27500, 22000, 3616, 560, 560, 12],
+    [27500, 22000, 3680, 560, 560, 10],
+    [27500, 22000, 3731, 560, 560, 33],
+    [27500, 22000, 3779, 560, 560, 13],
+    [27500, 22000, 3824, 560, 560, 6],
+    [27500, 22000, 3844, 560, 560, 16],
+    [27500, 22000, 3863, 560, 560, 10],
+    [27500, 22000, 3889, 560, 560, 5],
+    [27500, 22000, 3902, 560, 560, 20],
+    [27500, 22000, 3930, 560, 560, 19],
+    [27500, 22000, 3969, 560, 560, 16],
+    [27500, 22000, 4021, 560, 560, 9],
+    [27500, 22000, 4065, 560, 560, 12],
+    [27500, 22000, 4163, 560, 560, 9],
+    [27500, 22000, 4255, 560, 560, 11]
 ]
+num_samples = sum([bbox[5] for bbox in bboxes_add])*560*560/140/140
 target_binary_add = 1
 target_class_add = 0.0
 input_mean_add = 148.0
