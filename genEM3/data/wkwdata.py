@@ -1,4 +1,5 @@
 import os
+import pdb
 import json
 import random
 import numpy as np
@@ -278,7 +279,9 @@ class WkwData(Dataset):
 
         for output_idx, sample_idx in enumerate(sample_inds):
             source_idx, bbox = self.get_bbox_for_sample_idx(sample_idx, 'target')
-            print(bbox)
+
+            if bbox == [21910, 17070, 6895, 1, 1, 1]:
+                pdb.set_trace()
 
             wkw_path = self.data_sources[source_idx].input_path
             wkw_bbox = self.data_sources[source_idx].input_bbox
