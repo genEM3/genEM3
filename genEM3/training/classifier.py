@@ -282,7 +282,7 @@ class Trainer:
                   [0.9, 0.4, 0.1, 1],
                   [0.9, 0.1, 0.5, 1]]
         cmap = ListedColormap(colors=colors)
-        fig_width_mult = max([0.5, len(targets)/1000])
+        fig_width_mult = min(max([0.5, len(targets)/2000]), 3)
         fig, axs = plt.subplots(figsize=(12*fig_width_mult, 6))
         axs.matshow(mat, cmap=cmap, vmin=0, vmax=7)
         axs.set_yticks([0, 1, 2, 3])
