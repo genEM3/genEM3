@@ -217,7 +217,8 @@ class WkwData(Dataset):
 
         """ Retrieves a pair of input and target tensors from all available training cubes based on the global linear
         sample_idx"""
-
+        # Flag to determine whether the input and output are the same. When the same, the transforms are only applied to the input and the data is copied to output.
+        inputSameAsOutput = False
         if normalize is None:
             normalize = self.normalize
 
@@ -233,7 +234,8 @@ class WkwData(Dataset):
                                     self.data_sources[source_idx].input_std)
 
         input_ = torch.from_numpy(input_).float()
-        if self.input_shape[2] == 1:
+        # squeeze out the depth dimension if a singleton
+        if self.input_shape[2] == 1 and input_.dim() > 3 and input_.shape[3] == 1:
             input_ = input_.squeeze(3)
 
         if self.transforms:
@@ -246,7 +248,9 @@ class WkwData(Dataset):
         else:
             if (self.data_sources[source_idx].input_path == self.data_sources[source_idx].target_path) & \
                     (bbox_input == bbox_target):
-                target = input_
+                # targets get converted to torch below
+                target = np.asarray(input_)
+                inputSameAsOutput = True
             else:
                 if self.cache_RAM | self.cache_HDD:
                     target = self.wkw_read_cached(source_idx, 'target', bbox_target)
@@ -260,9 +264,11 @@ class WkwData(Dataset):
             target = torch.from_numpy(target).long()
         else:
             target = torch.from_numpy(target).float()
-            if self.output_shape[2] == 1:
+            # Note(AK): The input gets squeezed above and if the input and output are the same
+            # then there's no third dimension to squeeze.
+            if self.output_shape[2] == 1 and target.dim() > 3 and target.shape[3] == 1:
                 target = target.squeeze(3)
-            if self.transforms:
+            if self.transforms and not inputSameAsOutput:
                 target = self.transforms(target)
 
         return {'input': input_, 'target': target, 'sample_idx': sample_idx}
