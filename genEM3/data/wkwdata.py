@@ -229,7 +229,7 @@ class WkwData(Dataset):
             input_ = self.wkw_read(self.data_sources[source_idx].input_path, bbox_input)
 
         if normalize:
-            input_ = self.normalize(input_, self.data_sources[source_idx].input_mean,
+            input_ = WkwData.normalize(input_, self.data_sources[source_idx].input_mean,
                                     self.data_sources[source_idx].input_std)
 
         input_ = torch.from_numpy(input_).float()
