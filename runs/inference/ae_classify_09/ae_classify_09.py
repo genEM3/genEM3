@@ -20,10 +20,10 @@ device = 'cpu'
 
 output_wkw_root = '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8_artifact_pred'
 
-batch_size = 32
+batch_size = 64
 input_shape = (140, 140, 1)
 output_shape = (1, 1, 1)
-num_workers = 8
+num_workers = 16
 
 kernel_size = 3
 stride = 1
