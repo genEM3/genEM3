@@ -20,7 +20,7 @@ device = 'cpu'
 
 output_wkw_root = '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8_artifact_pred'
 
-batch_size = 64
+batch_size = 128
 input_shape = (140, 140, 1)
 output_shape = (1, 1, 1)
 num_workers = 0
@@ -40,13 +40,11 @@ dataset = WkwData(
     input_shape=input_shape,
     target_shape=output_shape,
     data_sources=datasources,
-    stride=(70, 70, 1),
+    stride=(35, 35, 1),
     cache_HDD=True,
     cache_RAM=True,
     cache_HDD_root=cache_HDD_root
 )
-dataset.show_sample(0, True)
-dataset.show_sample(1, True)
 
 prediction_loader = torch.utils.data.DataLoader(
     dataset=dataset, batch_size=batch_size, num_workers=num_workers)
@@ -84,6 +82,7 @@ predictor = Predictor(
     interpolate='nearest')
 
 predictor.predict()
+print('done')
 
 
 
