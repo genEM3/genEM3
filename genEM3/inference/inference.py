@@ -38,17 +38,22 @@ class Predictor:
 
         for batch_idx, data in enumerate(self.dataloader):
 
-            print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Predicting batch {}/{} ... '
-                  .format(batch_idx, len(self.dataloader)))
+            try:
 
-            inputs = data['input']
-            outputs = self.model(inputs)
-            outputs_prob = np.round(self.output_prob_fn(outputs), 3)
-            sample_ind_batch = data['sample_idx']
-            sample_ind_phase.extend(sample_ind_batch)
+                print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Predicting batch {}/{} ... '
+                      .format(batch_idx, len(self.dataloader)))
 
-            for datawriter in self.datawriters.values():
-                datawriter.batch_to_cache(outputs, sample_ind_batch)
+                inputs = data['input']
+                outputs = self.model(inputs)
+                outputs_prob = np.round(self.output_prob_fn(outputs), 3)
+                sample_ind_batch = data['sample_idx']
+                sample_ind_phase.extend(sample_ind_batch)
+
+                for datawriter in self.datawriters.values():
+                    datawriter.batch_to_cache(outputs, sample_ind_batch)
+
+            except:
+                print('error at batch {}'.format(batch_idx))
 
 
         elapsed_time = time.time() - start_time

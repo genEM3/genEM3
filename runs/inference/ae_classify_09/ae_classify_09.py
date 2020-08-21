@@ -14,13 +14,13 @@ from genEM3.inference.writer import DataWriter
 
 run_root = os.path.dirname(os.path.abspath(__file__))
 cache_HDD_root = os.path.join(run_root, '.cache/')
-datasources_json_path = os.path.join(run_root, 'datasources_distributed_test2.json')
+datasources_json_path = os.path.join(run_root, 'datasources_predict.json')
 state_dict_path = os.path.join(run_root, '../../training/ae_classify_v09_3layer_unfreeze_latent_debris_clean_transform_add_clean2_wiggle/.log/run_w_pr/epoch_700/model_state_dict')
 device = 'cpu'
 
 output_wkw_root = '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8_artifact_pred'
 
-batch_size = 128
+batch_size = 32
 input_shape = (140, 140, 1)
 output_shape = (1, 1, 1)
 num_workers = 8
@@ -42,7 +42,7 @@ dataset = WkwData(
     data_sources=datasources,
     stride=(35, 35, 1),
     cache_HDD=False,
-    cache_RAM=False,
+    cache_RAM=True,
     cache_HDD_root=cache_HDD_root
 )
 
@@ -79,7 +79,7 @@ predictor = Predictor(
     dataloader=prediction_loader,
     datawriters=datawriters,
     output_prob_fn=output_prob_fn,
-    interpolate='nearest')
+    interpolate=None)
 
 predictor.predict()
 print('done')
