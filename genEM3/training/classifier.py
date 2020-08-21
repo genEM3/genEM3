@@ -182,11 +182,8 @@ class Trainer:
                 writer.add_figure(figname + phase, fig, epoch)
 
                 writer.add_pr_curve(
-                    'pr_curve_', labels=targets_phase, predictions=np.exp(outputs_phase[:, 1]), global_step=epoch,
+                    'pr_curve_'+phase, labels=targets_phase, predictions=np.exp(outputs_phase[:, 1]), global_step=epoch,
                     num_thresholds=50)
-
-                if epoch == 5:
-                    a = 1
 
                 if self.save & (phase == 'train') & (epoch % self.save_int == 0):
                     print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Writing model graph ... ')
