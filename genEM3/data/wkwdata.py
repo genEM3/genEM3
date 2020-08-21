@@ -429,6 +429,12 @@ class WkwData(Dataset):
 
         return source_idx, bbox
 
+    def get_sample_idx_for_bbox(self, source_idx, sample_type, bbox):
+
+        #np.where(self.data_meshes[source_idx][sample_type]['x'] == bbox[0])
+        pass
+
+
     def get_source_mesh_for_sample_idx(self, sample_idx):
         # Get appropriate training data cube sample_idx based on global linear sample_idx
         source_idx = int(np.argmax(np.asarray(self.data_inds_max) >= int(sample_idx)))

@@ -45,6 +45,8 @@ dataset = WkwData(
     cache_RAM=True,
     cache_HDD_root=cache_HDD_root
 )
+bbox = [21910, 17070, 6895, 1, 1, 1]
+dataset.get_sample_idx_for_bbox(source_idx=0, sample_type='target', bbox=bbox)
 
 prediction_loader = torch.utils.data.DataLoader(
     dataset=dataset, batch_size=batch_size, num_workers=num_workers)
