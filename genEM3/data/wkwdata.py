@@ -47,7 +47,6 @@ class WkwData(Dataset):
                  data_split: DataSplit = None,
                  stride: Tuple[int, int, int] = None,
                  normalize: bool = True,
-                 normalize_fn: str = 'normalize',
                  transforms: Callable = None,
                  pad_target: bool = False,
                  cache_RAM: bool = True,
@@ -118,7 +117,6 @@ class WkwData(Dataset):
             self.stride = stride
 
         self.normalize = normalize
-        self.normalize_fn = getattr(WkwData, normalize_fn)
         self.transforms = transforms
         self.pad_target = pad_target
         self.cache_RAM = cache_RAM
@@ -231,7 +229,7 @@ class WkwData(Dataset):
             input_ = self.wkw_read(self.data_sources[source_idx].input_path, bbox_input)
 
         if normalize:
-            input_ = self.normalize_fn(input_, self.data_sources[source_idx].input_mean,
+            input_ = self.normalize(input_, self.data_sources[source_idx].input_mean,
                                     self.data_sources[source_idx].input_std)
 
         input_ = torch.from_numpy(input_).float()
@@ -493,12 +491,6 @@ class WkwData(Dataset):
     def normalize(data, mean, std):
         return (np.asarray(data) - mean) / std
 
-    @staticmethod
-    def normalize_to_0_1(data, *args):
-        """ Normalize the data to the range [0, 1]. The additional *args input is ignored to 
-            match the interface of the normalize function"""
-        d_npArray = np.asarray(data)
-        return (d_npArray - d_npArray.min()) / (d_npArray.max() - d_npArray.min())
 
     @staticmethod
     def wkw_header(wkw_path):

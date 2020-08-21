@@ -35,7 +35,9 @@ class Predictor:
         print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Starting Inference ... ')
         start_time = time.time()
         sample_ind_phase = []
+
         for batch_idx, data in enumerate(self.dataloader):
+
             print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Predicting batch {}/{} ... '
                   .format(batch_idx, len(self.dataloader)))
 
@@ -47,6 +49,7 @@ class Predictor:
 
             for datawriter in self.datawriters.values():
                 datawriter.batch_to_cache(outputs, sample_ind_batch)
+
 
         elapsed_time = time.time() - start_time
         print(elapsed_time)
