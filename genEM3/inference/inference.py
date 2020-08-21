@@ -18,6 +18,8 @@ class Predictor:
                  dataloader: DataLoader,
                  datawriters: Sequence[DataWriter],
                  output_prob_fn: Callable = None,
+                 device: str = 'cpu',
+                 gpu_id: int = None,
                  interpolate: str = None):
 
         self.model = model
@@ -28,6 +30,12 @@ class Predictor:
             output_prob_fn = lambda x: np.exp(x[:, 1, 0, 0])
         self.output_prob_fn = output_prob_fn
         self.interpolate = interpolate
+
+        if device == 'cuda':
+            gpu.get_gpu(gpu_id)
+            device = torch.device(torch.cuda.current_device())
+
+        self.device = torchDevice(device)
 
 
     @torch.no_grad()
@@ -43,8 +51,12 @@ class Predictor:
                 print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Predicting batch {}/{} ... '
                       .format(batch_idx, len(self.dataloader)))
 
-                inputs = data['input']
+                inputs = data['input'].to(self.device)
                 outputs = self.model(inputs)
+                targets = data['target'].to(self.device)
+
+                inputs, outputs, targets = Predictor.copy2cpu(inputs, outputs, targets)
+
                 outputs_prob = np.round(self.output_prob_fn(outputs), 3)
                 sample_ind_batch = data['sample_idx']
                 sample_ind_phase.extend(sample_ind_batch)
@@ -65,3 +77,12 @@ class Predictor:
 
             datawriter.cache_to_wkw(output_wkw_root=datawriter.output_path)
 
+    @staticmethod
+    def copy2cpu(inputs, outputs, targets):
+        if inputs.is_cuda:
+            inputs = inputs.cpu()
+        if outputs.is_cuda:
+            outputs = outputs.cpu()
+        if targets.is_cuda:
+            targets = targets.cpu()
+        return inputs, outputs, targets

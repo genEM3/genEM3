@@ -41,7 +41,7 @@ dataset = WkwData(
     target_shape=output_shape,
     data_sources=datasources,
     stride=(35, 35, 1),
-    cache_HDD=False,
+    cache_HDD=True,
     cache_RAM=True,
     cache_HDD_root=cache_HDD_root
 )
@@ -79,6 +79,7 @@ predictor = Predictor(
     dataloader=prediction_loader,
     datawriters=datawriters,
     output_prob_fn=output_prob_fn,
+    device=device,
     interpolate=None)
 
 predictor.predict()
