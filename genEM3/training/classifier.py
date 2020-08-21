@@ -119,7 +119,7 @@ class Trainer:
                         loss.backward()
                         self.optimizer.step()
 
-                    inputs, outputs = Trainer.copy2cpu(inputs, outputs)
+                    inputs, outputs, targets = Trainer.copy2cpu(inputs, outputs, targets)
 
                     predicted_classes = np.argmax(np.exp(outputs.detach().numpy()), axis=1)
                     predicted_sum += np.sum(predicted_classes)
@@ -207,12 +207,14 @@ class Trainer:
         print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Closed writer ... ')
 
     @staticmethod
-    def copy2cpu(inputs, outputs):
+    def copy2cpu(inputs, outputs, targets):
         if inputs.is_cuda:
             inputs = inputs.cpu()
         if outputs.is_cuda:
             outputs = outputs.cpu()
-        return inputs, outputs
+        if targets.is_cuda:
+            targets = targets.cpu()
+        return inputs, outputs, targets
 
     @staticmethod
     def n1hw_to_n3hw(data):
