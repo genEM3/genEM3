@@ -17,6 +17,10 @@ from model import ConvVAE
 from genEM3.data.wkwdata import WkwData, DataSplit
 import genEM3.util.path as gpath
 from genEM3.util import gpu
+from genEM3.data.transforms.normalize import To_0_1_range
+
+# factor for numerical stabilization of the loss sum
+NUMFACTOR = 10000
 
 # set the proper device (GPU with a specific ID or cpu)
 cuda = True
@@ -41,7 +45,6 @@ def loss_function(recon_x, x, mu, logvar):
 def train(epoch, model, train_loader, optimizer, args):
     model.train()
     train_loss = 0
-
     for batch_idx, data in tqdm(enumerate(train_loader), total=len(train_loader), desc='train'):
         data = data['input'].to(device)
 
@@ -49,12 +52,13 @@ def train(epoch, model, train_loader, optimizer, args):
         recon_batch, mu, logvar = model(data)
 
         loss = loss_function(recon_batch, data, mu, logvar)
-        train_loss += loss.item()
+        train_loss += (loss.item()/NUMFACTOR)
 
         loss.backward()
         optimizer.step()
 
     train_loss /= len(train_loader.dataset)
+    train_loss *= NUMFACTOR
 
     return train_loss
 
@@ -69,7 +73,7 @@ def test(epoch, model, test_loader, writer, args):
 
             recon_batch, mu, logvar = model(data)
 
-            test_loss += loss_function(recon_batch, data, mu, logvar).item()
+            test_loss += (loss_function(recon_batch, data, mu, logvar).item() / NUMFACTOR)
 
             if batch_idx == 0:
                 n = min(data.size(0), 8)
@@ -78,8 +82,9 @@ def test(epoch, model, test_loader, writer, args):
                 writer.add_image('reconstruction', img, epoch)
                 # save_image(comparison.cpu(), 'results/reconstruction_' + str(epoch) + '.png', nrow=n)
 
-    test_loss /= len(test_loader.dataset)
-
+    test_loss /= len(test_loader.dataset) 
+    test_loss *= NUMFACTOR
+    
     return test_loss
 
 
@@ -120,11 +125,13 @@ def main():
 
     # Parameters
     connDataDir = '/conndata/alik/genEM3_runs/VAE/'
-    json_dir = os.path.join(gpath.getAbsPathRepository(),'runs/training/ae_v06_skip/')
-    datasources_json_path = os.path.join(json_dir, 'datasources_distributed_test.json')
+    json_dir = gpath.getDataDir()
+    datasources_json_path = os.path.join(json_dir, 'datasource_20X_980_980_1000bboxes.json')
     input_shape = (28, 28, 1)
     output_shape = (28, 28, 1)
     data_sources = WkwData.datasources_from_json(datasources_json_path)
+    data_sources = data_sources[0:2]
+    # Only pick the first two bboxes for faster epoch
     data_split = DataSplit(train=0.70, validation=0.00, test=0.30)
     cache_RAM = True
     cache_HDD = True
@@ -138,8 +145,8 @@ def main():
         target_shape=output_shape,
         data_sources=data_sources,
         data_split=data_split,
-        normalize=True,
-        normalize_fn='normalize_to_0_1',
+        normalize=False,
+        transforms=To_0_1_range(minimum=0, maximum=255),
         cache_RAM=cache_RAM,
         cache_HDD=cache_HDD,
         cache_HDD_root=cache_root
