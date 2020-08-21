@@ -119,6 +119,8 @@ class Trainer:
                         loss.backward()
                         self.optimizer.step()
 
+                    inputs, outputs = Trainer.copy2cpu(inputs, outputs)
+
                     predicted_classes = np.argmax(np.exp(outputs.detach().numpy()), axis=1)
                     predicted_sum += np.sum(predicted_classes)
                     target_classes = targets.detach().numpy()
