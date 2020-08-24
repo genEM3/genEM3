@@ -144,16 +144,19 @@ class WkwData(Dataset):
             self.fill_caches()
 
     def __len__(self):
-        return self.data_inds_max[-1]
+        """This method returns the length of the dataset"""
+        return self.data_inds_max[-1] + 1
 
     def __getitem__(self, idx):
+        """indexing the dataset calls this method"""
         return self.get_ordered_sample(idx)
 
     def get_data_meshes(self):
+        """ Return the meshgrid for each datasource in self.datasources """
         [self.data_meshes.append(self.get_data_mesh(i)) for i in range(len(self.data_sources))]
 
     def get_data_mesh(self, data_source_idx):
-
+        """ Returns the grid of x, y and z locations for an individual datasource"""
         corner_min_target = np.floor(np.asarray(self.data_sources[data_source_idx].input_bbox[0:3]) +
                                     np.asarray(self.input_shape) / 2).astype(int)
         n_fits = np.floor((np.asarray(self.data_sources[data_source_idx].input_bbox[3:6]) -
@@ -173,26 +176,33 @@ class WkwData(Dataset):
         """ Computes the global linear idx limits contained in the respective training data cubes"""
         for source_idx, _ in enumerate(range(len(self.data_sources))):
             if source_idx == 0:
+                # Minimum index is 0 for the initial group 
                 self.data_inds_min.append(0)
             else:
+                # The minimum of all subsequent data sources is the maximum of the previous 
+                # group plus 1
                 self.data_inds_min.append(self.data_inds_max[source_idx - 1] + 1)
-
+            # The maximum index is the minimum + length of each data source minus 1
             self.data_inds_max.append(self.data_inds_min[source_idx] +
-                                      self.data_meshes[source_idx]['target']['x'].size)
+                                      self.data_meshes[source_idx]['target']['x'].size - 1)
 
     def get_data_ind_splits(self):
-
+        # Use different strategies when the data_split is a fraction rather than integers
         if type(self.data_split.train) is float:
-            # Create variable for the maximum index of training examples 
-            maxIndex = self.data_inds_max[-1]
-            data_inds_all = list(range(maxIndex+1))
+            # Maximum index is the total number of training examples from all data sources
+            maxIndex = len(self)
+            # Range creates a list starting at 0 and ending at maxIndex-1 of indices
+            data_inds_all = list(range(maxIndex))
+            # Here that list gets randomly permutated
             data_inds_all_rand = np.random.permutation(data_inds_all)
+            # Training, validation and test indices comes from the data_split fraction making sure that none of the training data is ignored
+            # These indices are randomized
             train_idx_max = int(self.data_split.train*maxIndex)
             data_train_inds = list(data_inds_all_rand[0:train_idx_max])
             validation_idx_max = train_idx_max + int(self.data_split.validation * maxIndex)
-            data_validation_inds = list(data_inds_all_rand[train_idx_max+1:validation_idx_max])
+            data_validation_inds = list(data_inds_all_rand[train_idx_max:validation_idx_max])
             test_idx_max = validation_idx_max + int(self.data_split.test * maxIndex)
-            data_test_inds = list(data_inds_all_rand[validation_idx_max+1:test_idx_max])
+            data_test_inds = list(data_inds_all_rand[validation_idx_max:test_idx_max])
         else:
             data_train_inds = []
             for i, id in enumerate(self.data_split.train):
