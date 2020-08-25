@@ -77,7 +77,7 @@ def test(epoch, model, test_loader, writer, args):
 
             if batch_idx == 0:
                 n = min(data.size(0), 8)
-                comparison = torch.cat([data[:n], recon_batch.view(args.batch_size, 1, 28, 28)[:n]]).cpu()
+                comparison = torch.cat([data[:n], recon_batch.view(args.batch_size, 1, recon_batch.shape[2], recon_batch.shape[3])[:n]]).cpu()
                 img = make_grid(comparison)
                 writer.add_image('reconstruction', img, epoch)
                 # save_image(comparison.cpu(), 'results/reconstruction_' + str(epoch) + '.png', nrow=n)
@@ -102,7 +102,7 @@ def main():
                         help='output directory')
     parser.add_argument('--batch_size', type=int, default=128, metavar='N',
                         help='input batch size for training (default: 128)')
-    parser.add_argument('--epochs', type=int, default=1000, metavar='N',
+    parser.add_argument('--epochs', type=int, default=100, metavar='N',
                         help='number of epochs to train (default: 10)')
     parser.add_argument('--seed', type=int, default=1, metavar='S',
                         help='random seed (default: 1)')
@@ -110,7 +110,8 @@ def main():
                         help='path to latest checkpoint (default: None')
 
     # model options
-    parser.add_argument('--latent_size', type=int, default=32, metavar='N',
+    # Note(AK): with the AE models from genEM3, the 2048 latent size and 16 fmaps are fixed 
+    parser.add_argument('--latent_size', type=int, default=2048, metavar='N',
                         help='latent vector size of encoder')
 
     args = parser.parse_args()
@@ -127,8 +128,8 @@ def main():
     connDataDir = '/conndata/alik/genEM3_runs/VAE/'
     json_dir = gpath.getDataDir()
     datasources_json_path = os.path.join(json_dir, 'datasource_20X_980_980_1000bboxes.json')
-    input_shape = (28, 28, 1)
-    output_shape = (28, 28, 1)
+    input_shape = (140, 140, 1)
+    output_shape = (140, 140, 1)
     data_sources = WkwData.datasources_from_json(datasources_json_path)
     data_sources = data_sources[0:2]
     # Only pick the first two bboxes for faster epoch
@@ -138,7 +139,7 @@ def main():
     cache_root = os.path.join(connDataDir, '.cache/')
     gpath.mkdir(cache_root)
     
-    num_workers = 0
+    num_workers = 8
     
     dataset = WkwData(
         input_shape=input_shape,
@@ -162,7 +163,15 @@ def main():
         dataset=dataset, batch_size=args.batch_size, num_workers=num_workers, sampler=test_sampler,
         collate_fn=dataset.collate_fn)
     # Model and optimizer definition
-    model = ConvVAE(args.latent_size).to(device)
+    input_size = 140
+    output_size = 140
+    kernel_size = 3
+    stride = 1
+    model = ConvVAE(latent_size=args.latent_size,
+                    input_size=input_size,
+                    output_size=output_size,
+                    kernel_size=kernel_size,
+                    stride=stride).to(device)
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
 
     start_epoch = 0

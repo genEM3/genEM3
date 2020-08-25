@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 
+from genEM3.model.autoencoder2d import Encoder_4_sampling_bn_1px_deep_convonly_skip, Decoder_4_sampling_bn_1px_deep_convonly_skip
 
 class Flatten(nn.Module):
     def forward(self, input):
@@ -20,39 +21,26 @@ class Unflatten(nn.Module):
 
 class ConvVAE(nn.Module):
 
-    def __init__(self, latent_size):
+    def __init__(self, 
+                 latent_size: int = 2048, 
+                 input_size: int = 140,
+                 output_size: int = 140,
+                 kernel_size: int = 3,
+                 stride: int = 1):
         super().__init__()
-
         self.latent_size = latent_size
 
-        self.encoder = nn.Sequential(
-            nn.Conv2d(1, 64, kernel_size=4, stride=2, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(64, 128, kernel_size=4, stride=2, padding=1),
-            nn.ReLU(),
-            Flatten(),
-            nn.Linear(6272, 1024),
-            nn.ReLU()
-        )
+        self.encoder = nn.Sequential(Encoder_4_sampling_bn_1px_deep_convonly_skip(input_size, kernel_size, stride), Flatten())
 
-        # hidden => mu
-        self.fc1 = nn.Linear(1024, self.latent_size)
+        # hidden => mui: 2048  is the number of latent variables fixed in the encoder/decoder models
+        self.fc1 = nn.Linear(2048, self.latent_size)
 
         # hidden => logvar
-        self.fc2 = nn.Linear(1024, self.latent_size)
+        self.fc2 = nn.Linear(2048, self.latent_size)
 
-        self.decoder = nn.Sequential(
-            nn.Linear(self.latent_size, 1024),
-            nn.ReLU(),
-            nn.Linear(1024, 6272),
-            nn.ReLU(),
-            Unflatten(128, 7, 7),
-            nn.ReLU(),
-            nn.ConvTranspose2d(128, 64, kernel_size=4, stride=2, padding=1),
-            nn.ReLU(),
-            nn.ConvTranspose2d(64, 1, kernel_size=4, stride=2, padding=1),
-            nn.Sigmoid()
-        )
+        self.decoder = nn.Sequential(Unflatten(latent_size, 1, 1), 
+                                     Decoder_4_sampling_bn_1px_deep_convonly_skip(output_size, kernel_size, stride),
+                                     nn.Sigmoid())
 
     def encode(self, x):
         h = self.encoder(x)
