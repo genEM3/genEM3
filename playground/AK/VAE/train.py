@@ -115,7 +115,9 @@ def main():
                         help='latent vector size of encoder')
 
     args = parser.parse_args()
-    
+    print('The command line argument:\n')
+    print(args) 
+
     # Make the directory for the result output
     if not os.path.isdir(args.result_dir):
         os.makedirs(args.result_dir)
@@ -131,9 +133,8 @@ def main():
     input_shape = (140, 140, 1)
     output_shape = (140, 140, 1)
     data_sources = WkwData.datasources_from_json(datasources_json_path)
-    data_sources = data_sources[0:2]
     # Only pick the first two bboxes for faster epoch
-    data_split = DataSplit(train=0.70, validation=0.00, test=0.30)
+    data_split = DataSplit(train=0.80, validation=0.00, test=0.20)
     cache_RAM = True
     cache_HDD = True
     cache_root = os.path.join(connDataDir, '.cache/')
