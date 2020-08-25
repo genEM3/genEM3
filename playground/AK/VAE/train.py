@@ -24,7 +24,7 @@ NUMFACTOR = 10000
 
 # set the proper device (GPU with a specific ID or cpu)
 cuda = True
-gpu_id = 0
+gpu_id = 1
 if cuda:
     print(f'Using GPU: {gpu_id}')
     gpu.get_gpu(gpu_id)
