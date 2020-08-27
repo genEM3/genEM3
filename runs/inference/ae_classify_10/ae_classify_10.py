@@ -16,10 +16,10 @@ run_root = os.path.dirname(os.path.abspath(__file__))
 cache_HDD_root = os.path.join(run_root, '.cache/')
 datasources_json_path = os.path.join(run_root, 'datasources_predict.json')
 state_dict_path = os.path.join(run_root, '../../training/ae_classify_v09_3layer_unfreeze_latent_debris_clean_transform_add_clean2_wiggle/.log/run_w_pr/epoch_700/model_state_dict')
-device = 'cuda'
+device = 'cpu'
 
 output_wkw_root = '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8_artifact_pred'
-output_label = 'pred_probs10'
+output_label = 'prediction_probs_logit_sparse'
 
 batch_size = 128
 input_shape = (140, 140, 1)
@@ -67,7 +67,7 @@ predictor = Predictor(
     output_dtype=output_dtype,
     output_label=output_label,
     output_wkw_root=output_wkw_root,
-    output_wkw_compress=True,
+    output_wkw_compress=False,
     device=device,
     interpolate=None)
 

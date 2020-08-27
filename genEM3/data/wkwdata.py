@@ -374,7 +374,7 @@ class WkwData(Dataset):
                 os.makedirs(wkw_cache_path)
 
             if not os.path.exists(os.path.join(wkw_cache_path, 'header.wkw')):
-                self.wkw_create(wkw_cache_path, self.wkw_header(wkw_path))
+                self.wkw_create(wkw_cache_path, wkw_dtype=self.wkw_header(wkw_path).voxel_type)
 
             self.wkw_write(wkw_cache_path, wkw_bbox, data)
 
@@ -425,24 +425,24 @@ class WkwData(Dataset):
         if output_dtype_fn is None:
             output_dtype_fn = lambda x: x
 
-        tmp, wkw_mag = os.path.split(wkw_path)
-        output_wkw_path = os.path.join(output_wkw_root, output_label, wkw_mag)
-        if not os.path.exists(output_wkw_path):
-            os.makedirs(output_wkw_path)
-            self.wkw_create(output_wkw_path, output_block_type)
-
         for path in self.data_cache_output.keys():
-            if wkw_path & (wkw_path != path):
+            if (wkw_path is not None) and (wkw_path != path):
                 continue
 
+            _, wkw_mag = os.path.split(path)
+            output_wkw_path = os.path.join(output_wkw_root, output_label, wkw_mag)
+            if not os.path.exists(output_wkw_path):
+                os.makedirs(output_wkw_path)
+                self.wkw_create(output_wkw_path, output_dtype, output_block_type)
+
             for bbox in self.data_cache_output[path].keys():
-                if wkw_bbox & (wkw_bbox != bbox):
+                if (wkw_bbox is not None) and (wkw_bbox != bbox):
                     continue
 
                 data = np.expand_dims(output_dtype_fn(self.data_cache_output[path][bbox][output_label])
                                       .astype(output_dtype), axis=0)
-                print('Writing cache to wkw ... ' + output_wkw_path + ' | ' + wkw_bbox)
-                bbox_from_str = [int(x) for x in wkw_bbox[1:-1].split(',')]
+                print('Writing cache to wkw ... ' + output_wkw_path + ' | ' + bbox)
+                bbox_from_str = [int(x) for x in bbox[1:-1].split(',')]
                 self.wkw_write(output_wkw_path, bbox_from_str, data)
 
     def get_bbox_for_sample_idx(self, sample_idx, sample_type='input'):
@@ -548,8 +548,7 @@ class WkwData(Dataset):
 
     @staticmethod
     def wkw_create(wkw_path, wkw_dtype=np.uint8, wkw_block_type=1):
-        with wkw.Header(voxel_type=wkw_dtype, block_type=wkw_block_type) as header:
-            wkw.Dataset.create(wkw_path, header)
+        wkw.Dataset.create(wkw_path, wkw.Header(voxel_type=wkw_dtype, block_type=wkw_block_type))
 
     @staticmethod
     def assert_data_completeness(data):
