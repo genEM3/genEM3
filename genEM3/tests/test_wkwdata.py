@@ -8,7 +8,7 @@ import itertools
 
 from genEM3.data.wkwdata import WkwData, DataSplit
 import genEM3.util.path as gpath
-from genEM3.data.transforms.normalize import To_0_1_range
+from genEM3.data.transforms.normalize import ToZeroOneRange
 
 def WkwDataSetConstructor():
     """ Construsts a WkwData[set] from fixed parameters. These parameters can also be explored for 
@@ -35,7 +35,7 @@ def WkwDataSetConstructor():
         data_sources=data_sources,
         data_split=data_split,
         normalize=False,
-        transforms=To_0_1_range(minimum=0, maximum=255),
+        transforms=ToZeroOneRange(minimum=0, maximum=255),
         cache_RAM=cache_RAM,
         cache_HDD=cache_HDD,
         cache_HDD_root=cache_root
