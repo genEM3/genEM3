@@ -10,7 +10,8 @@ class DataWriter:
                  output_path,
                  output_collate_fn,
                  output_write_dtype,
-                 output_write_dtype_fn):
+                 output_write_dtype_fn,
+                 output_write_compress):
 
         self.dataloader = dataloader
         self.output_label = output_label
@@ -18,6 +19,7 @@ class DataWriter:
         self.output_collate_fn = output_collate_fn
         self.output_write_dtype = output_write_dtype
         self.output_write_dtype_fn = output_write_dtype_fn
+        self.output_write_compress = output_write_compress
 
     def batch_to_cache(self, outputs, output_inds):
 
@@ -34,7 +36,7 @@ class DataWriter:
                     points = np.argwhere(~np.isnan(data))
                     values = data[points[:, 0], points[:, 1]]
                     grid_x, grid_y = np.mgrid[0:data.shape[0], 0:data.shape[1]]
-                    data_dense = griddata(points, values, (grid_x, grid_y), method='nearest')
+                    data_dense = griddata(points, values, (grid_x, grid_y))
                     cache[:, :, z] = data_dense
 
     def cache_to_wkw(self, output_wkw_root=None):
@@ -44,7 +46,8 @@ class DataWriter:
 
         for wkw_path in self.dataloader.dataset.data_cache_output.keys():
             for wkw_bbox in self.dataloader.dataset.data_cache_output[wkw_path].keys():
-                self.dataloader.dataset.wkw_write_cached(wkw_path, wkw_bbox,
-                                                         output_wkw_root=output_wkw_root,
-                                                         output_label=self.output_label,
-                                                         output_dtype=self.output_write_dtype)
+                self.dataloader.dataset.wkw_write_cache(wkw_path, wkw_bbox,
+                                                        output_wkw_root=output_wkw_root,
+                                                        output_label=self.output_label,
+                                                        output_dtype=self.output_write_dtype,
+                                                        output_compress=self.output_write_compress)

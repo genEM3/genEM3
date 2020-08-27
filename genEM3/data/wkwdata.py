@@ -2,9 +2,10 @@ import os
 import pdb
 import json
 import random
-import numpy as np
 from collections import namedtuple
 from typing import Tuple, Sequence, List, Callable
+import numpy as np
+from scipy.interpolate import griddata
 import matplotlib.pyplot as plt
 import torch
 from torch.utils.data import Dataset
@@ -314,6 +315,17 @@ class WkwData(Dataset):
             data[data_min[0]:data_max[0], data_min[1]:data_max[1], data_min[2]:data_max[2]] = outputs[output_idx].reshape(self.output_shape)
             self.data_cache_output[wkw_path][str(wkw_bbox)][output_label] = data
 
+    def interpolate_sparse_cache(self, output_label, method=None):
+        for wkw_path in self.data_cache_output.keys():
+            for wkw_bbox in self.data_cache_output[wkw_path].keys():
+                cache = self.data_cache_output[wkw_path][wkw_bbox][output_label]
+                for z in range(cache.shape[2]):
+                    data = cache[:, :, z]
+                    points = np.argwhere(~np.isnan(data))
+                    values = data[points[:, 0], points[:, 1]]
+                    grid_x, grid_y = np.mgrid[0:data.shape[0], 0:data.shape[1]]
+                    data_dense = griddata(points, values, (grid_x, grid_y), method=method)
+                    cache[:, :, z] = data_dense
 
     def get_random_sample(self):
         """ Retrieves a random pair of input and target tensors from all available training cubes"""
@@ -398,13 +410,14 @@ class WkwData(Dataset):
 
         return data
 
-    def wkw_write_cached(self,
-                         wkw_path,
-                         wkw_bbox,
-                         output_wkw_root,
-                         output_label,
-                         output_dtype=None,
-                         output_dtype_fn=None):
+    def wkw_write_cache(self,
+                        output_label,
+                        output_wkw_root,
+                        wkw_path=None,
+                        wkw_bbox=None,
+                        output_dtype=None,
+                        output_dtype_fn=None,
+                        output_block_type=1):
 
         if output_dtype is None:
             output_dtype = np.float
@@ -413,17 +426,24 @@ class WkwData(Dataset):
             output_dtype_fn = lambda x: x
 
         tmp, wkw_mag = os.path.split(wkw_path)
-        data = np.expand_dims(output_dtype_fn(self.data_cache_output[wkw_path][wkw_bbox][output_label])
-                              .astype(output_dtype), axis=0)
-
         output_wkw_path = os.path.join(output_wkw_root, output_label, wkw_mag)
         if not os.path.exists(output_wkw_path):
             os.makedirs(output_wkw_path)
-            self.wkw_create(output_wkw_path)
+            self.wkw_create(output_wkw_path, output_block_type)
 
-        print('Writing cache to wkw ... ' + output_wkw_path + ' | ' + wkw_bbox)
-        bbox_from_str = [int(x) for x in wkw_bbox[1:-1].split(',')]
-        self.wkw_write(output_wkw_path, bbox_from_str, data)
+        for path in self.data_cache_output.keys():
+            if wkw_path & (wkw_path != path):
+                continue
+
+            for bbox in self.data_cache_output[path].keys():
+                if wkw_bbox & (wkw_bbox != bbox):
+                    continue
+
+                data = np.expand_dims(output_dtype_fn(self.data_cache_output[path][bbox][output_label])
+                                      .astype(output_dtype), axis=0)
+                print('Writing cache to wkw ... ' + output_wkw_path + ' | ' + wkw_bbox)
+                bbox_from_str = [int(x) for x in wkw_bbox[1:-1].split(',')]
+                self.wkw_write(output_wkw_path, bbox_from_str, data)
 
     def get_bbox_for_sample_idx(self, sample_idx, sample_type='input'):
         source_idx, mesh_inds = self.get_source_mesh_for_sample_idx(sample_idx)
@@ -507,7 +527,6 @@ class WkwData(Dataset):
     def normalize(data, mean, std):
         return (np.asarray(data) - mean) / std
 
-
     @staticmethod
     def wkw_header(wkw_path):
         with wkw.Dataset.open(wkw_path) as w:
@@ -528,8 +547,9 @@ class WkwData(Dataset):
             w.write(wkw_bbox[0:3], data)
 
     @staticmethod
-    def wkw_create(wkw_path, wkw_dtype=np.uint8):
-        wkw.Dataset.create(wkw_path, wkw.Header(np.uint8))
+    def wkw_create(wkw_path, wkw_dtype=np.uint8, wkw_block_type=1):
+        with wkw.Header(voxel_type=wkw_dtype, block_type=wkw_block_type) as header:
+            wkw.Dataset.create(wkw_path, header)
 
     @staticmethod
     def assert_data_completeness(data):
