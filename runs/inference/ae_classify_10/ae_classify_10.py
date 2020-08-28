@@ -20,7 +20,7 @@ state_dict_path = os.path.join(run_root, '../../training/ae_classify_v09_3layer_
 device = 'cpu'
 
 output_wkw_root = '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8_artifact_pred'
-output_label = 'prediction_probs_logit_sparse'
+output_label = 'probs_sparse'
 
 batch_size = 128
 input_shape = (140, 140, 1)
@@ -56,9 +56,12 @@ state_dict = checkpoint['model_state_dict']
 model.load_state_dict(state_dict)
 
 output_prob_fn = lambda x: np.exp(x[:, 1, 0, 0])
-output_dtype = np.uint8
-output_dtype_fn = lambda x: (logit(x) + 16) * 256 / 32
-output_dtype_fni = lambda x: expit(x / 256 * 32 - 16)
+# output_dtype = np.uint8
+output_dtype = np.float32
+# output_dtype_fn = lambda x: (logit(x) + 16) * 256 / 32
+output_dtype_fn = lambda x: x
+# output_dtype_fni = lambda x: expit(x / 256 * 32 - 16)
+output_dtype_fni = lambda x: x
 
 predictor = Predictor(
     model=model,

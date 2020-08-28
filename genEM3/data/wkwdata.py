@@ -420,7 +420,7 @@ class WkwData(Dataset):
                         output_block_type=1):
 
         if output_dtype is None:
-            output_dtype = np.float
+            output_dtype = np.uint8
 
         if output_dtype_fn is None:
             output_dtype_fn = lambda x: x
@@ -569,6 +569,24 @@ class WkwData(Dataset):
                     total_size += os.path.getsize(fp)
 
         return np.floor(total_size/1024/1024)  # MiB
+
+    @staticmethod
+    def datasources_bbox_from_json(json_path, bbox_ext, bbox_idx, datasource_idx=0):
+        """ Crops out sub bbox from template json given linear index (parallelize over prediction volumes)"""
+
+        datasource = WkwData.datasources_from_json(json_path)[datasource_idx]
+        corner_min = (np.floor(np.array(datasource.input_bbox[0:3])/np.array(bbox_ext))*np.array(bbox_ext)).astype(int)
+        corner_max = (np.ceil((np.array(datasource.input_bbox[0:3])+np.array(datasource.input_bbox[3:6]))/
+                              np.array(bbox_ext))*np.array(bbox_ext)).astype(int)
+        x = np.arange(corner_min[0], corner_max[0], bbox_ext[0])
+        y = np.arange(corner_min[1], corner_max[1], bbox_ext[1])
+        z = np.arange(corner_min[2], corner_max[2], bbox_ext[2])
+        xm, ym, zm = np.meshgrid(x, y, z)
+        xi, yi, zi = np.unravel_index(bbox_idx, (len(x), len(y), len(z)))
+        bbox = [xm[xi, yi, zi], ym[xi, yi, zi], zm[xi, yi, zi], *bbox_ext]
+        datasource._replace(input_bbox=bbox, target_bbox=bbox)
+
+        return [datasource]
 
     @staticmethod
     def datasources_from_json(json_path):

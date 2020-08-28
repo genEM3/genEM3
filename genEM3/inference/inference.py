@@ -42,7 +42,6 @@ class Predictor:
         else:
             self.output_wkw_block_type = 2
 
-
         if device == 'cuda':
             gpu.get_gpu(gpu_id)
             device = torch.device(torch.cuda.current_device())
@@ -52,15 +51,16 @@ class Predictor:
 
 
     @torch.no_grad()
-    def predict(self):
-        print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Starting Inference ... ')
+    def predict(self, verbose=False):
+        if verbose:
+            print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Starting Inference ... ')
         start_time = time.time()
         sample_ind_phase = []
 
         for batch_idx, data in enumerate(self.dataloader):
-
-            print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Predicting batch {}/{} ... '
-                  .format(batch_idx, len(self.dataloader)))
+            if verbose:
+                print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Predicting batch {}/{} ... '
+                    .format(batch_idx, len(self.dataloader)))
 
             sample_ind_batch = data['sample_idx']
             sample_ind_phase.extend(sample_ind_batch)
