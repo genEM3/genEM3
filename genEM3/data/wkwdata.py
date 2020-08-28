@@ -584,7 +584,7 @@ class WkwData(Dataset):
         xm, ym, zm = np.meshgrid(x, y, z)
         xi, yi, zi = np.unravel_index(bbox_idx, (len(x), len(y), len(z)))
         bbox = [xm[xi, yi, zi], ym[xi, yi, zi], zm[xi, yi, zi], *bbox_ext]
-        datasource._replace(input_bbox=bbox, target_bbox=bbox)
+        datasource = datasource._replace(input_bbox=bbox, target_bbox=bbox)
 
         return [datasource]
 
