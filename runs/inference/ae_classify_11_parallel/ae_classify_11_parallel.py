@@ -85,7 +85,7 @@ def predict_bbox_from_json(bbox_idx, verbose=True):
         device=device,
         interpolate=None)
 
-    predictor.predict()
+    predictor.predict(verbose=verbose)
 
 
 if __name__ == '__main__':
