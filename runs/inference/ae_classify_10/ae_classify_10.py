@@ -10,7 +10,8 @@ from torch.utils.data.sampler import SubsetRandomSampler
 from genEM3.data.wkwdata import WkwData, DataSplit
 from genEM3.model.autoencoder2d import Encoder_4_sampling_bn_1px_deep_convonly_skip, AE_Encoder_Classifier, Classifier3Layered
 from genEM3.inference.inference import Predictor
-from genEM3.inference.writer import DataWriter
+
+torch.multiprocessing.set_sharing_strategy('file_system')
 
 run_root = os.path.dirname(os.path.abspath(__file__))
 cache_HDD_root = os.path.join(run_root, '.cache/')
@@ -24,7 +25,7 @@ output_label = 'prediction_probs_logit_sparse'
 batch_size = 128
 input_shape = (140, 140, 1)
 output_shape = (1, 1, 1)
-num_workers = 0
+num_workers = 12
 
 kernel_size = 3
 stride = 1
@@ -42,7 +43,7 @@ dataset = WkwData(
     target_shape=output_shape,
     data_sources=datasources,
     stride=(35, 35, 1),
-    cache_HDD=True,
+    cache_HDD=False,
     cache_RAM=True,
     cache_HDD_root=cache_HDD_root
 )
