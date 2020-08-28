@@ -9,7 +9,6 @@ from torch.utils.tensorboard import SummaryWriter
 from torch.utils.data import DataLoader
 from torch import device as torchDevice
 from genEM3.util import gpu, viewData
-from genEM3.inference.writer import DataWriter
 
 class Predictor:
 
