@@ -1,4 +1,4 @@
-#!/usr/local/bin/anaconda3/envs/genEM3/bin/python
+#!/u/flod/conda-envs/genEM3/bin/python
 
 import os
 import pdb
@@ -35,7 +35,7 @@ def predict_bbox_from_json(bbox_idx, verbose=True):
     batch_size = 128
     input_shape = (140, 140, 1)
     output_shape = (1, 1, 1)
-    num_workers = 12
+    num_workers = 8
 
     kernel_size = 3
     stride = 1
