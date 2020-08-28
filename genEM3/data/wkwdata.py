@@ -575,8 +575,8 @@ class WkwData(Dataset):
         """ Crops out sub bbox from template json given linear index (parallelize over prediction volumes)"""
 
         datasource = WkwData.datasources_from_json(json_path)[datasource_idx]
-        corner_min = (np.floor(np.array(datasource.input_bbox[0:3])/np.array(bbox_ext))*np.array(bbox_ext)).astype(int)
-        corner_max = (np.ceil((np.array(datasource.input_bbox[0:3])+np.array(datasource.input_bbox[3:6]))/
+        corner_min = (np.ceil(np.array(datasource.input_bbox[0:3])/np.array(bbox_ext))*np.array(bbox_ext)).astype(int)
+        corner_max = (np.floor((np.array(datasource.input_bbox[0:3])+np.array(datasource.input_bbox[3:6]))/
                               np.array(bbox_ext))*np.array(bbox_ext)).astype(int)
         x = np.arange(corner_min[0], corner_max[0], bbox_ext[0])
         y = np.arange(corner_min[1], corner_max[1], bbox_ext[1])

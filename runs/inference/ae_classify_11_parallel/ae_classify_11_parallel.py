@@ -35,7 +35,7 @@ def predict_bbox_from_json(bbox_idx, verbose=True):
     batch_size = 128
     input_shape = (140, 140, 1)
     output_shape = (1, 1, 1)
-    num_workers = 8
+    num_workers = 12
 
     kernel_size = 3
     stride = 1
@@ -81,7 +81,7 @@ def predict_bbox_from_json(bbox_idx, verbose=True):
         output_dtype=output_dtype,
         output_label=output_label,
         output_wkw_root=output_wkw_root,
-        output_wkw_compress=False,
+        output_wkw_compress=True,
         device=device,
         interpolate=None)
 
