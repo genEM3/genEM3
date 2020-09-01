@@ -17,7 +17,7 @@ from model import ConvVAE
 from genEM3.data.wkwdata import WkwData, DataSplit
 import genEM3.util.path as gpath
 from genEM3.util import gpu
-from genEM3.data.transforms.normalize import To_0_1_range
+from genEM3.data.transforms.normalize import ToZeroOneRange
 
 # factor for numerical stabilization of the loss sum
 NUMFACTOR = 10000
@@ -148,7 +148,7 @@ def main():
         data_sources=data_sources,
         data_split=data_split,
         normalize=False,
-        transforms=To_0_1_range(minimum=0, maximum=255),
+        transforms=ToZeroOneRange(minimum=0, maximum=255),
         cache_RAM=cache_RAM,
         cache_HDD=cache_HDD,
         cache_HDD_root=cache_root
