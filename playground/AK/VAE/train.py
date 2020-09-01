@@ -12,8 +12,7 @@ import numpy as np
 from tensorboardX import SummaryWriter
 from tqdm import tqdm
 
-from model import ConvVAE
-
+from genEM3.model.VAE import ConvVAE
 from genEM3.data.wkwdata import WkwData, DataSplit
 import genEM3.util.path as gpath
 from genEM3.util import gpu
