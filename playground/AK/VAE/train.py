@@ -33,7 +33,7 @@ else:
 
 def loss_function(recon_x, x, mu, logvar):
     # reconstruction loss
-    BCE = F.binary_cross_entropy(recon_x.view(-1, 784), x.view(-1, 784), reduction='sum')
+    BCE = F.binary_cross_entropy(recon_x.view(-1, recon_x.numel()), x.view(-1, x.numel()), reduction='sum')
 
     # KL divergence loss
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
