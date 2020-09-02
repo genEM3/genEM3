@@ -2,7 +2,6 @@ import argparse
 import torch
 import torch.optim as optim
 from torch.nn import functional as F
-from torchvision import datasets, transforms
 from torchvision.utils import save_image, make_grid
 from torch.utils.data.sampler import SubsetRandomSampler
 
@@ -34,57 +33,73 @@ else:
 def loss_function(recon_x, x, mu, logvar):
     # reconstruction loss
     BCE = F.binary_cross_entropy(recon_x.view(-1, recon_x.numel()), x.view(-1, x.numel()), reduction='sum')
-
-    # KL divergence loss
+    # KL divergence loss between the posterior and prior of latent space
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-
-    return BCE + KLD
+    # Add a dict of separate reconstruction and KL loss
+    lossDetail = {'Recon': BCE, 'KLD': KLD}
+    
+    return BCE + KLD, lossDetail
 
 
 def train(epoch, model, train_loader, optimizer, args):
     model.train()
     train_loss = 0
+    detailedLoss = {'Recon': 0.0, 'KLD': 0.0}
     for batch_idx, data in tqdm(enumerate(train_loader), total=len(train_loader), desc='train'):
         data = data['input'].to(device)
 
         optimizer.zero_grad()
         recon_batch, mu, logvar = model(data)
 
-        loss = loss_function(recon_batch, data, mu, logvar)
-        train_loss += (loss.item()/NUMFACTOR)
-
+        loss, curDetLoss = loss_function(recon_batch, data, mu, logvar)
+        train_loss += (loss.item() / NUMFACTOR)
+        # Separate loss
+        for key in curDetLoss:
+            detailedLoss[key] += (curDetLoss.get(key) / NUMFACTOR)
+        # Backprop
         loss.backward()
         optimizer.step()
-
-    train_loss /= len(train_loader.dataset)
+    num_data_points = len(train_loader.dataset)
+    train_loss /= num_data_points
     train_loss *= NUMFACTOR
 
-    return train_loss
+    for key in detailedLoss:
+        detailedLoss[key] /= num_data_points
+        detailedLoss[key] *= NUMFACTOR
+    
+    return train_loss, detailedLoss
 
 
 def test(epoch, model, test_loader, writer, args):
     model.eval()
     test_loss = 0
-
+    detailedLoss = {'Recon': 0.0, 'KLD': 0.0}
     with torch.no_grad():
         for batch_idx, data in tqdm(enumerate(test_loader), total=len(test_loader), desc='test'):
             data = data['input'].to(device)
-
             recon_batch, mu, logvar = model(data)
-
-            test_loss += (loss_function(recon_batch, data, mu, logvar).item() / NUMFACTOR)
-
+            curLoss, curDetLoss = loss_function(recon_batch, data, mu, logvar)
+            test_loss += (curLoss.item() / NUMFACTOR)
+            # The separate KL and Reconstruction losses
+            for key in curDetLoss:
+                detailedLoss[key] += (curDetLoss.get(key) / NUMFACTOR)
+            
             if batch_idx == 0:
                 n = min(data.size(0), 8)
                 comparison = torch.cat([data[:n], recon_batch.view(args.batch_size, 1, recon_batch.shape[2], recon_batch.shape[3])[:n]]).cpu()
                 img = make_grid(comparison)
-                writer.add_image('reconstruction', img, epoch)
+                writer.add_image('test_reconstruction', img, epoch)
                 # save_image(comparison.cpu(), 'results/reconstruction_' + str(epoch) + '.png', nrow=n)
-
-    test_loss /= len(test_loader.dataset) 
+    # Divide by the length of the dataset and multiply by factor used for numerical stabilization
+    num_data_points = len(test_loader.dataset)
+    test_loss /= num_data_points 
     test_loss *= NUMFACTOR
     
-    return test_loss
+    for key in detailedLoss:
+        detailedLoss[key] /= num_data_points
+        detailedLoss[key] *= NUMFACTOR
+  
+    return test_loss, detailedLoss
 
 
 def save_checkpoint(state, is_best, outdir='.log'):
@@ -140,7 +155,7 @@ def main():
     gpath.mkdir(cache_root)
     
     num_workers = 8
-    
+    data_sources = [data_sources[0]] 
     dataset = WkwData(
         input_shape=input_shape,
         target_shape=output_shape,
@@ -193,13 +208,14 @@ def main():
     writer = SummaryWriter(logdir=tensorBoardDir)
 
     for epoch in range(start_epoch, args.epochs):
-        train_loss = train(epoch, model, train_loader, optimizer, args)
-        test_loss = test(epoch, model, test_loader, writer, args)
+        train_loss, train_lossDetailed = train(epoch, model, train_loader, optimizer, args)
+        test_loss, test_lossDetailed = test(epoch, model, test_loader, writer, args)
 
         # logging
-        writer.add_scalar('train/loss', train_loss, epoch)
-        writer.add_scalar('test/loss', test_loss, epoch)
-
+        writer.add_scalar('loss_train/total', train_loss, epoch)
+        writer.add_scalar('loss_test/total', test_loss, epoch)
+        writer.add_scalars('loss_train', train_lossDetailed, global_step=epoch)
+        writer.add_scalars('loss_test', test_lossDetailed, global_step=epoch)
         print('Epoch [%d/%d] loss: %.3f val_loss: %.3f' % (epoch + 1, args.epochs, train_loss, test_loss))
 
         is_best = test_loss < best_test_loss
@@ -216,7 +232,6 @@ def main():
             sample = model.decode(sample).cpu()
             img = make_grid(sample)
             writer.add_image('sampling', img, epoch)
-            # save_image(sample.view(64, 1, 28, 28), 'results/sample_' + str(epoch) + '.png')
 
 
 if __name__ == '__main__':
