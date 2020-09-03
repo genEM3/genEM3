@@ -2,7 +2,7 @@ import argparse
 import torch
 import torch.optim as optim
 from torch.nn import functional as F
-from torchvision.utils import save_image, make_grid
+from torchvision.utils import make_grid
 from torch.utils.data.sampler import SubsetRandomSampler
 
 import os
