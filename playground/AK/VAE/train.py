@@ -14,8 +14,9 @@ from tqdm import tqdm
 from genEM3.model.VAE import ConvVAE
 from genEM3.data.wkwdata import WkwData, DataSplit
 import genEM3.util.path as gpath
+from genEM3.util.image import undo_normalize
 from genEM3.util import gpu
-from genEM3.data.transforms.normalize import ToZeroOneRange
+from genEM3.data.transforms.normalize import ToStandardNormal
 
 # factor for numerical stabilization of the loss sum
 NUMFACTOR = 10000
@@ -30,14 +31,16 @@ if cuda:
 else:
     device = torch.device("cpu")
 
+
 def loss_function(recon_x, x, mu, logvar):
+    img_size_recon = torch.tensor(recon_x.shape[2:4]).prod()
+    img_size_input = torch.tensor(x.shape[2:4]).prod()
     # reconstruction loss
-    BCE = F.binary_cross_entropy(recon_x.view(-1, recon_x.numel()), x.view(-1, x.numel()), reduction='sum')
+    BCE = F.mse_loss(recon_x.view(-1, img_size_recon), x.view(-1, img_size_input), reduction='sum')
     # KL divergence loss between the posterior and prior of latent space
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
     # Add a dict of separate reconstruction and KL loss
     lossDetail = {'Recon': BCE, 'KLD': KLD}
-    
     return BCE + KLD, lossDetail
 
 
@@ -66,7 +69,7 @@ def train(epoch, model, train_loader, optimizer, args):
     for key in detailedLoss:
         detailedLoss[key] /= num_data_points
         detailedLoss[key] *= NUMFACTOR
-    
+
     return train_loss, detailedLoss
 
 
@@ -83,22 +86,26 @@ def test(epoch, model, test_loader, writer, args):
             # The separate KL and Reconstruction losses
             for key in curDetLoss:
                 detailedLoss[key] += (curDetLoss.get(key) / NUMFACTOR)
-            
+            # Add 8 test images and reconstructions to tensorboard
             if batch_idx == 0:
                 n = min(data.size(0), 8)
-                comparison = torch.cat([data[:n], recon_batch.view(args.batch_size, 1, recon_batch.shape[2], recon_batch.shape[3])[:n]]).cpu()
-                img = make_grid(comparison)
-                writer.add_image('test_reconstruction', img, epoch)
+                # concatenate the input data and associated reconstruction
+                comparison = torch.cat([data[:n], recon_batch[:n]]).cpu()
+                comparison_uint8 = undo_normalize(comparison, mean=148.0, std=36.0)
+                img = make_grid(comparison_uint8)
+                writer.add_image('test_reconstruction',
+                                 img,
+                                 epoch)
                 # save_image(comparison.cpu(), 'results/reconstruction_' + str(epoch) + '.png', nrow=n)
     # Divide by the length of the dataset and multiply by factor used for numerical stabilization
     num_data_points = len(test_loader.dataset)
-    test_loss /= num_data_points 
+    test_loss /= num_data_points
     test_loss *= NUMFACTOR
-    
+
     for key in detailedLoss:
         detailedLoss[key] /= num_data_points
         detailedLoss[key] *= NUMFACTOR
-  
+
     return test_loss, detailedLoss
 
 
@@ -124,13 +131,13 @@ def main():
                         help='path to latest checkpoint (default: None')
 
     # model options
-    # Note(AK): with the AE models from genEM3, the 2048 latent size and 16 fmaps are fixed 
+    # Note(AK): with the AE models from genEM3, the 2048 latent size and 16 fmaps are fixed
     parser.add_argument('--latent_size', type=int, default=2048, metavar='N',
                         help='latent vector size of encoder')
 
     args = parser.parse_args()
     print('The command line argument:\n')
-    print(args) 
+    print(args)
 
     # Make the directory for the result output
     if not os.path.isdir(args.result_dir):
@@ -153,16 +160,16 @@ def main():
     cache_HDD = True
     cache_root = os.path.join(connDataDir, '.cache/')
     gpath.mkdir(cache_root)
-    
+
     num_workers = 8
-    data_sources = [data_sources[0]] 
+    data_sources = [data_sources[0]]
     dataset = WkwData(
         input_shape=input_shape,
         target_shape=output_shape,
         data_sources=data_sources,
         data_split=data_split,
         normalize=False,
-        transforms=ToZeroOneRange(minimum=0, maximum=255),
+        transforms=ToStandardNormal(mean=148.0, std=36.0),
         cache_RAM=cache_RAM,
         cache_HDD=cache_HDD,
         cache_HDD_root=cache_root
@@ -172,7 +179,7 @@ def main():
     train_loader = torch.utils.data.DataLoader(
         dataset=dataset, batch_size=args.batch_size, num_workers=num_workers, sampler=train_sampler,
         collate_fn=dataset.collate_fn)
-    
+
     test_sampler = SubsetRandomSampler(dataset.data_test_inds)
     test_loader = torch.utils.data.DataLoader(
         dataset=dataset, batch_size=args.batch_size, num_workers=num_workers, sampler=test_sampler,
@@ -228,11 +235,14 @@ def main():
         }, is_best)
 
         with torch.no_grad():
+            # Image 64 random sample from the prior latent space and decode
             sample = torch.randn(64, args.latent_size).to(device)
             sample = model.decode(sample).cpu()
-            img = make_grid(sample)
+            sample_uint8 = undo_normalize(sample, mean=148.0, std=36.0)
+            img = make_grid(sample_uint8)
             writer.add_image('sampling', img, epoch)
 
 
+# Run main as script
 if __name__ == '__main__':
     main()

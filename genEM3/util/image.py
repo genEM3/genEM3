@@ -1,3 +1,4 @@
+from torch import Tensor, uint8
 import numpy as np
 from genEM3.data.wkwdata import WkwData
 # This is a module for all image processing related functionalities
@@ -22,9 +23,25 @@ def bboxesFromArray(centerArray,
     return bboxes
 
 
-def normalize(img, mean=148, std=36):
+def normalize(img: Tensor,
+              mean: float = 148.0,
+              std: float = 36.0):
     """ Returns the image values normalized to mean of 0 and std of 1"""
     return (img-mean)/std
+
+
+def undo_normalize(img: Tensor, 
+                   mean: float = 148.0, 
+                   std: float = 36.0):
+    """ undo the normalization process  return uint8 image for visualization"""
+    return ((img*std)+mean).type(uint8)
+
+
+def normalize_to_uniform(img: Tensor, 
+                         minimum: float = 0.0, 
+                         maximum: float = 255.0):
+    """ Returns the image values normalized to mean of 0 and std of 1"""
+    return (img - minimum) / (maximum - minimum)
 
 
 def readWkwFromCenter(wkwdir, coordinates, dimensions):
