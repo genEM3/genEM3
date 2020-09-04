@@ -163,7 +163,7 @@ def main():
     tensorBoardDir = os.path.join(connDataDir, gpath.gethostnameTimeString())
     writer = SummaryWriter(logdir=tensorBoardDir)
     # Set up data loaders
-#    data_sources = [data_sources[0]]
+    data_sources = [data_sources[0]]
     num_workers = 8
     dataset = WkwData(
         input_shape=input_shape,
@@ -224,9 +224,10 @@ def main():
         writer.add_scalar('loss_test/total', test_loss, epoch)
         writer.add_scalars('loss_train', train_lossDetailed, global_step=epoch)
         writer.add_scalars('loss_test', test_lossDetailed, global_step=epoch)
-        # add the histogram of weights and biases
+        # add the histogram of weights and biases plus their gradients
         for name, param in model.named_parameters():
             writer.add_histogram(name, param.clone().cpu().data.numpy(), epoch)
+            writer.add_histogram(name+'_gradient', param.grad.cpu().numpy(),epoch)
         # plot mu and logvar
         for latent_prop in ['cur_mu', 'cur_logvar']:
             latent_val=getattr(model, latent_prop)
