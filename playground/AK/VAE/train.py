@@ -52,9 +52,9 @@ def train(epoch, model, train_loader, optimizer, args):
         data = data['input'].to(device)
 
         optimizer.zero_grad()
-        recon_batch, mu, logvar = model(data)
+        recon_batch = model(data)
 
-        loss, curDetLoss = loss_function(recon_batch, data, mu, logvar)
+        loss, curDetLoss = loss_function(recon_batch, data, model.cur_mu, model.cur_logvar)
         train_loss += (loss.item() / NUMFACTOR)
         # Separate loss
         for key in curDetLoss:
@@ -80,8 +80,8 @@ def test(epoch, model, test_loader, writer, args):
     with torch.no_grad():
         for batch_idx, data in tqdm(enumerate(test_loader), total=len(test_loader), desc='test'):
             data = data['input'].to(device)
-            recon_batch, mu, logvar = model(data)
-            curLoss, curDetLoss = loss_function(recon_batch, data, mu, logvar)
+            recon_batch = model(data)
+            curLoss, curDetLoss = loss_function(recon_batch, data, model.cur_mu, model.cur_logvar)
             test_loss += (curLoss.item() / NUMFACTOR)
             # The separate KL and Reconstruction losses
             for key in curDetLoss:
@@ -110,6 +110,7 @@ def test(epoch, model, test_loader, writer, args):
 
 
 def save_checkpoint(state, is_best, outdir='.log'):
+    gpath.mkdir(outdir)
     checkpoint_file = os.path.join(outdir, 'checkpoint.pth')
     best_file = os.path.join(outdir, 'model_best.pth')
     torch.save(state, checkpoint_file)
@@ -144,9 +145,6 @@ def main():
         os.makedirs(args.result_dir)
 
     torch.manual_seed(args.seed)
-
-#     kwargs = {'num_workers': 1, 'pin_memory': True} if cuda else {}
-
     # Parameters
     connDataDir = '/conndata/alik/genEM3_runs/VAE/'
     json_dir = gpath.getDataDir()
@@ -161,8 +159,12 @@ def main():
     cache_root = os.path.join(connDataDir, '.cache/')
     gpath.mkdir(cache_root)
 
-    num_workers = 8
+    # Set up summary writer for tensorboard
+    tensorBoardDir = os.path.join(connDataDir, gpath.gethostnameTimeString())
+    writer = SummaryWriter(logdir=tensorBoardDir)
+    # Set up data loaders
     data_sources = [data_sources[0]]
+    num_workers = 8
     dataset = WkwData(
         input_shape=input_shape,
         target_shape=output_shape,
@@ -194,6 +196,7 @@ def main():
                     output_size=output_size,
                     kernel_size=kernel_size,
                     stride=stride).to(device)
+    # set up optimizer
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
 
     start_epoch = 0
@@ -211,9 +214,7 @@ def main():
             print('=> loaded checkpoint %s' % args.resume)
         else:
             print('=> no checkpoint found at %s' % args.resume)
-    tensorBoardDir = os.path.join(connDataDir, gpath.gethostnameTimeString())
-    writer = SummaryWriter(logdir=tensorBoardDir)
-
+    # Training loop
     for epoch in range(start_epoch, args.epochs):
         train_loss, train_lossDetailed = train(epoch, model, train_loader, optimizer, args)
         test_loss, test_lossDetailed = test(epoch, model, test_loader, writer, args)
@@ -227,12 +228,13 @@ def main():
 
         is_best = test_loss < best_test_loss
         best_test_loss = min(test_loss, best_test_loss)
-        save_checkpoint({
-            'epoch': epoch,
-            'best_test_loss': best_test_loss,
-            'state_dict': model.state_dict(),
-            'optimizer': optimizer.state_dict(),
-        }, is_best)
+        save_directory = os.path.join(tensorBoardDir, '.log')
+        save_checkpoint({'epoch': epoch,
+                         'best_test_loss': best_test_loss,
+                         'state_dict': model.state_dict(),
+                         'optimizer': optimizer.state_dict()},
+                        is_best,
+                        save_directory)
 
         with torch.no_grad():
             # Image 64 random sample from the prior latent space and decode
