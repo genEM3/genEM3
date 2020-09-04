@@ -163,7 +163,7 @@ def main():
     tensorBoardDir = os.path.join(connDataDir, gpath.gethostnameTimeString())
     writer = SummaryWriter(logdir=tensorBoardDir)
     # Set up data loaders
-    data_sources = [data_sources[0]]
+#    data_sources = [data_sources[0]]
     num_workers = 8
     dataset = WkwData(
         input_shape=input_shape,
@@ -224,8 +224,16 @@ def main():
         writer.add_scalar('loss_test/total', test_loss, epoch)
         writer.add_scalars('loss_train', train_lossDetailed, global_step=epoch)
         writer.add_scalars('loss_test', test_lossDetailed, global_step=epoch)
+        # add the histogram of weights and biases
+        for name, param in model.named_parameters():
+            writer.add_histogram(name, param.clone().cpu().data.numpy(), epoch)
+        # plot mu and logvar
+        for latent_prop in ['cur_mu', 'cur_logvar']:
+            latent_val=getattr(model, latent_prop)
+            writer.add_histogram(latent_prop, latent_val.cpu().numpy(), epoch)
+        # flush them to the output
+        writer.flush()
         print('Epoch [%d/%d] loss: %.3f val_loss: %.3f' % (epoch + 1, args.epochs, train_loss, test_loss))
-
         is_best = test_loss < best_test_loss
         best_test_loss = min(test_loss, best_test_loss)
         save_directory = os.path.join(tensorBoardDir, '.log')
