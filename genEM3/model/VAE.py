@@ -41,8 +41,7 @@ class ConvVAE(nn.Module):
                                  nn.Softplus())
 
         self.decoder = nn.Sequential(Unflatten(latent_size, 1, 1), 
-                                     Decoder_4_sampling_bn_1px_deep_convonly_skip(output_size, kernel_size, stride),
-                                     nn.Sigmoid())
+                                     Decoder_4_sampling_bn_1px_deep_convonly_skip(output_size, kernel_size, stride))
 
         self.cur_mu = torch.zeros([batch_size, self.latent_size], dtype=torch.float)
         self.cur_logvar = torch.zeros([batch_size, self.latent_size], dtype=torch.float)
