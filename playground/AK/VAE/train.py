@@ -17,12 +17,12 @@ import genEM3.util.path as gpath
 from genEM3.util.image import undo_normalize
 from genEM3.util import gpu
 from genEM3.data.transforms.normalize import ToStandardNormal
-
+from genEM3.util.tensorboard import launch_tb
 # factor for numerical stabilization of the loss sum
 NUMFACTOR = 10000
 
 # set the proper device (GPU with a specific ID or cpu)
-cuda = True
+cuda = False
 gpu_id = 1
 if cuda:
     print(f'Using GPU: {gpu_id}')
@@ -96,7 +96,8 @@ def test(epoch, model, test_loader, writer, args):
                 writer.add_image('test_reconstruction',
                                  img,
                                  epoch)
-                # save_image(comparison.cpu(), 'results/reconstruction_' + str(epoch) + '.png', nrow=n)
+        writer.add_histogram('input_last_batch_test', data.cpu().numpy(), global_step=epoch)
+        writer.add_histogram('reconstruction_last_batch_test', recon_batch.cpu().numpy(), global_step=epoch)
     # Divide by the length of the dataset and multiply by factor used for numerical stabilization
     num_data_points = len(test_loader.dataset)
     test_loss /= num_data_points
@@ -152,6 +153,7 @@ def main():
     input_shape = (140, 140, 1)
     output_shape = (140, 140, 1)
     data_sources = WkwData.datasources_from_json(datasources_json_path)
+    data_sources = [data_sources[0]]
     # Only pick the first two bboxes for faster epoch
     data_split = DataSplit(train=0.80, validation=0.00, test=0.20)
     cache_RAM = True
@@ -162,8 +164,8 @@ def main():
     # Set up summary writer for tensorboard
     tensorBoardDir = os.path.join(connDataDir, gpath.gethostnameTimeString())
     writer = SummaryWriter(logdir=tensorBoardDir)
+    launch_tb(logdir=tensorBoardDir, port='7900')
     # Set up data loaders
-    data_sources = [data_sources[0]]
     num_workers = 8
     dataset = WkwData(
         input_shape=input_shape,
@@ -196,6 +198,10 @@ def main():
                     output_size=output_size,
                     kernel_size=kernel_size,
                     stride=stride).to(device)
+    # print the details of the model
+    print_model = True
+    if print_model:
+        model.summary(input_size=input_size, device=device.type)
     # set up optimizer
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
 
@@ -227,10 +233,10 @@ def main():
         # add the histogram of weights and biases plus their gradients
         for name, param in model.named_parameters():
             writer.add_histogram(name, param.clone().cpu().data.numpy(), epoch)
-            writer.add_histogram(name+'_gradient', param.grad.cpu().numpy(),epoch)
+            writer.add_histogram(name+'_gradient', param.grad.cpu().numpy(), epoch)
         # plot mu and logvar
         for latent_prop in ['cur_mu', 'cur_logvar']:
-            latent_val=getattr(model, latent_prop)
+            latent_val = getattr(model, latent_prop)
             writer.add_histogram(latent_prop, latent_val.cpu().numpy(), epoch)
         # flush them to the output
         writer.flush()
