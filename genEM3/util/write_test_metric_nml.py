@@ -7,10 +7,11 @@ from genEM3.data.wkwdata import WkwData, DataSource
 def bbox_from_wkw(wkw_z, wkw_y, wkw_x):
     return [wkw_x * 1024, wkw_y * 1024, wkw_z * 1024, 1024, 1024, 1024]
 
-bbox_val_dims_um = (10, 10, 2)
-nml_path_out = '/home/drawitschf/Code/genEM3/runs/inference/ae_classify_11_parallel/test_metrics/bbox_z1_y15_x20.nml'
-
+bbox_val_dims_um = (10, 10, 1)
 bbox = np.array(bbox_from_wkw(1, 15, 20))
+bbox_str = '_'.join([str(b) for b in bbox])
+nml_path_out = '/home/drawitschf/Code/genEM3/runs/inference/ae_classify_11_parallel/test_top/bbox_' + bbox_str + '.nml'
+
 path = '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8_artifact_pred/color/1'
 name = os.path.split(os.path.split(os.path.split(path)[0])[0])[1]
 
@@ -41,10 +42,8 @@ meshes_val = {key: meshes[key][meshes_min[0]:meshes_max[0], meshes_min[1]:meshes
 
 parameters = Parameters(name=name, scale=scale)
 # skel = Skeleton(parameters=parameters)
-skel = Skeleton('/home/drawitschf/Code/genEM3/runs/inference/ae_classify_11_parallel/test_metrics/empty.nml')
+skel = Skeleton('/home/drawitschf/Code/genEM3/runs/inference/ae_classify_11_parallel/empty.nml')
 
-plane_id = 0
-zi_prev = 0
 for idx in range(np.prod(n_fits)):
     print('adding trees {}/{}'.format(idx, np.prod(n_fits)))
     xi, yi, zi = np.unravel_index(idx, shape=n_fits)
@@ -70,17 +69,12 @@ for idx in range(np.prod(n_fits)):
         [3, 5],
         [4, 6]
     ]) + skel.max_node_id()
-    if idx == 0 | (zi > zi_prev):
-        plane_id = plane_id + 1
-        skel.add_group(id=plane_id, name='plane:X')
+    if zi not in skel.group_ids:
+        skel.add_group(id=zi, name='plane{}:X'.format(zi))
 
-    skel.add_tree(nodes=nodes, edges=edges, group_id=plane_id, name='patch:X')
-    zi_prev = zi
+    skel.add_tree(nodes=nodes, edges=edges, group_id=zi, name='patch{}:X'.format(idx))
 
 skel.write_nml(nml_path_out)
-
-skel_empty = Skeleton('/home/drawitschf/Code/genEM3/runs/inference/ae_classify_11_parallel/test_metrics/empty.nml')
-skel_one = Skeleton('/home/drawitschf/Code/genEM3/runs/inference/ae_classify_11_parallel/test_metrics/one.nml')
 
 
 

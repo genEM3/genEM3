@@ -3,9 +3,9 @@
         "id": 0,
         "input_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
         "input_bbox": [
+                28672,
                 24576,
-                19968,
-                3072,
+                5120,
                 1024,
                 1024,
                 1024
@@ -14,9 +14,9 @@
         "input_std": 36.0,
         "target_path": "/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1",
         "target_bbox": [
+                28672,
                 24576,
-                19968,
-                3072,
+                5120,
                 1024,
                 1024,
                 1024
