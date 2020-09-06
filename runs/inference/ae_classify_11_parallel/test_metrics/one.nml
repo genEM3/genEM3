@@ -1,0 +1,26 @@
+<things>
+  <meta name="writer" content="NmlWriter.scala" />
+  <meta name="writerGitCommit" content="7b300d9239f9004e209efe35a3c5d1ca0415fd6e" />
+  <meta name="timestamp" content="1599322432194" />
+  <meta name="annotationId" content="5f53b8e601000032442a5559" />
+  <meta name="username" content="Florian Drawitsch" />
+  <parameters>
+    <experiment name="2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8_artifact_pred" organization="Connectomics_Department" description="" />
+    <scale x="32.0" y="32.0" z="35.0" />
+    <offset x="0" y="0" z="0" />
+    <time ms="1599322340139" />
+    <editPosition x="25217" y="20771" z="3593" />
+    <editRotation xRot="0.0" yRot="0.0" zRot="0.0" />
+    <zoomLevel zoom="2.0" />
+    <activeNode id="1" />
+  </parameters>
+  <thing id="1" color.r="0.6784313917160034" color.g="0.1411764770746231" color.b="0.05098039284348488" color.a="1.0" name="explorative_2020-09-05_Florian_Drawitsch_001">
+    <nodes>
+      <node id="1" radius="320.0" x="25217" y="20771" z="3593" rotX="0.0" rotY="0.0" rotZ="0.0" inVp="0" inMag="2" bitDepth="8" interpolation="false" time="1599322426267" />
+    </nodes>
+    <edges />
+  </thing>
+  <branchpoints />
+  <comments />
+  <groups />
+</things>
