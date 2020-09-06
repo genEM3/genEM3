@@ -2,8 +2,7 @@ import argparse
 import torch
 import torch.optim as optim
 from torch.nn import functional as F
-from torchvision import datasets, transforms
-from torchvision.utils import save_image, make_grid
+from torchvision.utils import make_grid
 from torch.utils.data.sampler import SubsetRandomSampler
 
 import os
@@ -12,18 +11,18 @@ import numpy as np
 from tensorboardX import SummaryWriter
 from tqdm import tqdm
 
-from model import ConvVAE
-
+from genEM3.model.VAE import ConvVAE
 from genEM3.data.wkwdata import WkwData, DataSplit
 import genEM3.util.path as gpath
+from genEM3.util.image import undo_normalize
 from genEM3.util import gpu
-from genEM3.data.transforms.normalize import To_0_1_range
-
+from genEM3.data.transforms.normalize import ToStandardNormal
+from genEM3.util.tensorboard import launch_tb
 # factor for numerical stabilization of the loss sum
 NUMFACTOR = 10000
 
 # set the proper device (GPU with a specific ID or cpu)
-cuda = True
+cuda = False
 gpu_id = 1
 if cuda:
     print(f'Using GPU: {gpu_id}')
@@ -32,63 +31,87 @@ if cuda:
 else:
     device = torch.device("cpu")
 
+
 def loss_function(recon_x, x, mu, logvar):
+    img_size_recon = torch.tensor(recon_x.shape[2:4]).prod()
+    img_size_input = torch.tensor(x.shape[2:4]).prod()
     # reconstruction loss
-    BCE = F.binary_cross_entropy(recon_x.view(-1, 784), x.view(-1, 784), reduction='sum')
-
-    # KL divergence loss
+    BCE = F.mse_loss(recon_x.view(-1, img_size_recon), x.view(-1, img_size_input), reduction='sum')
+    # KL divergence loss between the posterior and prior of latent space
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-
-    return BCE + KLD
+    # Add a dict of separate reconstruction and KL loss
+    lossDetail = {'Recon': BCE, 'KLD': KLD}
+    return BCE + KLD, lossDetail
 
 
 def train(epoch, model, train_loader, optimizer, args):
     model.train()
     train_loss = 0
+    detailedLoss = {'Recon': 0.0, 'KLD': 0.0}
     for batch_idx, data in tqdm(enumerate(train_loader), total=len(train_loader), desc='train'):
         data = data['input'].to(device)
 
         optimizer.zero_grad()
-        recon_batch, mu, logvar = model(data)
+        recon_batch = model(data)
 
-        loss = loss_function(recon_batch, data, mu, logvar)
-        train_loss += (loss.item()/NUMFACTOR)
-
+        loss, curDetLoss = loss_function(recon_batch, data, model.cur_mu, model.cur_logvar)
+        train_loss += (loss.item() / NUMFACTOR)
+        # Separate loss
+        for key in curDetLoss:
+            detailedLoss[key] += (curDetLoss.get(key) / NUMFACTOR)
+        # Backprop
         loss.backward()
         optimizer.step()
-
-    train_loss /= len(train_loader.dataset)
+    num_data_points = len(train_loader.dataset)
+    train_loss /= num_data_points
     train_loss *= NUMFACTOR
 
-    return train_loss
+    for key in detailedLoss:
+        detailedLoss[key] /= num_data_points
+        detailedLoss[key] *= NUMFACTOR
+
+    return train_loss, detailedLoss
 
 
 def test(epoch, model, test_loader, writer, args):
     model.eval()
     test_loss = 0
-
+    detailedLoss = {'Recon': 0.0, 'KLD': 0.0}
     with torch.no_grad():
         for batch_idx, data in tqdm(enumerate(test_loader), total=len(test_loader), desc='test'):
             data = data['input'].to(device)
-
-            recon_batch, mu, logvar = model(data)
-
-            test_loss += (loss_function(recon_batch, data, mu, logvar).item() / NUMFACTOR)
-
+            recon_batch = model(data)
+            curLoss, curDetLoss = loss_function(recon_batch, data, model.cur_mu, model.cur_logvar)
+            test_loss += (curLoss.item() / NUMFACTOR)
+            # The separate KL and Reconstruction losses
+            for key in curDetLoss:
+                detailedLoss[key] += (curDetLoss.get(key) / NUMFACTOR)
+            # Add 8 test images and reconstructions to tensorboard
             if batch_idx == 0:
                 n = min(data.size(0), 8)
-                comparison = torch.cat([data[:n], recon_batch.view(args.batch_size, 1, recon_batch.shape[2], recon_batch.shape[3])[:n]]).cpu()
-                img = make_grid(comparison)
-                writer.add_image('reconstruction', img, epoch)
-                # save_image(comparison.cpu(), 'results/reconstruction_' + str(epoch) + '.png', nrow=n)
-
-    test_loss /= len(test_loader.dataset) 
+                # concatenate the input data and associated reconstruction
+                comparison = torch.cat([data[:n], recon_batch[:n]]).cpu()
+                comparison_uint8 = undo_normalize(comparison, mean=148.0, std=36.0)
+                img = make_grid(comparison_uint8)
+                writer.add_image('test_reconstruction',
+                                 img,
+                                 epoch)
+        writer.add_histogram('input_last_batch_test', data.cpu().numpy(), global_step=epoch)
+        writer.add_histogram('reconstruction_last_batch_test', recon_batch.cpu().numpy(), global_step=epoch)
+    # Divide by the length of the dataset and multiply by factor used for numerical stabilization
+    num_data_points = len(test_loader.dataset)
+    test_loss /= num_data_points
     test_loss *= NUMFACTOR
-    
-    return test_loss
+
+    for key in detailedLoss:
+        detailedLoss[key] /= num_data_points
+        detailedLoss[key] *= NUMFACTOR
+
+    return test_loss, detailedLoss
 
 
 def save_checkpoint(state, is_best, outdir='.log'):
+    gpath.mkdir(outdir)
     checkpoint_file = os.path.join(outdir, 'checkpoint.pth')
     best_file = os.path.join(outdir, 'model_best.pth')
     torch.save(state, checkpoint_file)
@@ -110,22 +133,19 @@ def main():
                         help='path to latest checkpoint (default: None')
 
     # model options
-    # Note(AK): with the AE models from genEM3, the 2048 latent size and 16 fmaps are fixed 
+    # Note(AK): with the AE models from genEM3, the 2048 latent size and 16 fmaps are fixed
     parser.add_argument('--latent_size', type=int, default=2048, metavar='N',
                         help='latent vector size of encoder')
 
     args = parser.parse_args()
     print('The command line argument:\n')
-    print(args) 
+    print(args)
 
     # Make the directory for the result output
     if not os.path.isdir(args.result_dir):
         os.makedirs(args.result_dir)
 
     torch.manual_seed(args.seed)
-
-#     kwargs = {'num_workers': 1, 'pin_memory': True} if cuda else {}
-
     # Parameters
     connDataDir = '/conndata/alik/genEM3_runs/VAE/'
     json_dir = gpath.getDataDir()
@@ -133,22 +153,27 @@ def main():
     input_shape = (140, 140, 1)
     output_shape = (140, 140, 1)
     data_sources = WkwData.datasources_from_json(datasources_json_path)
+    data_sources = [data_sources[0]]
     # Only pick the first two bboxes for faster epoch
     data_split = DataSplit(train=0.80, validation=0.00, test=0.20)
     cache_RAM = True
     cache_HDD = True
     cache_root = os.path.join(connDataDir, '.cache/')
     gpath.mkdir(cache_root)
-    
+
+    # Set up summary writer for tensorboard
+    tensorBoardDir = os.path.join(connDataDir, gpath.gethostnameTimeString())
+    writer = SummaryWriter(logdir=tensorBoardDir)
+    launch_tb(logdir=tensorBoardDir, port='7900')
+    # Set up data loaders
     num_workers = 8
-    
     dataset = WkwData(
         input_shape=input_shape,
         target_shape=output_shape,
         data_sources=data_sources,
         data_split=data_split,
         normalize=False,
-        transforms=To_0_1_range(minimum=0, maximum=255),
+        transforms=ToStandardNormal(mean=148.0, std=36.0),
         cache_RAM=cache_RAM,
         cache_HDD=cache_HDD,
         cache_HDD_root=cache_root
@@ -158,7 +183,7 @@ def main():
     train_loader = torch.utils.data.DataLoader(
         dataset=dataset, batch_size=args.batch_size, num_workers=num_workers, sampler=train_sampler,
         collate_fn=dataset.collate_fn)
-    
+
     test_sampler = SubsetRandomSampler(dataset.data_test_inds)
     test_loader = torch.utils.data.DataLoader(
         dataset=dataset, batch_size=args.batch_size, num_workers=num_workers, sampler=test_sampler,
@@ -173,6 +198,11 @@ def main():
                     output_size=output_size,
                     kernel_size=kernel_size,
                     stride=stride).to(device)
+    # print the details of the model
+    print_model = True
+    if print_model:
+        model.summary(input_size=input_size, device=device.type)
+    # set up optimizer
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
 
     start_epoch = 0
@@ -190,35 +220,46 @@ def main():
             print('=> loaded checkpoint %s' % args.resume)
         else:
             print('=> no checkpoint found at %s' % args.resume)
-    tensorBoardDir = os.path.join(connDataDir, gpath.gethostnameTimeString())
-    writer = SummaryWriter(logdir=tensorBoardDir)
-
+    # Training loop
     for epoch in range(start_epoch, args.epochs):
-        train_loss = train(epoch, model, train_loader, optimizer, args)
-        test_loss = test(epoch, model, test_loader, writer, args)
+        train_loss, train_lossDetailed = train(epoch, model, train_loader, optimizer, args)
+        test_loss, test_lossDetailed = test(epoch, model, test_loader, writer, args)
 
         # logging
-        writer.add_scalar('train/loss', train_loss, epoch)
-        writer.add_scalar('test/loss', test_loss, epoch)
-
+        writer.add_scalar('loss_train/total', train_loss, epoch)
+        writer.add_scalar('loss_test/total', test_loss, epoch)
+        writer.add_scalars('loss_train', train_lossDetailed, global_step=epoch)
+        writer.add_scalars('loss_test', test_lossDetailed, global_step=epoch)
+        # add the histogram of weights and biases plus their gradients
+        for name, param in model.named_parameters():
+            writer.add_histogram(name, param.clone().cpu().data.numpy(), epoch)
+            writer.add_histogram(name+'_gradient', param.grad.cpu().numpy(), epoch)
+        # plot mu and logvar
+        for latent_prop in ['cur_mu', 'cur_logvar']:
+            latent_val = getattr(model, latent_prop)
+            writer.add_histogram(latent_prop, latent_val.cpu().numpy(), epoch)
+        # flush them to the output
+        writer.flush()
         print('Epoch [%d/%d] loss: %.3f val_loss: %.3f' % (epoch + 1, args.epochs, train_loss, test_loss))
-
         is_best = test_loss < best_test_loss
         best_test_loss = min(test_loss, best_test_loss)
-        save_checkpoint({
-            'epoch': epoch,
-            'best_test_loss': best_test_loss,
-            'state_dict': model.state_dict(),
-            'optimizer': optimizer.state_dict(),
-        }, is_best)
+        save_directory = os.path.join(tensorBoardDir, '.log')
+        save_checkpoint({'epoch': epoch,
+                         'best_test_loss': best_test_loss,
+                         'state_dict': model.state_dict(),
+                         'optimizer': optimizer.state_dict()},
+                        is_best,
+                        save_directory)
 
         with torch.no_grad():
+            # Image 64 random sample from the prior latent space and decode
             sample = torch.randn(64, args.latent_size).to(device)
             sample = model.decode(sample).cpu()
-            img = make_grid(sample)
+            sample_uint8 = undo_normalize(sample, mean=148.0, std=36.0)
+            img = make_grid(sample_uint8)
             writer.add_image('sampling', img, epoch)
-            # save_image(sample.view(64, 1, 28, 28), 'results/sample_' + str(epoch) + '.png')
 
 
+# Run main as script
 if __name__ == '__main__':
     main()
