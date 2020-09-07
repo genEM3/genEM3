@@ -67,6 +67,23 @@ class Metrics:
                (metrics['TNR'].astype(np.float16) == (1 - metrics['FPR']).astype(np.float16))
         
         return metrics
+
+    def pr_curve(self, n_steps, path_out=None):
+
+        p = []
+        r = []
+        decision_ths = np.linspace(0, 1, n_steps)
+        for decision_th in decision_ths:
+            metrics = self.compute(decision_th)
+            p.append(metrics['PPV'])
+            r.append(metrics['TPR'])
+
+        df = pd.DataFrame({'decision_th': decision_ths, 'precision': p, 'recall': r})
+
+        if path_out is not None:
+            df.to_csv(path_out)
+
+        return df
     
     def confusion_table(self, path_out=None):
 
@@ -78,6 +95,8 @@ class Metrics:
             if not os.path.exists(os.path.dirname(path_out)):
                 os.makedirs(os.path.dirname(path_out))
             df.to_csv(path_out)
+
+        return df
 
     def prediction_table(self, path_out):
 
@@ -96,5 +115,4 @@ class Metrics:
                 os.makedirs(os.path.dirname(path_out))
             df.to_csv(path_out)
         
-        
-        
+        return df
