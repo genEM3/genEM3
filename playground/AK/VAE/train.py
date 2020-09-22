@@ -61,7 +61,6 @@ def main():
     input_shape = (140, 140, 1)
     output_shape = (140, 140, 1)
     data_sources = WkwData.datasources_from_json(datasources_json_path)
-    data_sources = [data_sources[0]]
     # Only pick the first two bboxes for faster epoch
     data_split = DataSplit(train=0.80, validation=0.00, test=0.20)
     cache_RAM = True

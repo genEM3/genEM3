@@ -41,8 +41,7 @@ class ConvVAE(nn.Module):
         self.fc1 = nn.Linear(2048, self.latent_size)
 
         # hidden => logvar, added the softplus activation based on Sonderby etal. 2016
-        self.fc2 = nn.Sequential(nn.Linear(2048, self.latent_size),
-                                 nn.Softplus())
+        self.fc2 = nn.Linear(2048, self.latent_size)
 
         self.decoder = nn.Sequential(Unflatten(latent_size, 1, 1),
                                      Decoder_4_sampling_bn_1px_deep_convonly_skip(output_size, kernel_size, stride))
