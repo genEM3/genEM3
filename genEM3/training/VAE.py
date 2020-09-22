@@ -52,7 +52,7 @@ def train(epoch: int = None,
         # Backprop
         loss.backward()
         optimizer.step()
-    num_data_points = len(train_loader.dataset)
+    num_data_points = len(train_loader.dataset.data_train_inds)
     train_loss /= num_data_points
     train_loss *= NUM_FACTOR
 
@@ -95,7 +95,7 @@ def test(epoch: int = None,
         writer.add_histogram('input_last_batch_test', data.cpu().numpy(), global_step=epoch)
         writer.add_histogram('reconstruction_last_batch_test', recon_batch.cpu().numpy(), global_step=epoch)
     # Divide by the length of the dataset and multiply by factor used for numerical stabilization
-    num_data_points = len(test_loader.dataset)
+    num_data_points = len(test_loader.dataset.data_test_inds)
     test_loss /= num_data_points
     test_loss *= NUM_FACTOR
 
