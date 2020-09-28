@@ -24,7 +24,7 @@ def loss_function(recon_x, x, mu, logvar, weight_KLD):
     # KL divergence loss between the posterior and prior of latent space
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
     # Add a dict of separate reconstruction and KL loss
-    lossDetail = {'Recon': BCE, 'KLD': KLD}
+    lossDetail = {'Recon': BCE, 'KLD': KLD, 'weighted_KLD': weight_KLD*KLD}
     return BCE + weight_KLD*KLD, lossDetail
 
 
@@ -37,7 +37,7 @@ def train(epoch: int = None,
     """training loop on a batch of data"""
     model.train()
     train_loss = 0
-    detailedLoss = {'Recon': 0.0, 'KLD': 0.0}
+    detailedLoss = {'Recon': 0.0, 'KLD': 0.0, 'weighted_KLD': 0.0}
     for batch_idx, data in tqdm(enumerate(train_loader), total=len(train_loader), desc='train'):
         data = data['input'].to(device)
 
@@ -73,7 +73,7 @@ def test(epoch: int = None,
     """Run inference on a batch of data without"""
     model.eval()
     test_loss = 0
-    detailedLoss = {'Recon': 0.0, 'KLD': 0.0}
+    detailedLoss = {'Recon': 0.0, 'KLD': 0.0, 'weighted_KLD': 0.0}
     with torch.no_grad():
         for batch_idx, data in tqdm(enumerate(test_loader), total=len(test_loader), desc='test'):
             data = data['input'].to(device)
