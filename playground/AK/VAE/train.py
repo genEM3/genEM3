@@ -61,7 +61,8 @@ def main():
     input_shape = (140, 140, 1)
     output_shape = (140, 140, 1)
     data_sources = WkwData.datasources_from_json(datasources_json_path)
-    # Only pick the first two bboxes for faster epoch
+    # Only pick the first bboxes for faster epoch
+    data_sources = [data_sources[0]]
     data_split = DataSplit(train=0.80, validation=0.00, test=0.20)
     cache_RAM = True
     cache_HDD = True
@@ -100,11 +101,13 @@ def main():
     output_size = 140
     kernel_size = 3
     stride = 1
+    weight_KLD = 10.0
     model = ConvVAE(latent_size=args.latent_size,
                     input_size=input_size,
                     output_size=output_size,
                     kernel_size=kernel_size,
-                    stride=stride).to(device)
+                    stride=stride,
+                    weight_KLD=weight_KLD).to(device)
     # Add model to the tensorboard as graph
     add_graph(writer=writer, model=model, data_loader=train_loader, device=device)
     # print the details of the model
@@ -144,7 +147,10 @@ def main():
         # add the histogram of weights and biases plus their gradients
         for name, param in model.named_parameters():
             writer.add_histogram(name, param.detach().cpu().data.numpy(), epoch)
-            writer.add_histogram(name+'_gradient', param.grad.cpu().numpy(), epoch)
+            # weight_KLD is a parameter but does not have a gradient. It creates an error if one 
+            # tries to plot the histogram of a None variable
+            if param.grad is not None:
+                writer.add_histogram(name+'_gradient', param.grad.cpu().numpy(), epoch)
         # plot mu and logvar
         for latent_prop in ['cur_mu', 'cur_logvar']:
             latent_val = getattr(model, latent_prop)

@@ -10,6 +10,13 @@ class Flatten(nn.Module):
         return input.view(input.size(0), -1)
 
 
+class Split_latent(nn.Module):
+    # TODO: The goal is to split the latent space into two and use the split as mu and logvar.
+    # The problem: this breaks down the symmetry between up and down sampling steps
+    def forward(self, input):
+        return torch.split(input, 2, dim=0)
+
+
 class Unflatten(nn.Module):
     def __init__(self, channel, height, width):
         super(Unflatten, self).__init__()
@@ -29,25 +36,27 @@ class ConvVAE(nn.Module):
                  output_size: int = 140,
                  kernel_size: int = 3,
                  stride: int = 1,
-                 batch_size: int = 256):
+                 batch_size: int = 256,
+                 weight_KLD: float = 1.0):
         super().__init__()
         self.latent_size = latent_size
 
         self.encoder = nn.Sequential(
-                                    Encoder_4_sampling_bn_1px_deep_convonly_skip(input_size, kernel_size, stride), 
-                                    Flatten())
+                                    Encoder_4_sampling_bn_1px_deep_convonly_skip(input_size, kernel_size, stride, n_latent=latent_size), Flatten())
 
         # hidden => mui: 2048  is the number of latent variables fixed in the encoder/decoder models
-        self.fc1 = nn.Linear(2048, self.latent_size)
+        self.fc1 = nn.Linear(self.latent_size, self.latent_size)
 
-        # hidden => logvar, added the softplus activation based on Sonderby etal. 2016
-        self.fc2 = nn.Linear(2048, self.latent_size)
+        # hidden => logvar is a linear transformation of 2048 units to another 2048 units
+        self.fc2 = nn.Linear(self.latent_size, self.latent_size)
 
         self.decoder = nn.Sequential(Unflatten(latent_size, 1, 1),
-                                     Decoder_4_sampling_bn_1px_deep_convonly_skip(output_size, kernel_size, stride))
+                                     Decoder_4_sampling_bn_1px_deep_convonly_skip(output_size, kernel_size, stride, n_latent=latent_size))
 
         self.cur_mu = torch.zeros([batch_size, self.latent_size], dtype=torch.float)
         self.cur_logvar = torch.zeros([batch_size, self.latent_size], dtype=torch.float)
+        # The weight factor for the KL divergence part of loss. Currently set to 1
+        self.weight_KLD = nn.Parameter(torch.Tensor([weight_KLD]), requires_grad=False)
 
     def encode(self, x):
         h = self.encoder(x)

@@ -15,7 +15,7 @@ import genEM3.util.path as gpath
 NUM_FACTOR = 10000
 
 
-def loss_function(recon_x, x, mu, logvar):
+def loss_function(recon_x, x, mu, logvar, weight_KLD):
     """Returns the variational loss which is the sum of reconstruction and KL divergence from prior"""
     img_size_recon = torch.tensor(recon_x.shape[2:4]).prod()
     img_size_input = torch.tensor(x.shape[2:4]).prod()
@@ -25,7 +25,7 @@ def loss_function(recon_x, x, mu, logvar):
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
     # Add a dict of separate reconstruction and KL loss
     lossDetail = {'Recon': BCE, 'KLD': KLD}
-    return BCE + KLD, lossDetail
+    return BCE + weight_KLD*KLD, lossDetail
 
 
 def train(epoch: int = None,
@@ -44,7 +44,8 @@ def train(epoch: int = None,
         optimizer.zero_grad()
         recon_batch = model(data)
 
-        loss, curDetLoss = loss_function(recon_batch, data, model.cur_mu, model.cur_logvar)
+        loss, curDetLoss = loss_function(recon_batch, data, 
+                                         model.cur_mu, model.cur_logvar, model.weight_KLD)
         train_loss += (loss.item() / NUM_FACTOR)
         # Separate loss
         for key in curDetLoss:
@@ -77,7 +78,8 @@ def test(epoch: int = None,
         for batch_idx, data in tqdm(enumerate(test_loader), total=len(test_loader), desc='test'):
             data = data['input'].to(device)
             recon_batch = model(data)
-            curLoss, curDetLoss = loss_function(recon_batch, data, model.cur_mu, model.cur_logvar)
+            curLoss, curDetLoss = loss_function(recon_batch, data, 
+                                                model.cur_mu, model.cur_logvar, model.weight_KLD)
             test_loss += (curLoss.item() / NUM_FACTOR)
             # The separate KL and Reconstruction losses
             for key in curDetLoss:
