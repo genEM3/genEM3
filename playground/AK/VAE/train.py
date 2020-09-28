@@ -17,7 +17,7 @@ from genEM3.util.tensorboard import launch_tb, add_graph
 from genEM3.training.VAE import train, test, save_checkpoint
 
 # set the proper device (GPU with a specific ID or cpu)
-cuda = True
+cuda = False
 gpu_id = 1
 if cuda:
     print(f'Using GPU: {gpu_id}')
@@ -44,6 +44,8 @@ def main():
     # Note(AK): with the AE models from genEM3, the 2048 latent size and 16 fmaps are fixed
     parser.add_argument('--latent_size', type=int, default=2048, metavar='N',
                         help='latent vector size of encoder')
+    parser.add_argument('--weight_KLD', type=float, default=1.0, metavar='N',
+                        help='Weight for the KLD part of loss')
 
     args = parser.parse_args()
     print('The command line argument:\n')
@@ -70,7 +72,8 @@ def main():
     gpath.mkdir(cache_root)
 
     # Set up summary writer for tensorboard
-    tensorBoardDir = os.path.join(connDataDir, gpath.gethostnameTimeString())
+    constructedDirName = ''.join([f'weightedVAE_{args.weight_KLD}_', gpath.gethostnameTimeString()])
+    tensorBoardDir = os.path.join(connDataDir, constructedDirName)
     writer = SummaryWriter(log_dir=tensorBoardDir)
     launch_tb(logdir=tensorBoardDir, port='7900')
     # Set up data loaders
@@ -101,7 +104,7 @@ def main():
     output_size = 140
     kernel_size = 3
     stride = 1
-    weight_KLD = 10.0
+    weight_KLD = args.weight_KLD
     model = ConvVAE(latent_size=args.latent_size,
                     input_size=input_size,
                     output_size=output_size,
