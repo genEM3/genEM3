@@ -17,8 +17,8 @@ from genEM3.util.tensorboard import launch_tb, add_graph
 from genEM3.training.VAE import train, test, save_checkpoint
 
 # set the proper device (GPU with a specific ID or cpu)
-cuda = False
-gpu_id = 1
+cuda = True
+gpu_id = 0
 if cuda:
     print(f'Using GPU: {gpu_id}')
     gpu.get_gpu(gpu_id)
@@ -28,13 +28,13 @@ else:
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Convolutional VAE MNIST Example')
+    parser = argparse.ArgumentParser(description='Convolutional VAE for 3D electron microscopy data')
     parser.add_argument('--result_dir', type=str, default='.log', metavar='DIR',
                         help='output directory')
-    parser.add_argument('--batch_size', type=int, default=128, metavar='N',
-                        help='input batch size for training (default: 128)')
+    parser.add_argument('--batch_size', type=int, default=256, metavar='N',
+                        help='input batch size for training (default: 256)')
     parser.add_argument('--epochs', type=int, default=100, metavar='N',
-                        help='number of epochs to train (default: 10)')
+                        help='number of epochs to train (default: 100)')
     parser.add_argument('--seed', type=int, default=1, metavar='S',
                         help='random seed (default: 1)')
     parser.add_argument('--resume', default='', type=str, metavar='PATH',
@@ -44,7 +44,7 @@ def main():
     # Note(AK): with the AE models from genEM3, the 2048 latent size and 16 fmaps are fixed
     parser.add_argument('--latent_size', type=int, default=2048, metavar='N',
                         help='latent vector size of encoder')
-    parser.add_argument('--weight_KLD', type=float, default=1.0, metavar='N',
+    parser.add_argument('--max_weight_KLD', type=float, default=1.0, metavar='N',
                         help='Weight for the KLD part of loss')
 
     args = parser.parse_args()
@@ -57,14 +57,15 @@ def main():
 
     torch.manual_seed(args.seed)
     # Parameters
+    warmup_kld = True
     connDataDir = '/conndata/alik/genEM3_runs/VAE/'
     json_dir = gpath.getDataDir()
     datasources_json_path = os.path.join(json_dir, 'datasource_20X_980_980_1000bboxes.json')
     input_shape = (140, 140, 1)
     output_shape = (140, 140, 1)
     data_sources = WkwData.datasources_from_json(datasources_json_path)
-    # Only pick the first bboxes for faster epoch
-    data_sources = [data_sources[0]]
+    # # Only pick the first bboxes for faster epoch
+    # data_sources = [data_sources[0]]
     data_split = DataSplit(train=0.80, validation=0.00, test=0.20)
     cache_RAM = True
     cache_HDD = True
@@ -72,7 +73,7 @@ def main():
     gpath.mkdir(cache_root)
 
     # Set up summary writer for tensorboard
-    constructedDirName = ''.join([f'weightedVAE_{args.weight_KLD}_', gpath.gethostnameTimeString()])
+    constructedDirName = ''.join([f'weightedVAE_{args.max_weight_KLD}_warmup_{warmup_kld}_', gpath.gethostnameTimeString()])
     tensorBoardDir = os.path.join(connDataDir, constructedDirName)
     writer = SummaryWriter(log_dir=tensorBoardDir)
     launch_tb(logdir=tensorBoardDir, port='7900')
@@ -104,7 +105,8 @@ def main():
     output_size = 140
     kernel_size = 3
     stride = 1
-    weight_KLD = args.weight_KLD
+    # initialize with the given value of KLD (maximum value in case of a warmup scenario)
+    weight_KLD = args.max_weight_KLD
     model = ConvVAE(latent_size=args.latent_size,
                     input_size=input_size,
                     output_size=output_size,
@@ -137,12 +139,18 @@ def main():
             print('=> no checkpoint found at %s' % args.resume)
     # Training loop
     for epoch in range(start_epoch, args.epochs):
+        # warmup the kld error linearly
+        if warmup_kld:
+            model.weight_KLD.data = torch.Tensor([((epoch+1) / args.epochs) * args.max_weight_KLD]).to(device) 
+
         train_loss, train_lossDetailed = train(epoch, model, train_loader, optimizer, args,
                                                device=device)
         test_loss, test_lossDetailed = test(epoch, model, test_loader, writer, args,
                                             device=device)
 
-        # logging
+        # logging, TODO: Use better tags for the logging
+        cur_weight_KLD = model.weight_KLD.detach().item()
+        writer.add_scalar('loss_train/weight_KLD', cur_weight_KLD, epoch)
         writer.add_scalar('loss_train/total', train_loss, epoch)
         writer.add_scalar('loss_test/total', test_loss, epoch)
         writer.add_scalars('loss_train', train_lossDetailed, global_step=epoch)
