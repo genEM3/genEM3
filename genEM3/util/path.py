@@ -41,3 +41,6 @@ def gethostnameTimeString():
     dt_string = now.strftime("%d_%b_%Y-%H_%M_%S")
     return '-'.join([hname, dt_string]) 
 
+def get_conndata_dir_AK():
+    """Return the string for the conndata directory which contains the results of training runs"""
+    return '/conndata/alik/genEM3_runs/VAE/'

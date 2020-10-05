@@ -10,6 +10,7 @@ from tqdm import tqdm
 
 from genEM3.util.image import undo_normalize
 import genEM3.util.path as gpath
+from torch.utils.tensorboard import SummaryWriter
 
 # factor for numerical stabilization of the loss sum
 NUM_FACTOR = 10000
@@ -67,7 +68,7 @@ def train(epoch: int = None,
 def test(epoch: int = None,
          model: torch.nn.Module = None,
          test_loader: torch.utils.data.DataLoader = None,
-         writer: torch.utils.tensorboard.SummaryWriter = None,
+         writer: SummaryWriter = None,
          args: argparse.Namespace = None,
          device: torch.device = torch.device('cpu')):
     """Run inference on a batch of data without"""
@@ -115,3 +116,7 @@ def save_checkpoint(state, is_best, outdir='.log'):
     torch.save(state, checkpoint_file)
     if is_best:
         shutil.copyfile(checkpoint_file, best_file)
+
+def generate_dir_prefix(max_weight_kld: float=1.0, warmup_bool: bool=True):
+    """Return the prefix for the directory name of the training run"""
+    return f'weightedVAE_{max_weight_kld}_warmup_{warmup_bool}_'

@@ -83,3 +83,16 @@ class ConvVAE(nn.Module):
                 device: str = "cpu",
                 input_size: int = 140):
         summary(self, (1, input_size, input_size), device=device)
+    
+    @classmethod
+    def from_saved_state_dict(cls,
+                              model_dir: str = None, 
+                              *args, 
+                              **kwargs):
+        """Initialize the model with the saved dictionary given with the model_dir"""
+        model = cls(*args, **kwargs)
+        checkpoint = torch.load(model_dir, map_location='cpu')
+        state_dict = checkpoint['state_dict']
+        model.load_state_dict(state_dict)
+        model.eval()
+        return model
