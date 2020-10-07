@@ -29,6 +29,19 @@ def loss_function(recon_x, x, mu, logvar, weight_KLD):
     return BCE + weight_KLD*KLD, lossDetail
 
 
+def loss_function_predict(recon_x, x, mu, logvar, weight_KLD, reduction: str = 'none'):
+    """Returns the variational loss which is the sum of reconstruction and KL divergence from prior"""
+    img_size_recon = torch.tensor(recon_x.shape[2:4]).prod()
+    img_size_input = torch.tensor(x.shape[2:4]).prod()
+    # reconstruction loss
+    BCE = torch.sum(F.mse_loss(recon_x.view(-1, img_size_recon), x.view(-1, img_size_input), reduction=reduction), dim=1, keepdim=True)
+    # KL divergence loss between the posterior and prior of latent space
+    KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp(), dim=1, keepdim=True)
+    # Add a dict of separate reconstruction and KL loss
+    lossDetail = {'Recon': BCE, 'KLD': KLD, 'weighted_KLD': weight_KLD*KLD}
+    return BCE + weight_KLD*KLD, lossDetail
+
+
 def train(epoch: int = None,
           model: torch.nn.Module = None,
           train_loader: torch.utils.data.DataLoader = None,
@@ -45,8 +58,11 @@ def train(epoch: int = None,
         optimizer.zero_grad()
         recon_batch = model(data)
 
-        loss, curDetLoss = loss_function(recon_batch, data, 
-                                         model.cur_mu, model.cur_logvar, model.weight_KLD)
+        loss, curDetLoss = loss_function(recon_batch,
+                                         data,
+                                         model.cur_mu,
+                                         model.cur_logvar,
+                                         model.weight_KLD)
         train_loss += (loss.item() / NUM_FACTOR)
         # Separate loss
         for key in curDetLoss:
@@ -79,7 +95,7 @@ def test(epoch: int = None,
         for batch_idx, data in tqdm(enumerate(test_loader), total=len(test_loader), desc='test'):
             data = data['input'].to(device)
             recon_batch = model(data)
-            curLoss, curDetLoss = loss_function(recon_batch, data, 
+            curLoss, curDetLoss = loss_function(recon_batch, data,
                                                 model.cur_mu, model.cur_logvar, model.weight_KLD)
             test_loss += (curLoss.item() / NUM_FACTOR)
             # The separate KL and Reconstruction losses
@@ -117,6 +133,35 @@ def save_checkpoint(state, is_best, outdir='.log'):
     if is_best:
         shutil.copyfile(checkpoint_file, best_file)
 
-def generate_dir_prefix(max_weight_kld: float=1.0, warmup_bool: bool=True):
+
+def generate_dir_prefix(max_weight_kld: float = 1.0, warmup_bool: bool = True):
     """Return the prefix for the directory name of the training run"""
     return f'weightedVAE_{max_weight_kld}_warmup_{warmup_bool}_'
+
+
+def predict(model: torch.nn.Module = None,
+            data_loader: torch.utils.data.DataLoader = None,
+            device: torch.device = torch.device('cpu')):
+    """Run inference on a dataset"""
+    model.eval()
+    detailedLoss = {'Recon': [], 'KLD': [], 'weighted_KLD': []}
+    latent_params = {'Mu': [], 'logvar': []}
+    with torch.no_grad():
+        for batch_idx, data in tqdm(enumerate(data_loader), total=len(data_loader), desc='test'):
+            data = data['input'].to(device)
+            recon_batch = model(data)
+            curLoss, curDetLoss = loss_function_predict(recon_batch, data,
+                                                        model.cur_mu, model.cur_logvar, model.weight_KLD, reduction='none')
+            # save latent distribtion parameters
+            latent_params['Mu'].append(model.cur_mu)
+            latent_params['logvar'].append(model.cur_logvar)
+            # The separate KL and Reconstruction losses
+            for key in curDetLoss:
+                # The squared error losses are summed within each individual 2D example
+                detailedLoss[key].append(curDetLoss.get(key))
+        # concatenate the result for the different batches
+        for key in latent_params:
+            latent_params[key] = torch.cat(latent_params[key])
+        for key in detailedLoss:
+            detailedLoss[key] = torch.cat(detailedLoss[key])
+    return {'latent': latent_params, 'loss': detailedLoss}
