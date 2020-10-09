@@ -6,7 +6,7 @@ from wkskel import Skeleton, Parameters, Nodes
 from genEM3.data.wkwdata import WkwData, DataSource
 from genEM3.training.metrics import Metrics
 
-path_in = '/home/drawitschf/Code/genEM3/runs/inference/ae_classify_11_parallel/test_top'
+path_in = '/home/drawitschf/Code/genEM3/runs/inference/ae_classify_11_parallel/test_center_filt'
 cache_HDD_root = os.path.join(path_in, '.cache/')
 path_datasources = os.path.join(path_in, 'datasources.json')
 path_nml_in = os.path.join(path_in, 'bbox_annotated.nml')

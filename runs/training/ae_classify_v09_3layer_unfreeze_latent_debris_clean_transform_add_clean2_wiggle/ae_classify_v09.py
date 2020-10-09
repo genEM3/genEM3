@@ -18,7 +18,7 @@ input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
 
 data_split = DataSplit(train=0.85, validation=0.15, test=0.00)
-cache_RAM = True
+cache_RAM = False
 cache_HDD = False
 cache_root = os.path.join(run_root, '.cache/')
 batch_size = 256

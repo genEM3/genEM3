@@ -54,7 +54,7 @@ def predict_bbox_from_json(bbox_idx, verbose=True):
         data_sources=datasources,
         stride=(35, 35, 1),
         cache_HDD=False,
-        cache_RAM=True,
+        cache_RAM=False,
         cache_HDD_root=cache_HDD_root
     )
 
