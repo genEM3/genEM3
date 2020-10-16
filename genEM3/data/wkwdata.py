@@ -469,6 +469,17 @@ class WkwData(Dataset):
 
         return source_idx, mesh_inds
 
+    def get_source_idx_from_sample_idx(self, sample_idx):
+        """Get the [data]source index from the linear index of the sample"""
+        source_idx = int(np.argmax(np.asarray(self.data_inds_max) >= int(sample_idx)))
+        return source_idx
+
+    def get_target_from_sample_idx(self, sample_idx):
+        """Get the binary target class from the linear index of the sample"""
+        source_idx = self.get_source_idx_from_sample_idx(sample_idx) 
+        target_class = self.data_sources[source_idx].target_class
+        return target_class 
+
     def get_datasources_stats(self, num_samples=30):
         return [self.get_datasource_stats(i, num_samples) for i in range(len(self.data_sources))]
 
@@ -509,7 +520,7 @@ class WkwData(Dataset):
         target = data['target'].data.numpy().squeeze()
         if orient_wkw:
             input_ = np.rot90(np.flipud(input_), k=-1)
-        fig, axs = plt.subplots(1,2)
+        fig, axs = plt.subplots(1, 2)
         axs[0].imshow(input_, cmap='gray')
         while target.ndim < 2:
             target = np.expand_dims(target, 0)
