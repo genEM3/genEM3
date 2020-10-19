@@ -526,6 +526,8 @@ class WkwData(Dataset):
             target = np.expand_dims(target, 0)
         target = np.rot90(np.flipud(target), k=-1)
         axs[1].imshow(target, cmap='gray', vmin=0, vmax=1)
+        # AK: Add to pipe the figure through X11
+        plt.show()
 
     @staticmethod
     def collate_fn(batch):
