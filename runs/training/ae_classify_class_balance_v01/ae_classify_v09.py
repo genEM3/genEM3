@@ -1,6 +1,5 @@
 import os
 import torch
-from torch.utils.data import DataLoader, Subset
 from torch.utils.data.sampler import SubsetRandomSampler
 
 from genEM3.data import transforms
@@ -11,7 +10,6 @@ from genEM3.training.classifier import Trainer, subsetWeightedSampler
 import numpy as np
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
-run_name = 'class_balance_run_w_pr'
 cache_HDD_root = os.path.join(run_root, '../../../data/.cache/')
 datasources_json_path = os.path.join(run_root, '../../../data/debris_clean_added_bboxes2_wiggle_datasource.json')
 state_dict_path = '/u/flod/code/genEM3/runs/training/ae_v05_skip/.log/epoch_60/model_state_dict'
@@ -43,46 +41,17 @@ dataset = WkwData(
     cache_HDD=cache_HDD,
     cache_HDD_root=cache_HDD_root
 )
-########
-# imbalance factor clean
-for factor in range(1, 20):
-    sampler = subsetWeightedSampler(dataset, dataset.data_train_inds, factor) 
-    # Initialize the data loader using the dataset subset and the sampler
-    subset_weighted_loader = DataLoader(
-        dataset=sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=sampler,
-        collate_fn=dataset.collate_fn)
-    print(f'########\nImbalance Factor: {sampler.imbalance_factor}') 
-    ratio_clean = list()
-    for i, data in enumerate(subset_weighted_loader):
-        print(f'####\nBatch Index: {i}/{len(subset_weighted_loader)}')
-        # check that all sample indices are part of the total indices
-        batch_idx = data['sample_idx']
-        batch_idx_set = set(batch_idx)
-        assert batch_idx_set.issubset(sampler.index_set)
-        repetition_num = len(batch_idx)-len(batch_idx_set)
-        print(f'Repeated/total number of samples in current batch: {repetition_num}/{len(batch_idx)}')
-        y = data['target']
-        clean_num = float((y == 0).sum())
-        debris_num = float((y == 1).sum())
-        fraction_clean = clean_num / (debris_num + clean_num) 
-        ratio_clean.append(clean_num / debris_num)
-        print(f"Number of clean/debris samples in mini-batch: {int(clean_num)}/{int(debris_num)}\nFraction clean: {fraction_clean:.2f}, Ratio clean: {ratio_clean[i]:.2f}")
-    # Show an example from each batch (clean and debris)
-    example_idx = {'clean':np.where(y == 0)[0][0], 'debris': np.where(y == 1)[0][0]}
-    for indexInBatch in example_idx.values():
-        dataset.show_sample(batch_idx[indexInBatch])
-    average_ratio_clean = np.asarray(ratio_clean).mean()
-    print(f'The empirical average imbalanced factor: {average_ratio_clean:.2f}')
-
-#########
-train_sampler = SubsetRandomSampler(dataset.data_train_inds)
+# run test case for the data loader examples
+# subsetWeightedSampler.run_test_case(dataset)
+imbalance_factor = 1
+train_sampler = subsetWeightedSampler(dataset, dataset.data_train_inds, imbalance_factor=imbalance_factor)
 train_loader = torch.utils.data.DataLoader(
-    dataset=dataset, batch_size=batch_size, num_workers=num_workers, sampler=train_sampler,
+    dataset=train_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=train_sampler,
     collate_fn=dataset.collate_fn)
 
-validation_sampler = SubsetRandomSampler(dataset.data_validation_inds)
+validation_sampler = subsetWeightedSampler(dataset, dataset.data_validation_inds, imbalance_factor=imbalance_factor)
 validation_loader = torch.utils.data.DataLoader(
-    dataset=dataset, batch_size=batch_size, num_workers=num_workers, sampler=validation_sampler,
+    dataset=validation_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=validation_sampler,
     collate_fn=dataset.collate_fn)
 
 data_loaders = {
@@ -114,10 +83,12 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.00000075)
 
 num_epoch = 700
 log_int = 5
-device = 'cpu'
+device = 'cuda'
+gpu_id = 0
 save = True
 save_int = 25
 resume = False
+run_name = f'class_balance_run_v01_factor_{imbalance_factor}'
 
 trainer = Trainer(run_name=run_name,
                   run_root=run_root,
@@ -130,6 +101,6 @@ trainer = Trainer(run_name=run_name,
                   device=device,
                   save=save,
                   save_int=save_int,
-                  resume=resume)
-
+                  resume=resume,
+                  gpu_id=gpu_id)
 trainer.train()

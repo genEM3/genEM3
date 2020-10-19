@@ -6,7 +6,7 @@ from matplotlib.colors import ListedColormap
 import torch
 from torch import nn
 from torch.utils.tensorboard import SummaryWriter
-from torch.utils.data import Sampler, Subset
+from torch.utils.data import Sampler, Subset, DataLoader
 from torch.utils.data.sampler import WeightedRandomSampler
 from torch import device as torchDevice
 from genEM3.util import gpu
@@ -91,7 +91,7 @@ class Trainer:
                 correct_sum = 0
                 batch_idx_start = 0
 
-                num_items = len(self.data_loaders[phase].batch_sampler.sampler.indices)
+                num_items = len(self.data_loaders[phase].batch_sampler.sampler)
 
                 inputs_phase = -np.ones((num_items, 1, 140, 140)).astype(float)
                 outputs_phase = -np.ones((num_items, 2)).astype(float)
@@ -362,3 +362,35 @@ class subsetWeightedSampler(Sampler):
         """print the sample imbalance"""
         print('Target balance for original train set clean/debris: {}/{}'.format(
             len(np.where(self.target_class == 0)[0]), len(np.where(self.target_class == 1)[0])))
+
+    @classmethod
+    def run_test_case(cls, dataset, factor_range=range(1, 20)):
+        # imbalance factor clean
+        for factor in factor_range:
+            sampler = cls(dataset, dataset.data_train_inds, factor) 
+            # Initialize the data loader using the dataset subset and the sampler
+            subset_weighted_loader = DataLoader(
+                dataset=sampler.sub_dataset, batch_size=256, num_workers=0, sampler=sampler,
+                collate_fn=dataset.collate_fn)
+            print(f'########\nImbalance Factor: {sampler.imbalance_factor}') 
+            ratio_clean = list()
+            for i, data in enumerate(subset_weighted_loader):
+                print(f'####\nBatch Index: {i}/{len(subset_weighted_loader)}')
+                # check that all sample indices are part of the total indices
+                batch_idx = data['sample_idx']
+                batch_idx_set = set(batch_idx)
+                assert batch_idx_set.issubset(sampler.index_set)
+                repetition_num = len(batch_idx)-len(batch_idx_set)
+                print(f'Repeated/total number of samples in current batch: {repetition_num}/{len(batch_idx)}')
+                y = data['target']
+                clean_num = float((y == 0).sum())
+                debris_num = float((y == 1).sum())
+                fraction_clean = clean_num / (debris_num + clean_num)
+                ratio_clean.append(clean_num / debris_num)
+                print(f"Number of clean/debris samples in mini-batch: {int(clean_num)}/{int(debris_num)}\nFraction clean: {fraction_clean:.2f}, Ratio clean: {ratio_clean[i]:.2f}")
+            average_ratio_clean = np.asarray(ratio_clean).mean()
+            print(f'The empirical average imbalanced factor: {average_ratio_clean:.2f}')
+            # Show an example from each batch (clean and debris)
+            example_idx = {'clean':np.where(y == 0)[0][0], 'debris': np.where(y == 1)[0][0]}
+            for indexInBatch in example_idx.values():
+                dataset.show_sample(batch_idx[indexInBatch])
