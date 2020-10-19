@@ -6,6 +6,8 @@ from matplotlib.colors import ListedColormap
 import torch
 from torch import nn
 from torch.utils.tensorboard import SummaryWriter
+from torch.utils.data import Sampler, Subset
+from torch.utils.data.sampler import WeightedRandomSampler
 from torch import device as torchDevice
 from genEM3.util import gpu
 from genEM3.training.metrics import Metrics
@@ -320,5 +322,43 @@ class Trainer:
         return fig
 
 
+class subsetWeightedSampler(Sampler):
+    r"""Samples a subset of dataset with weights related to the balance factor
 
+    Arguments:
+        wkw_dataset (wkwDataset): dataset to sample from
+    """
 
+    def __init__(self, wkw_dataset, subset_indices, imbalance_factor):
+        self.wkw_dataset = wkw_dataset
+        self.subset_indices = subset_indices
+        self.imbalance_factor = imbalance_factor 
+        # Get the target (debris vs. clean) for each sample
+        total_sample_range = iter(subset_indices)
+        self.index_set = set(subset_indices)
+        # check uniqueness of the train indices
+        assert len(self.index_set) == len(self.subset_indices)
+        self.target_class = np.asarray([wkw_dataset.get_target_from_sample_idx(sample_idx) for sample_idx in total_sample_range], dtype=np.int32)
+        self.report_original_numbers()       
+        # Use the inverse of the number of samples as weight to create balance
+        self.class_sample_count = np.array(
+            [len(np.where(self.target_class == t)[0]) for t in np.unique(self.target_class)])
+        # Subset dataset 
+        self.sub_dataset = Subset(wkw_dataset, subset_indices)
+
+    def __iter__(self):
+        weight = 1. / self.class_sample_count
+        weight[0] = weight[0]*self.imbalance_factor
+        samples_weight = np.array([weight[t] for t in self.target_class])
+        # Create the weighted sampler
+        samples_weight = torch.from_numpy(samples_weight).double()
+        sampler = WeightedRandomSampler(samples_weight, len(samples_weight))
+        return iter(sampler)
+
+    def __len__(self):
+        return len(self.sub_dataset)
+
+    def report_original_numbers(self):
+        """print the sample imbalance"""
+        print('Target balance for original train set clean/debris: {}/{}'.format(
+            len(np.where(self.target_class == 0)[0]), len(np.where(self.target_class == 1)[0])))

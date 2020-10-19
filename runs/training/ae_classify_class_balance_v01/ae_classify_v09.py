@@ -1,12 +1,12 @@
 import os
 import torch
 from torch.utils.data import DataLoader, Subset
-from torch.utils.data.sampler import SubsetRandomSampler, WeightedRandomSampler
+from torch.utils.data.sampler import SubsetRandomSampler
 
 from genEM3.data import transforms
 from genEM3.data.wkwdata import WkwData, DataSplit
 from genEM3.model.autoencoder2d import Encoder_4_sampling_bn_1px_deep_convonly_skip, AE_Encoder_Classifier, Classifier3Layered
-from genEM3.training.classifier import Trainer
+from genEM3.training.classifier import Trainer, subsetWeightedSampler 
 
 import numpy as np
 # Parameters
@@ -44,41 +44,21 @@ dataset = WkwData(
     cache_HDD_root=cache_HDD_root
 )
 ########
-# Get the target (debris vs. clean) for each sample
-total_sample_range = iter(dataset.data_train_inds)
-total_sample_set = set(dataset.data_train_inds)
-# check uniqueness of the train indices
-assert len(total_sample_set) == len(dataset.data_train_inds)
-target_class = np.asarray([dataset.get_target_from_sample_idx(sample_idx) for sample_idx in total_sample_range], dtype=np.int32)
-# print the sample imbalance
-print('Target balance for original train set clean/debris: {}/{}'.format(
-    len(np.where(target_class == 0)[0]), len(np.where(target_class == 1)[0])))
-# Use the inverse of the number of samples as weight to create balance
-class_sample_count = np.array(
-    [len(np.where(target_class == t)[0]) for t in np.unique(target_class)])
 # imbalance factor clean
 for factor in range(1, 20):
-    imbalance_factor_clean = factor 
-    weight = 1. / class_sample_count
-    weight[0] = weight[0]*imbalance_factor_clean
-    samples_weight = np.array([weight[t] for t in target_class])
-    # Create the weighted sampler
-    samples_weight = torch.from_numpy(samples_weight)
-    samples_weight = samples_weight.double()
-    sampler = WeightedRandomSampler(samples_weight, len(samples_weight))
-    # Subset dataset 
-    train_dataset = Subset(dataset, dataset.data_train_inds)
+    sampler = subsetWeightedSampler(dataset, dataset.data_train_inds, factor) 
+    # Initialize the data loader using the dataset subset and the sampler
     subset_weighted_loader = DataLoader(
-        dataset=train_dataset, batch_size=batch_size, num_workers=num_workers, sampler=sampler,
+        dataset=sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=sampler,
         collate_fn=dataset.collate_fn)
-    print(f'########\nImbalance Factor: {imbalance_factor_clean}') 
+    print(f'########\nImbalance Factor: {sampler.imbalance_factor}') 
     ratio_clean = list()
     for i, data in enumerate(subset_weighted_loader):
         print(f'####\nBatch Index: {i}/{len(subset_weighted_loader)}')
         # check that all sample indices are part of the total indices
         batch_idx = data['sample_idx']
         batch_idx_set = set(batch_idx)
-        assert batch_idx_set.issubset(total_sample_set)
+        assert batch_idx_set.issubset(sampler.index_set)
         repetition_num = len(batch_idx)-len(batch_idx_set)
         print(f'Repeated/total number of samples in current batch: {repetition_num}/{len(batch_idx)}')
         y = data['target']
