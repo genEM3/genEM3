@@ -19,8 +19,8 @@ input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
 
 data_split = DataSplit(train=0.85, validation=0.15, test=0.00)
-cache_RAM = False
-cache_HDD = False
+cache_RAM = True
+cache_HDD = True
 cache_root = os.path.join(run_root, '.cache/')
 batch_size = 256
 num_workers = 0
@@ -46,12 +46,12 @@ dataset = WkwData(
 ########
 # Get the target (debris vs. clean) for each sample
 total_sample_range = iter(dataset.data_train_inds)
-total_sample_set = set(dataset.data_train_ind)
+total_sample_set = set(dataset.data_train_inds)
 # check uniqueness of the train indices
-assert len(total_sample_set) == len(dataset.data_train_indices)
+assert len(total_sample_set) == len(dataset.data_train_inds)
 target_class = np.asarray([dataset.get_target_from_sample_idx(sample_idx) for sample_idx in total_sample_range], dtype=np.int32)
 # print the sample imbalance
-print('target train 0/1: {}/{}'.format(
+print('Target balance for original train set clean/debris: {}/{}'.format(
     len(np.where(target_class == 0)[0]), len(np.where(target_class == 1)[0])))
 # Use the inverse of the number of samples as weight to create balance
 class_sample_count = np.array(
@@ -71,20 +71,29 @@ for factor in range(1, 20):
     subset_weighted_loader = DataLoader(
         dataset=train_dataset, batch_size=batch_size, num_workers=num_workers, sampler=sampler,
         collate_fn=dataset.collate_fn)
-    
+    print(f'########\nImbalance Factor: {imbalance_factor_clean}') 
+    ratio_clean = list()
     for i, data in enumerate(subset_weighted_loader):
+        print(f'####\nBatch Index: {i}/{len(subset_weighted_loader)}')
         # check that all sample indices are part of the total indices
         batch_idx = data['sample_idx']
         batch_idx_set = set(batch_idx)
         assert batch_idx_set.issubset(total_sample_set)
         repetition_num = len(batch_idx)-len(batch_idx_set)
-        print(f'number of repetition in batch {i} is {repetition_num}')
+        print(f'Repeated/total number of samples in current batch: {repetition_num}/{len(batch_idx)}')
         y = data['target']
         clean_num = float((y == 0).sum())
         debris_num = float((y == 1).sum())
         fraction_clean = clean_num / (debris_num + clean_num) 
-        ratio_clean = clean_num / debris_num
-        print(f"batch index {i}, 0/1: {clean_num}/{debris_num}\nFraction clean: {fraction_clean}, Ratio clean: {ratio_clean}")
+        ratio_clean.append(clean_num / debris_num)
+        print(f"Number of clean/debris samples in mini-batch: {int(clean_num)}/{int(debris_num)}\nFraction clean: {fraction_clean:.2f}, Ratio clean: {ratio_clean[i]:.2f}")
+    # Show an example from each batch (clean and debris)
+    example_idx = {'clean':np.where(y == 0)[0][0], 'debris': np.where(y == 1)[0][0]}
+    for indexInBatch in example_idx.values():
+        dataset.show_sample(batch_idx[indexInBatch])
+    average_ratio_clean = np.asarray(ratio_clean).mean()
+    print(f'The empirical average imbalanced factor: {average_ratio_clean:.2f}')
+
 #########
 train_sampler = SubsetRandomSampler(dataset.data_train_inds)
 train_loader = torch.utils.data.DataLoader(
