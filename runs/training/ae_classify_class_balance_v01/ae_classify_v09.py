@@ -41,22 +41,12 @@ dataset = WkwData(
     cache_HDD=cache_HDD,
     cache_HDD_root=cache_HDD_root
 )
-# run test case for the data loader examples
-# subsetWeightedSampler.run_test_case(dataset)
-imbalance_factor = 2
-train_sampler = subsetWeightedSampler(dataset, dataset.data_train_inds, imbalance_factor=imbalance_factor)
-train_loader = torch.utils.data.DataLoader(
-    dataset=train_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=train_sampler,
-    collate_fn=dataset.collate_fn)
-
-validation_sampler = subsetWeightedSampler(dataset, dataset.data_validation_inds, imbalance_factor=imbalance_factor)
-validation_loader = torch.utils.data.DataLoader(
-    dataset=validation_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=validation_sampler,
-    collate_fn=dataset.collate_fn)
-
-data_loaders = {
-    "train": train_loader,
-    "val": validation_loader}
+# Create the weighted samplers which create imbalance given the factor
+imbalance_factor = 5
+data_loaders = subsetWeightedSampler.get_data_loaders(dataset,
+                                                      imbalance_factor=imbalance_factor,
+                                                      batch_size=batch_size,
+                                                      num_workers=num_workers)
 
 input_size = 140
 output_size = input_size
