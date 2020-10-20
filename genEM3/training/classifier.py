@@ -141,6 +141,11 @@ class Trainer:
 
                     running_loss += loss.item()
                     epoch_loss += loss.item()
+                    # Report fraction of clean data in mini batch 
+                    clean_num = float((targets == 0).sum())
+                    debris_num = float((targets == 1).sum())
+                    fraction_clean = clean_num / (debris_num + clean_num)
+                    writer.add_scalars('Fraction of clean samples', {phase:fraction_clean}, it)
 
                     if i % self.log_int == 0:
                         running_loss_log = float(running_loss) / batch_idx_end
@@ -394,3 +399,24 @@ class subsetWeightedSampler(Sampler):
             example_idx = {'clean':np.where(y == 0)[0][0], 'debris': np.where(y == 1)[0][0]}
             for indexInBatch in example_idx.values():
                 dataset.show_sample(batch_idx[indexInBatch])
+
+    @classmethod
+    def get_data_loaders(cls, dataset, 
+                         imbalance_factor: int = 1, 
+                         batch_size: int = 256,
+                         num_workers: int = 0):
+        """Give the train and validation data loaders using the balance controlled sampler""" 
+        train_sampler = cls(dataset, dataset.data_train_inds, imbalance_factor=imbalance_factor)
+        train_loader = torch.utils.data.DataLoader(
+            dataset=train_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=train_sampler,
+            collate_fn=dataset.collate_fn)
+        
+        validation_sampler = cls(dataset, dataset.data_validation_inds, imbalance_factor=imbalance_factor)
+        validation_loader = torch.utils.data.DataLoader(
+            dataset=validation_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=validation_sampler,
+            collate_fn=dataset.collate_fn)
+        
+        data_loaders = {
+            "train": train_loader,
+            "val": validation_loader}
+        return data_loaders
