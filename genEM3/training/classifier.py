@@ -1,5 +1,7 @@
 import os
 import datetime
+from typing import List, Union, Dict
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
@@ -12,7 +14,6 @@ from torch import device as torchDevice
 from genEM3.util import gpu
 from genEM3.training.metrics import Metrics
 
-
 class Trainer:
 
     def __init__(self,
@@ -21,16 +22,16 @@ class Trainer:
                  model: nn.Module,
                  optimizer: torch.optim.Optimizer,
                  criterion: nn.MSELoss,
-                 data_loaders: {},
+                 data_loaders: Union[List, Dict],
                  num_epoch: int = 100,
                  log_int: int = 10,
                  device: str = 'cpu',
                  save: bool = False,
                  save_int: int = 1,
                  resume: bool = False,
-                 gpu_id: int = None
-                 ):
-
+                 gpu_id: int = None,
+                 balance_factor: List = None):
+        """balance_factor: is a list which contains the balance factor for each training epoch"""
         self.run_name = run_name
         self.run_root = run_root
         self.model = model
@@ -41,7 +42,7 @@ class Trainer:
         self.save = save
         self.save_int = save_int
         self.resume = resume
-
+        self.balance_factor = balance_factor
         if device == 'cuda':
             gpu.get_gpu(gpu_id)
             device = torch.device(torch.cuda.current_device())
@@ -49,8 +50,11 @@ class Trainer:
         self.device = torchDevice(device)
         self.log_root = os.path.join(run_root, '.log', run_name)
         self.data_loaders = data_loaders
-        self.data_lengths = dict(zip(self.data_loaders.keys(), [len(loader) for loader in self.data_loaders]))
-
+        # can only get the lengths when a single set of data loaders are used
+        if isinstance(data_loaders, dict):
+            self.data_lengths = dict(zip(self.data_loaders.keys(), [len(loader) for loader in self.data_loaders]))
+        else:
+            self.data_lengths = {}
         if save:
             if not os.path.exists(self.log_root):
                 os.makedirs(self.log_root)
@@ -72,12 +76,22 @@ class Trainer:
         it = int(self.model.iteration)
         sample_inds = dict()
         for epoch in range(epoch, epoch + self.num_epoch):
+            if isinstance(self.data_loaders, list):
+                # each element of the list is a data loader for an epoch
+                loader_change_interval = self.num_epoch / len(self.data_loaders)
+                division_index, _ = divmod(epoch, loader_change_interval)
+                # Make sure that the index does not exceed the length of the data_loader list
+                index = round(min(division_index, len(self.data_loaders)-1))
+                cur_data_loaders = self.data_loaders[index]
+            else:
+                # same dataloaders for all epochs
+                cur_data_loaders = self.data_loaders
 
             epoch_root = 'epoch_{:02d}'.format(epoch)
             if not os.path.exists(os.path.join(self.log_root, epoch_root)):
                 os.makedirs(os.path.join(self.log_root, epoch_root))
 
-            for phase in self.data_loaders.keys():
+            for phase in cur_data_loaders.keys():
 
                 if phase == 'train':
                     self.model.train(True)
@@ -91,7 +105,7 @@ class Trainer:
                 correct_sum = 0
                 batch_idx_start = 0
 
-                num_items = len(self.data_loaders[phase].batch_sampler.sampler)
+                num_items = len(cur_data_loaders[phase].batch_sampler.sampler)
 
                 inputs_phase = -np.ones((num_items, 1, 140, 140)).astype(float)
                 outputs_phase = -np.ones((num_items, 2)).astype(float)
@@ -100,7 +114,7 @@ class Trainer:
                 correct_phase = -np.ones(num_items).astype(int)
 
                 sample_ind_phase = []
-                for i, data in enumerate(self.data_loaders[phase]):
+                for i, data in enumerate(cur_data_loaders[phase]):
 
                     it += 1
 
@@ -145,7 +159,7 @@ class Trainer:
                     clean_num = float((targets == 0).sum())
                     debris_num = float((targets == 1).sum())
                     fraction_clean = clean_num / (debris_num + clean_num)
-                    writer.add_scalars('Fraction of clean samples', {phase:fraction_clean}, it)
+                    writer.add_scalars('Fraction of clean samples', {phase: fraction_clean}, it)
 
                     if i % self.log_int == 0:
                         running_loss_log = float(running_loss) / batch_idx_end

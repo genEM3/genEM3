@@ -41,22 +41,19 @@ dataset = WkwData(
     cache_HDD=cache_HDD,
     cache_HDD_root=cache_HDD_root
 )
-# run test case for the data loader examples
-# subsetWeightedSampler.run_test_case(dataset)
-imbalance_factor = 2
-train_sampler = subsetWeightedSampler(dataset, dataset.data_train_inds, imbalance_factor=imbalance_factor)
-train_loader = torch.utils.data.DataLoader(
-    dataset=train_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=train_sampler,
-    collate_fn=dataset.collate_fn)
-
-validation_sampler = subsetWeightedSampler(dataset, dataset.data_validation_inds, imbalance_factor=imbalance_factor)
-validation_loader = torch.utils.data.DataLoader(
-    dataset=validation_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=validation_sampler,
-    collate_fn=dataset.collate_fn)
-
-data_loaders = {
-    "train": train_loader,
-    "val": validation_loader}
+# Create the weighted samplers which create imbalance given the factor
+# The sampler is linear between the given the clean sample imbalabce factor ranges
+num_epoch = 700
+# controls the interval at which the dataloader's imbalance gets updated
+loader_interval = 50
+# The range of the imbalance (frequency ratio clean/debris)
+imbalance_factor_range = [1, 20]
+balance_factor_epoch = np.linspace(imbalance_factor_range[0], imbalance_factor_range[1], num=int(num_epoch/loader_interval))
+# list of data loaders each contains a dictionary for train and validation loaders
+data_loaders = [subsetWeightedSampler.get_data_loaders(dataset,
+                                                       imbalance_factor=imbalance_factor,
+                                                       batch_size=batch_size,
+                                                       num_workers=num_workers) for imbalance_factor in balance_factor_epoch]
 
 input_size = 140
 output_size = input_size
@@ -81,14 +78,13 @@ for name, param in model.named_parameters():
 criterion = torch.nn.NLLLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.00000075)
 
-num_epoch = 700
 log_int = 5
 device = 'cuda'
 gpu_id = 0
 save = True
 save_int = 25
 resume = False
-run_name = f'class_balance_run_v01_factor_{imbalance_factor}'
+run_name = f'class_balance_run_v02_factor_{imbalance_factor_range[0]}_{imbalance_factor_range[1]}'
 
 trainer = Trainer(run_name=run_name,
                   run_root=run_root,

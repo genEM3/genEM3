@@ -4,6 +4,8 @@ import json
 import random
 from collections import namedtuple
 from typing import Tuple, Sequence, List, Callable
+from functools import lru_cache
+
 import numpy as np
 from scipy.interpolate import griddata
 import matplotlib.pyplot as plt
@@ -469,11 +471,13 @@ class WkwData(Dataset):
 
         return source_idx, mesh_inds
 
+    @lru_cache(maxsize=128)
     def get_source_idx_from_sample_idx(self, sample_idx):
         """Get the [data]source index from the linear index of the sample"""
         source_idx = int(np.argmax(np.asarray(self.data_inds_max) >= int(sample_idx)))
         return source_idx
 
+    @lru_cache(maxsize=128)
     def get_target_from_sample_idx(self, sample_idx):
         """Get the binary target class from the linear index of the sample"""
         source_idx = self.get_source_idx_from_sample_idx(sample_idx) 
