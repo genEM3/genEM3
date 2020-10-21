@@ -42,11 +42,11 @@ dataset = WkwData(
 )
 # Create the weighted samplers which create imbalance given the factor
 # The sampler is linear between the given the clean sample imbalabce factor ranges
-num_epoch = 700
+num_epoch = 1000
 # controls the interval at which the dataloader's imbalance gets updated
-loader_interval = 50
+loader_interval = 25
 # The range of the imbalance (frequency ratio clean/debris)
-imbalance_factor_range = [1, 10]
+imbalance_factor_range = [1, 19]
 balance_factor_epoch = np.linspace(imbalance_factor_range[0], imbalance_factor_range[1], num=int(num_epoch/loader_interval))
 # list of data loaders each contains a dictionary for train and validation loaders
 data_loaders = [subsetWeightedSampler.get_data_loaders(dataset,
