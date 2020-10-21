@@ -1,11 +1,10 @@
 import os
 import torch
-from torch.utils.data.sampler import SubsetRandomSampler
 
 from genEM3.data import transforms
 from genEM3.data.wkwdata import WkwData, DataSplit
 from genEM3.model.autoencoder2d import Encoder_4_sampling_bn_1px_deep_convonly_skip, AE_Encoder_Classifier, Classifier3Layered
-from genEM3.training.classifier import Trainer, subsetWeightedSampler 
+from genEM3.training.classifier import Trainer, subsetWeightedSampler
 
 import numpy as np
 # Parameters
@@ -21,7 +20,7 @@ cache_RAM = True
 cache_HDD = True
 cache_root = os.path.join(run_root, '.cache/')
 batch_size = 256
-num_workers = 0
+num_workers = 8
 
 data_sources = WkwData.datasources_from_json(datasources_json_path)
 
@@ -47,7 +46,7 @@ num_epoch = 700
 # controls the interval at which the dataloader's imbalance gets updated
 loader_interval = 50
 # The range of the imbalance (frequency ratio clean/debris)
-imbalance_factor_range = [1, 20]
+imbalance_factor_range = [1, 10]
 balance_factor_epoch = np.linspace(imbalance_factor_range[0], imbalance_factor_range[1], num=int(num_epoch/loader_interval))
 # list of data loaders each contains a dictionary for train and validation loaders
 data_loaders = [subsetWeightedSampler.get_data_loaders(dataset,

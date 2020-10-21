@@ -21,7 +21,7 @@ cache_RAM = True
 cache_HDD = True
 cache_root = os.path.join(run_root, '.cache/')
 batch_size = 256
-num_workers = 0
+num_workers = 8
 
 data_sources = WkwData.datasources_from_json(datasources_json_path)
 
@@ -42,7 +42,7 @@ dataset = WkwData(
     cache_HDD_root=cache_HDD_root
 )
 # Create the weighted samplers which create imbalance given the factor
-imbalance_factor = 5
+imbalance_factor = 20
 data_loaders = subsetWeightedSampler.get_data_loaders(dataset,
                                                       imbalance_factor=imbalance_factor,
                                                       batch_size=batch_size,

@@ -13,6 +13,7 @@ from torch.utils.data.sampler import WeightedRandomSampler
 from torch import device as torchDevice
 from genEM3.util import gpu
 from genEM3.training.metrics import Metrics
+from genEM3.data.wkwdata import WkwData
 
 class Trainer:
 
@@ -342,13 +343,20 @@ class Trainer:
 
 
 class subsetWeightedSampler(Sampler):
-    r"""Samples a subset of dataset with weights related to the balance factor
+    """Sampler for generating a weighted random subset of the given dataset  
 
     Arguments:
-        wkw_dataset (wkwDataset): dataset to sample from
+        wkw_dataset (WkwData): dataset to sample (subclass of torch Dataset)
+        subset_indices: List of sample indices used to create the sampler
+        imbalance_factor: ratio of clean/debris classes in generated sampler
+        verbose: whether or not to print debug info
     """
 
-    def __init__(self, wkw_dataset, subset_indices, imbalance_factor):
+    def __init__(self,
+                 wkw_dataset: WkwData,
+                 subset_indices: List[np.int64],
+                 imbalance_factor: float = 1.0,
+                 verbose: bool = False):
         self.wkw_dataset = wkw_dataset
         self.subset_indices = subset_indices
         self.imbalance_factor = imbalance_factor 
@@ -357,8 +365,9 @@ class subsetWeightedSampler(Sampler):
         self.index_set = set(subset_indices)
         # check uniqueness of the train indices
         assert len(self.index_set) == len(self.subset_indices)
-        self.target_class = np.asarray([wkw_dataset.get_target_from_sample_idx(sample_idx) for sample_idx in total_sample_range], dtype=np.int32)
-        self.report_original_numbers()       
+        self.target_class = np.asarray([wkw_dataset.get_target_from_sample_idx(sample_idx) for sample_idx in total_sample_range], dtype=np.int64)
+        if verbose:
+            self.report_original_numbers()       
         # Use the inverse of the number of samples as weight to create balance
         self.class_sample_count = np.array(
             [len(np.where(self.target_class == t)[0]) for t in np.unique(self.target_class)])
@@ -366,6 +375,9 @@ class subsetWeightedSampler(Sampler):
         self.sub_dataset = Subset(wkw_dataset, subset_indices)
 
     def __iter__(self):
+        """Method called when iter() calls the sampler. Returns a iterator over the samples.
+        This method directorly returns the iterator from weightedRandomSampler of pytorch.
+        """
         weight = 1. / self.class_sample_count
         weight[0] = weight[0]*self.imbalance_factor
         samples_weight = np.array([weight[t] for t in self.target_class])
@@ -375,6 +387,7 @@ class subsetWeightedSampler(Sampler):
         return iter(sampler)
 
     def __len__(self):
+        """the length of the sampler (length of the sub dataset)"""
         return len(self.sub_dataset)
 
     def report_original_numbers(self):
@@ -383,7 +396,10 @@ class subsetWeightedSampler(Sampler):
             len(np.where(self.target_class == 0)[0]), len(np.where(self.target_class == 1)[0])))
 
     @classmethod
-    def run_test_case(cls, dataset, factor_range=range(1, 20)):
+    def run_test_case(cls,
+                      dataset: WkwData, 
+                      factor_range: range = range(1, 20)):
+        """Method to create the sampler with a range of balance factors and report summary statistics"""
         # imbalance factor clean
         for factor in factor_range:
             sampler = cls(dataset, dataset.data_train_inds, factor) 
@@ -415,21 +431,31 @@ class subsetWeightedSampler(Sampler):
                 dataset.show_sample(batch_idx[indexInBatch])
 
     @classmethod
-    def get_data_loaders(cls, dataset, 
-                         imbalance_factor: int = 1, 
+    def get_data_loaders(cls, 
+                         dataset: WkwData,
+                         imbalance_factor: float = 1.0,
                          batch_size: int = 256,
-                         num_workers: int = 0):
-        """Give the train and validation data loaders using the balance controlled sampler""" 
+                         num_workers: int = 0) -> Dict[str, torch.utils.data.DataLoader]:
+        """Generate the pytorch data loaders for the training and validation subsets of the dataset. 
+        The balance of two target classes are controled by imbalance factor.
+        Arguments:
+            dataset: Pytorch dataset with train and validation indices
+            imbalance_factor: The factor to control the ratio of 0/1 classes
+            batch_size and num_workers are inputs to data loader
+        Output:
+            data_loaders: dictionary of the pytroch data loaders
+        """ 
+        # Train sampler
         train_sampler = cls(dataset, dataset.data_train_inds, imbalance_factor=imbalance_factor)
         train_loader = torch.utils.data.DataLoader(
             dataset=train_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=train_sampler,
             collate_fn=dataset.collate_fn)
-        
+        # validation sampler/loader 
         validation_sampler = cls(dataset, dataset.data_validation_inds, imbalance_factor=imbalance_factor)
         validation_loader = torch.utils.data.DataLoader(
             dataset=validation_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=validation_sampler,
             collate_fn=dataset.collate_fn)
-        
+        # combine into one dictionary 
         data_loaders = {
             "train": train_loader,
             "val": validation_loader}
