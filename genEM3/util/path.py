@@ -27,6 +27,12 @@ def getDataDir():
     return os.path.join(repoDir, 'data')
 
 
+def get_runs_dir():
+    """return the path for the 'data' directory"""
+    repoDir = getAbsPathRepository()
+    return os.path.join(repoDir, 'runs')
+
+
 def getMag8DatasetDir():
     """return string for mag8 dataset we work with"""
     wkwDir = '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1'
@@ -39,7 +45,8 @@ def gethostnameTimeString():
     now = datetime.now()
     # dd/mm/YY H:M:S
     dt_string = now.strftime("%d_%b_%Y-%H_%M_%S")
-    return '-'.join([hname, dt_string]) 
+    return '-'.join([hname, dt_string])
+
 
 def get_conndata_dir_AK():
     """Return the string for the conndata directory which contains the results of training runs"""
