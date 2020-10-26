@@ -6,12 +6,12 @@ from typing import Sequence, Union
 
 
 def bboxFromCenter2D(center: Sequence[Union[float, int]], 
-                     dims: Sequence[Union[float, int]]=np.asarray[140, 140, 0]):
+                     dims: Sequence[Union[float, int]]):
     """Returns the 2D bounding box from center and dims arrays"""
     # input should be numpy arrays
     assert type(center) is np.ndarray and type(dims) is np.ndarray
     # last dimension should be zero for the bbox to not change the location of third dimension
-    if dim[2] != 0
+    if dims[2] != 0:
         dims[2] = 0
     topLeft = center - dims/2
     # make sure it is only a single slice (3rd dim size = 0)
