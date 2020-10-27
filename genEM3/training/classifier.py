@@ -8,12 +8,13 @@ from matplotlib.colors import ListedColormap
 import torch
 from torch import nn
 from torch.utils.tensorboard import SummaryWriter
-from torch.utils.data import Sampler, Subset, DataLoader
+from torch.utils.data import Sampler, Subset, DataLoader, SequentialSampler
 from torch.utils.data.sampler import WeightedRandomSampler
 from torch import device as torchDevice
 from genEM3.util import gpu
 from genEM3.training.metrics import Metrics
 from genEM3.data.wkwdata import WkwData
+
 
 class Trainer:
 
@@ -156,7 +157,7 @@ class Trainer:
 
                     running_loss += loss.item()
                     epoch_loss += loss.item()
-                    # Report fraction of clean data in mini batch 
+                    # Report fraction of clean data in mini batch
                     clean_num = float((targets == 0).sum())
                     debris_num = float((targets == 1).sum())
                     fraction_clean = clean_num / (debris_num + clean_num)
@@ -170,7 +171,6 @@ class Trainer:
                               format(epoch, i, running_loss_log, running_accuracy_log))
                         writer.add_scalars('running_loss', {phase: running_loss_log}, it)
                         writer.add_scalars('running_accuracy', {phase: running_accuracy_log}, it)
-
 
                 epoch_loss_log = float(epoch_loss) / num_items
                 epoch_accuracy_log = float(correct_sum) / num_items
@@ -251,7 +251,7 @@ class Trainer:
         return fig
 
     @staticmethod
-    def show_imgs(inputs, outputs, predictions, targets, sample_ind, class_idx=1, plot_ind = None):
+    def show_imgs(inputs, outputs, predictions, targets, sample_ind, class_idx=1, plot_ind=None):
 
         if plot_ind is None:
             plot_ind = list(range(5))
@@ -359,7 +359,7 @@ class subsetWeightedSampler(Sampler):
                  verbose: bool = False):
         self.wkw_dataset = wkw_dataset
         self.subset_indices = subset_indices
-        self.imbalance_factor = imbalance_factor 
+        self.imbalance_factor = imbalance_factor
         # Get the target (debris vs. clean) for each sample
         total_sample_range = iter(subset_indices)
         self.index_set = set(subset_indices)
@@ -367,11 +367,11 @@ class subsetWeightedSampler(Sampler):
         assert len(self.index_set) == len(self.subset_indices)
         self.target_class = np.asarray([wkw_dataset.get_target_from_sample_idx(sample_idx) for sample_idx in total_sample_range], dtype=np.int64)
         if verbose:
-            self.report_original_numbers()       
+            self.report_original_numbers()     
         # Use the inverse of the number of samples as weight to create balance
         self.class_sample_count = np.array(
             [len(np.where(self.target_class == t)[0]) for t in np.unique(self.target_class)])
-        # Subset dataset 
+        # Subset dataset
         self.sub_dataset = Subset(wkw_dataset, subset_indices)
 
     def __iter__(self):
@@ -397,17 +397,17 @@ class subsetWeightedSampler(Sampler):
 
     @classmethod
     def run_test_case(cls,
-                      dataset: WkwData, 
+                      dataset: WkwData,
                       factor_range: range = range(1, 20)):
         """Method to create the sampler with a range of balance factors and report summary statistics"""
         # imbalance factor clean
         for factor in factor_range:
-            sampler = cls(dataset, dataset.data_train_inds, factor) 
+            sampler = cls(dataset, dataset.data_train_inds, factor)
             # Initialize the data loader using the dataset subset and the sampler
             subset_weighted_loader = DataLoader(
                 dataset=sampler.sub_dataset, batch_size=256, num_workers=0, sampler=sampler,
                 collate_fn=dataset.collate_fn)
-            print(f'########\nImbalance Factor: {sampler.imbalance_factor}') 
+            print(f'########\nImbalance Factor: {sampler.imbalance_factor}')
             ratio_clean = list()
             for i, data in enumerate(subset_weighted_loader):
                 print(f'####\nBatch Index: {i}/{len(subset_weighted_loader)}')
@@ -426,13 +426,14 @@ class subsetWeightedSampler(Sampler):
             average_ratio_clean = np.asarray(ratio_clean).mean()
             print(f'The empirical average imbalanced factor: {average_ratio_clean:.2f}')
             # Show an example from each batch (clean and debris)
-            example_idx = {'clean':np.where(y == 0)[0][0], 'debris': np.where(y == 1)[0][0]}
+            example_idx = {'clean': np.where(y == 0)[0][0], 'debris': np.where(y == 1)[0][0]}
             for indexInBatch in example_idx.values():
                 dataset.show_sample(batch_idx[indexInBatch])
 
     @classmethod
-    def get_data_loaders(cls, 
+    def get_data_loaders(cls,
                          dataset: WkwData,
+                         test_dataset: WkwData = None,
                          imbalance_factor: float = 1.0,
                          batch_size: int = 256,
                          num_workers: int = 0) -> Dict[str, torch.utils.data.DataLoader]:
@@ -444,19 +445,31 @@ class subsetWeightedSampler(Sampler):
             batch_size and num_workers are inputs to data loader
         Output:
             data_loaders: dictionary of the pytroch data loaders
-        """ 
+        """
         # Train sampler
         train_sampler = cls(dataset, dataset.data_train_inds, imbalance_factor=imbalance_factor)
         train_loader = torch.utils.data.DataLoader(
             dataset=train_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=train_sampler,
             collate_fn=dataset.collate_fn)
-        # validation sampler/loader 
+        # validation sampler/loader
         validation_sampler = cls(dataset, dataset.data_validation_inds, imbalance_factor=imbalance_factor)
         validation_loader = torch.utils.data.DataLoader(
             dataset=validation_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=validation_sampler,
             collate_fn=dataset.collate_fn)
-        # combine into one dictionary 
-        data_loaders = {
-            "train": train_loader,
-            "val": validation_loader}
+        # Use a sequential sampler for the 3 test boxes, test sampler/loader
+        if test_dataset is not None:
+            test_sampler = SequentialSampler(test_dataset)
+            test_loader = torch.utils.data.DataLoader(
+                dataset=test_dataset, batch_size=batch_size, num_workers=num_workers, sampler=test_sampler,
+                collate_fn=dataset.collate_fn)
+            # combine into one dictionary
+            data_loaders = {
+                "train": train_loader,
+                "val": validation_loader,
+                "test": test_loader}
+        else:
+            # combine into one dictionary
+            data_loaders = {
+                "train": train_loader,
+                "val": validation_loader}
         return data_loaders
