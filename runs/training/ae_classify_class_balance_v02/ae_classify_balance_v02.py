@@ -56,7 +56,7 @@ num_epoch = 1000
 # controls the interval at which the dataloader's imbalance gets updated
 loader_interval = 25
 # The range of the imbalance (frequency ratio clean/debris)
-imbalance_factor_range = [1, 19]
+imbalance_factor_range = [19, 1]
 balance_factor_epoch = np.linspace(imbalance_factor_range[0], imbalance_factor_range[1], num=int(num_epoch/loader_interval))
 # list of data loaders each contains a dictionary for train and validation loaders
 data_loaders = [subsetWeightedSampler.get_data_loaders(dataset,
@@ -90,7 +90,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.00000075)
 
 log_int = 5
 device = 'cuda'
-gpu_id = 0
+gpu_id = 1
 save = True
 save_int = 25
 resume = False

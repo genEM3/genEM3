@@ -8,7 +8,7 @@ from matplotlib.colors import ListedColormap
 import torch
 from torch import nn
 from torch.utils.tensorboard import SummaryWriter
-from torch.utils.data import Sampler, Subset, DataLoader, SequentialSampler
+from torch.utils.data import Sampler, Subset, DataLoader, SequentialSampler, RandomSampler
 from torch.utils.data.sampler import WeightedRandomSampler
 from torch import device as torchDevice
 from genEM3.util import gpu
@@ -88,7 +88,9 @@ class Trainer:
             else:
                 # same dataloaders for all epochs
                 cur_data_loaders = self.data_loaders
-
+            # Dictionary (of dictionaries) to collect four metrics from different phases for tensorboard
+            epoch_metric_names = ['epoch_loss', 'epoch_accuracy', 'precision/PPV', 'recall/TPR']
+            epoch_metric_dict = {metric_name: dict.fromkeys(cur_data_loaders.keys()) for metric_name in epoch_metric_names}
             epoch_root = 'epoch_{:02d}'.format(epoch)
             if not os.path.exists(os.path.join(self.log_root, epoch_root)):
                 os.makedirs(os.path.join(self.log_root, epoch_root))
@@ -161,7 +163,7 @@ class Trainer:
                     clean_num = float((targets == 0).sum())
                     debris_num = float((targets == 1).sum())
                     fraction_clean = clean_num / (debris_num + clean_num)
-                    writer.add_scalars('Fraction of clean samples', {phase: fraction_clean}, it)
+                    writer.add_scalars('Fraction_clean_samples', {phase: fraction_clean}, it)
 
                     if i % self.log_int == 0:
                         running_loss_log = float(running_loss) / batch_idx_end
@@ -185,11 +187,10 @@ class Trainer:
                     path_out=os.path.join(self.log_root, epoch_root, 'confusion_table_' + phase + '.csv'))
                 metrics.prediction_table(
                     path_out=os.path.join(self.log_root, epoch_root, 'prediction_table_' + phase + '.csv'))
-
-                writer.add_scalars('epoch_loss', {phase: epoch_loss_log}, epoch)
-                writer.add_scalars('epoch_accuracy', {phase: epoch_accuracy_log}, epoch)
-                writer.add_scalars('precision/PPV', {phase: metrics.metrics['PPV']}, epoch)
-                writer.add_scalars('recall/TPR', {phase: metrics.metrics['TPR']}, epoch)
+                # Set the current values of the epoch error metrics
+                cur_metrics = [epoch_loss_log, epoch_accuracy_log, metrics.metrics['PPV'], metrics.metrics['TPR']]
+                for i, metric_name in enumerate(epoch_metric_names):
+                    epoch_metric_dict[metric_name][phase] = cur_metrics[i]
 
                 fig = Trainer.show_imgs(inputs=inputs_phase, outputs=outputs_phase, predictions=predictions_phase,
                                         targets=targets_phase,
@@ -222,7 +223,9 @@ class Trainer:
                     torch.save({
                         'optimizer_state_dict': self.optimizer.state_dict()
                     }, os.path.join(self.log_root, 'optimizer_state_dict'))
-
+            # write the epoch related metrics to the tensorboard
+            for metric_name in epoch_metric_names:
+                writer.add_scalars(metric_name, epoch_metric_dict[metric_name], epoch)
         print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Finished training ... ')
 
         writer.close()
@@ -458,7 +461,7 @@ class subsetWeightedSampler(Sampler):
             collate_fn=dataset.collate_fn)
         # Use a sequential sampler for the 3 test boxes, test sampler/loader
         if test_dataset is not None:
-            test_sampler = SequentialSampler(test_dataset)
+            test_sampler = RandomSampler(test_dataset)
             test_loader = torch.utils.data.DataLoader(
                 dataset=test_dataset, batch_size=batch_size, num_workers=num_workers, sampler=test_sampler,
                 collate_fn=dataset.collate_fn)
