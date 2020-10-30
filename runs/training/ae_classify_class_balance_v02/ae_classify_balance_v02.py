@@ -10,7 +10,7 @@ from genEM3.util.path import getDataDir, gethostnameTimeString
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
 cache_HDD_root = os.path.join(getDataDir(), '.cache/')
-datasources_json_path = os.path.join(getDataDir(), 'debris_clean_added_bboxes2_wiggle_datasource.json')
+datasources_json_path = os.path.join(getDataDir(), 'train_test_combined.json')
 state_dict_path = '/u/flod/code/genEM3/runs/training/ae_v05_skip/.log/epoch_60/model_state_dict'
 input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
@@ -39,28 +39,16 @@ dataset = WkwData(
     cache_HDD=cache_HDD,
     cache_HDD_root=cache_HDD_root
 )
-# test dataset
-test_json_path = os.path.join(getDataDir(), 'test_data_three_bboxes.json')
-test_sources = WkwData.datasources_from_json(test_json_path)
-test_dataset = WkwData(
-    input_shape=input_shape,
-    target_shape=output_shape,
-    data_sources=test_sources,
-    cache_RAM=cache_RAM,
-    cache_HDD=cache_HDD,
-    cache_HDD_root=cache_HDD_root
-)
 # Create the weighted samplers which create imbalance given the factor
 # The sampler is linear between the given the clean sample imbalabce factor ranges
 num_epoch = 1000
 # controls the interval at which the dataloader's imbalance gets updated
 loader_interval = 25
 # The range of the imbalance (frequency ratio clean/debris)
-imbalance_factor_range = [19, 1]
+imbalance_factor_range = [1, 19]
 balance_factor_epoch = np.linspace(imbalance_factor_range[0], imbalance_factor_range[1], num=int(num_epoch/loader_interval))
 # list of data loaders each contains a dictionary for train and validation loaders
 data_loaders = [subsetWeightedSampler.get_data_loaders(dataset,
-                                                       test_dataset=test_dataset,
                                                        imbalance_factor=imbalance_factor,
                                                        batch_size=batch_size,
                                                        num_workers=num_workers) for imbalance_factor in balance_factor_epoch]
