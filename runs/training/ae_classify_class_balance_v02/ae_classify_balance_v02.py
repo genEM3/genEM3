@@ -1,12 +1,12 @@
 import os
 import torch
+import numpy as np
 
 from genEM3.data import transforms
 from genEM3.data.wkwdata import WkwData, DataSplit
 from genEM3.model.autoencoder2d import Encoder_4_sampling_bn_1px_deep_convonly_skip, AE_Encoder_Classifier, Classifier3Layered
 from genEM3.training.classifier import Trainer, subsetWeightedSampler
-from genEM3.util.path import getDataDir 
-import numpy as np
+from genEM3.util.path import getDataDir, gethostnameTimeString
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
 cache_HDD_root = os.path.join(getDataDir(), '.cache/')
@@ -94,7 +94,7 @@ gpu_id = 1
 save = True
 save_int = 25
 resume = False
-run_name = f'class_balance_run_with_test_v01_factor_{imbalance_factor_range[0]}_{imbalance_factor_range[1]}'
+run_name = f'class_balance_run_with_test_v01_factor_{imbalance_factor_range[0]}_{imbalance_factor_range[1]}_{gethostnameTimeString()}'
 
 trainer = Trainer(run_name=run_name,
                   run_root=run_root,
