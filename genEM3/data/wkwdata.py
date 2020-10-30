@@ -1,5 +1,4 @@
 import os
-import pdb
 import json
 import random
 from collections import namedtuple
@@ -629,3 +628,27 @@ class WkwData(Dataset):
 
         with open(json_path, 'w') as f:
             f.write(dumps)
+
+    @staticmethod
+    def concat_datasources(json_paths_in: Sequence[str], json_path_out: str = None):
+        """
+        Concatenate multiple .json data sources into one list and possibly write to a new json file
+        """
+        all_ds = []
+        for json_path in json_paths_in:
+            cur_ds = WkwData.datasources_from_json(json_path)
+            # Concatenate the data sources from current json to a list of all data sources
+            all_ds = all_ds + cur_ds
+
+        data_sources_out = []
+        it = 0
+        for cur_data_source in all_ds:
+            # Correct the id of the data source (sequential starting at 0)
+            cur_ds_id_corrected = cur_data_source._replace(id=str(it))
+            data_sources_out.append(cur_ds_id_corrected)
+            it += 1
+        # Write json to a output file if name is given
+        if json_path_out is not None:
+            WkwData.datasources_to_json(data_sources_out, json_path_out)
+        # return the list of data sources
+        return data_sources_out
