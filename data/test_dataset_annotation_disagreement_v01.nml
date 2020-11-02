@@ -1,0 +1,2486 @@
+<?xml version="1.0" encoding="utf-8"?>
+<things>
+  <parameters>
+    <experiment name="2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8_artifact_pred" />
+    <scale x="32.0" y="32.0" z="35.0" />
+    <offset x="0.0" y="0.0" z="0.0" />
+    <time ms="1599421371307" />
+    <editPosition x="25125.0" y="20875.0" z="3593.0" />
+    <editRotation xRot="0.0" yRot="0.0" zRot="0.0" />
+    <zoomLevel zoom="2.0" />
+  </parameters>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="1" name="sample index: 299, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="1" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21040.0" z="3566.0" />
+      <node bitDepth="8" id="2" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20970.0" z="3566.0" />
+      <node bitDepth="8" id="3" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21110.0" z="3566.0" />
+      <node bitDepth="8" id="4" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25206.0" y="20970.0" z="3566.0" />
+      <node bitDepth="8" id="5" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25206.0" y="21110.0" z="3566.0" />
+      <node bitDepth="8" id="6" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25206.0" y="21109.0" z="3566.0" />
+    </nodes>
+    <edges>
+      <edge source="1" target="2" />
+      <edge source="1" target="3" />
+      <edge source="1" target="4" />
+      <edge source="1" target="5" />
+      <edge source="2" target="3" />
+      <edge source="2" target="4" />
+      <edge source="3" target="5" />
+      <edge source="4" target="6" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="2" name="sample index: 310, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="7" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20970.0" z="3567.0" />
+      <node bitDepth="8" id="8" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="20900.0" z="3567.0" />
+      <node bitDepth="8" id="9" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="21040.0" z="3567.0" />
+      <node bitDepth="8" id="10" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20900.0" z="3567.0" />
+      <node bitDepth="8" id="11" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21040.0" z="3567.0" />
+      <node bitDepth="8" id="12" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21039.0" z="3567.0" />
+    </nodes>
+    <edges>
+      <edge source="7" target="8" />
+      <edge source="7" target="9" />
+      <edge source="7" target="10" />
+      <edge source="7" target="11" />
+      <edge source="8" target="9" />
+      <edge source="8" target="10" />
+      <edge source="9" target="11" />
+      <edge source="10" target="12" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="3" name="sample index: 311, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="13" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="20970.0" z="3567.0" />
+      <node bitDepth="8" id="14" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24961.0" y="20900.0" z="3567.0" />
+      <node bitDepth="8" id="15" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24961.0" y="21040.0" z="3567.0" />
+      <node bitDepth="8" id="16" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="20900.0" z="3567.0" />
+      <node bitDepth="8" id="17" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="21040.0" z="3567.0" />
+      <node bitDepth="8" id="18" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="21039.0" z="3567.0" />
+    </nodes>
+    <edges>
+      <edge source="13" target="14" />
+      <edge source="13" target="15" />
+      <edge source="13" target="16" />
+      <edge source="13" target="17" />
+      <edge source="14" target="15" />
+      <edge source="14" target="16" />
+      <edge source="15" target="17" />
+      <edge source="16" target="18" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="4" name="sample index: 315, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="19" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="21005.0" z="3567.0" />
+      <node bitDepth="8" id="20" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="20935.0" z="3567.0" />
+      <node bitDepth="8" id="21" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="21075.0" z="3567.0" />
+      <node bitDepth="8" id="22" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20935.0" z="3567.0" />
+      <node bitDepth="8" id="23" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21075.0" z="3567.0" />
+      <node bitDepth="8" id="24" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21074.0" z="3567.0" />
+    </nodes>
+    <edges>
+      <edge source="19" target="20" />
+      <edge source="19" target="21" />
+      <edge source="19" target="22" />
+      <edge source="19" target="23" />
+      <edge source="20" target="21" />
+      <edge source="20" target="22" />
+      <edge source="21" target="23" />
+      <edge source="22" target="24" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="5" name="sample index: 475, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="25" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20900.0" z="3574.0" />
+      <node bitDepth="8" id="26" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="20830.0" z="3574.0" />
+      <node bitDepth="8" id="27" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="20970.0" z="3574.0" />
+      <node bitDepth="8" id="28" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20830.0" z="3574.0" />
+      <node bitDepth="8" id="29" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20970.0" z="3574.0" />
+      <node bitDepth="8" id="30" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20969.0" z="3574.0" />
+    </nodes>
+    <edges>
+      <edge source="25" target="26" />
+      <edge source="25" target="27" />
+      <edge source="25" target="28" />
+      <edge source="25" target="29" />
+      <edge source="26" target="27" />
+      <edge source="26" target="28" />
+      <edge source="27" target="29" />
+      <edge source="28" target="30" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="6" name="sample index: 476, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="31" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="20900.0" z="3574.0" />
+      <node bitDepth="8" id="32" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24961.0" y="20830.0" z="3574.0" />
+      <node bitDepth="8" id="33" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24961.0" y="20970.0" z="3574.0" />
+      <node bitDepth="8" id="34" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="20830.0" z="3574.0" />
+      <node bitDepth="8" id="35" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="20970.0" z="3574.0" />
+      <node bitDepth="8" id="36" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="20969.0" z="3574.0" />
+    </nodes>
+    <edges>
+      <edge source="31" target="32" />
+      <edge source="31" target="33" />
+      <edge source="31" target="34" />
+      <edge source="31" target="35" />
+      <edge source="32" target="33" />
+      <edge source="32" target="34" />
+      <edge source="33" target="35" />
+      <edge source="34" target="36" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="7" name="sample index: 477, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="37" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20900.0" z="3574.0" />
+      <node bitDepth="8" id="38" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20830.0" z="3574.0" />
+      <node bitDepth="8" id="39" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20970.0" z="3574.0" />
+      <node bitDepth="8" id="40" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20830.0" z="3574.0" />
+      <node bitDepth="8" id="41" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20970.0" z="3574.0" />
+      <node bitDepth="8" id="42" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20969.0" z="3574.0" />
+    </nodes>
+    <edges>
+      <edge source="37" target="38" />
+      <edge source="37" target="39" />
+      <edge source="37" target="40" />
+      <edge source="37" target="41" />
+      <edge source="38" target="39" />
+      <edge source="38" target="40" />
+      <edge source="39" target="41" />
+      <edge source="40" target="42" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="8" name="sample index: 480, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="43" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20935.0" z="3574.0" />
+      <node bitDepth="8" id="44" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="20865.0" z="3574.0" />
+      <node bitDepth="8" id="45" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="21005.0" z="3574.0" />
+      <node bitDepth="8" id="46" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20865.0" z="3574.0" />
+      <node bitDepth="8" id="47" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21005.0" z="3574.0" />
+      <node bitDepth="8" id="48" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21004.0" z="3574.0" />
+    </nodes>
+    <edges>
+      <edge source="43" target="44" />
+      <edge source="43" target="45" />
+      <edge source="43" target="46" />
+      <edge source="43" target="47" />
+      <edge source="44" target="45" />
+      <edge source="44" target="46" />
+      <edge source="45" target="47" />
+      <edge source="46" target="48" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="9" name="sample index: 481, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="49" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="20935.0" z="3574.0" />
+      <node bitDepth="8" id="50" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24961.0" y="20865.0" z="3574.0" />
+      <node bitDepth="8" id="51" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24961.0" y="21005.0" z="3574.0" />
+      <node bitDepth="8" id="52" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="20865.0" z="3574.0" />
+      <node bitDepth="8" id="53" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="21005.0" z="3574.0" />
+      <node bitDepth="8" id="54" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="21004.0" z="3574.0" />
+    </nodes>
+    <edges>
+      <edge source="49" target="50" />
+      <edge source="49" target="51" />
+      <edge source="49" target="52" />
+      <edge source="49" target="53" />
+      <edge source="50" target="51" />
+      <edge source="50" target="52" />
+      <edge source="51" target="53" />
+      <edge source="52" target="54" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="10" name="sample index: 482, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="55" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20935.0" z="3574.0" />
+      <node bitDepth="8" id="56" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20865.0" z="3574.0" />
+      <node bitDepth="8" id="57" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="21005.0" z="3574.0" />
+      <node bitDepth="8" id="58" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20865.0" z="3574.0" />
+      <node bitDepth="8" id="59" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21005.0" z="3574.0" />
+      <node bitDepth="8" id="60" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21004.0" z="3574.0" />
+    </nodes>
+    <edges>
+      <edge source="55" target="56" />
+      <edge source="55" target="57" />
+      <edge source="55" target="58" />
+      <edge source="55" target="59" />
+      <edge source="56" target="57" />
+      <edge source="56" target="58" />
+      <edge source="57" target="59" />
+      <edge source="58" target="60" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="11" name="sample index: 485, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="61" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20970.0" z="3574.0" />
+      <node bitDepth="8" id="62" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="20900.0" z="3574.0" />
+      <node bitDepth="8" id="63" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="21040.0" z="3574.0" />
+      <node bitDepth="8" id="64" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20900.0" z="3574.0" />
+      <node bitDepth="8" id="65" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21040.0" z="3574.0" />
+      <node bitDepth="8" id="66" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21039.0" z="3574.0" />
+    </nodes>
+    <edges>
+      <edge source="61" target="62" />
+      <edge source="61" target="63" />
+      <edge source="61" target="64" />
+      <edge source="61" target="65" />
+      <edge source="62" target="63" />
+      <edge source="62" target="64" />
+      <edge source="63" target="65" />
+      <edge source="64" target="66" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="12" name="sample index: 486, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="67" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="20970.0" z="3574.0" />
+      <node bitDepth="8" id="68" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24961.0" y="20900.0" z="3574.0" />
+      <node bitDepth="8" id="69" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24961.0" y="21040.0" z="3574.0" />
+      <node bitDepth="8" id="70" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="20900.0" z="3574.0" />
+      <node bitDepth="8" id="71" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="21040.0" z="3574.0" />
+      <node bitDepth="8" id="72" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="21039.0" z="3574.0" />
+    </nodes>
+    <edges>
+      <edge source="67" target="68" />
+      <edge source="67" target="69" />
+      <edge source="67" target="70" />
+      <edge source="67" target="71" />
+      <edge source="68" target="69" />
+      <edge source="68" target="70" />
+      <edge source="69" target="71" />
+      <edge source="70" target="72" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="13" name="sample index: 487, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="73" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20970.0" z="3574.0" />
+      <node bitDepth="8" id="74" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20900.0" z="3574.0" />
+      <node bitDepth="8" id="75" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="21040.0" z="3574.0" />
+      <node bitDepth="8" id="76" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20900.0" z="3574.0" />
+      <node bitDepth="8" id="77" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21040.0" z="3574.0" />
+      <node bitDepth="8" id="78" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21039.0" z="3574.0" />
+    </nodes>
+    <edges>
+      <edge source="73" target="74" />
+      <edge source="73" target="75" />
+      <edge source="73" target="76" />
+      <edge source="73" target="77" />
+      <edge source="74" target="75" />
+      <edge source="74" target="76" />
+      <edge source="75" target="77" />
+      <edge source="76" target="78" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="14" name="sample index: 490, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="79" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="21005.0" z="3574.0" />
+      <node bitDepth="8" id="80" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="20935.0" z="3574.0" />
+      <node bitDepth="8" id="81" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="21075.0" z="3574.0" />
+      <node bitDepth="8" id="82" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20935.0" z="3574.0" />
+      <node bitDepth="8" id="83" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21075.0" z="3574.0" />
+      <node bitDepth="8" id="84" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21074.0" z="3574.0" />
+    </nodes>
+    <edges>
+      <edge source="79" target="80" />
+      <edge source="79" target="81" />
+      <edge source="79" target="82" />
+      <edge source="79" target="83" />
+      <edge source="80" target="81" />
+      <edge source="80" target="82" />
+      <edge source="81" target="83" />
+      <edge source="82" target="84" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="15" name="sample index: 491, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="85" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="21005.0" z="3574.0" />
+      <node bitDepth="8" id="86" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24961.0" y="20935.0" z="3574.0" />
+      <node bitDepth="8" id="87" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24961.0" y="21075.0" z="3574.0" />
+      <node bitDepth="8" id="88" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="20935.0" z="3574.0" />
+      <node bitDepth="8" id="89" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="21075.0" z="3574.0" />
+      <node bitDepth="8" id="90" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="21074.0" z="3574.0" />
+    </nodes>
+    <edges>
+      <edge source="85" target="86" />
+      <edge source="85" target="87" />
+      <edge source="85" target="88" />
+      <edge source="85" target="89" />
+      <edge source="86" target="87" />
+      <edge source="86" target="88" />
+      <edge source="87" target="89" />
+      <edge source="88" target="90" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="16" name="sample index: 492, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="91" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21005.0" z="3574.0" />
+      <node bitDepth="8" id="92" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20935.0" z="3574.0" />
+      <node bitDepth="8" id="93" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="21075.0" z="3574.0" />
+      <node bitDepth="8" id="94" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20935.0" z="3574.0" />
+      <node bitDepth="8" id="95" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21075.0" z="3574.0" />
+      <node bitDepth="8" id="96" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21074.0" z="3574.0" />
+    </nodes>
+    <edges>
+      <edge source="91" target="92" />
+      <edge source="91" target="93" />
+      <edge source="91" target="94" />
+      <edge source="91" target="95" />
+      <edge source="92" target="93" />
+      <edge source="92" target="94" />
+      <edge source="93" target="95" />
+      <edge source="94" target="96" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="17" name="sample index: 495, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="97" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="21040.0" z="3574.0" />
+      <node bitDepth="8" id="98" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="20970.0" z="3574.0" />
+      <node bitDepth="8" id="99" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="21110.0" z="3574.0" />
+      <node bitDepth="8" id="100" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20970.0" z="3574.0" />
+      <node bitDepth="8" id="101" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21110.0" z="3574.0" />
+      <node bitDepth="8" id="102" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21109.0" z="3574.0" />
+    </nodes>
+    <edges>
+      <edge source="97" target="98" />
+      <edge source="97" target="99" />
+      <edge source="97" target="100" />
+      <edge source="97" target="101" />
+      <edge source="98" target="99" />
+      <edge source="98" target="100" />
+      <edge source="99" target="101" />
+      <edge source="100" target="102" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="18" name="sample index: 496, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="103" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="21040.0" z="3574.0" />
+      <node bitDepth="8" id="104" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24961.0" y="20970.0" z="3574.0" />
+      <node bitDepth="8" id="105" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24961.0" y="21110.0" z="3574.0" />
+      <node bitDepth="8" id="106" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="20970.0" z="3574.0" />
+      <node bitDepth="8" id="107" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="21110.0" z="3574.0" />
+      <node bitDepth="8" id="108" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="21109.0" z="3574.0" />
+    </nodes>
+    <edges>
+      <edge source="103" target="104" />
+      <edge source="103" target="105" />
+      <edge source="103" target="106" />
+      <edge source="103" target="107" />
+      <edge source="104" target="105" />
+      <edge source="104" target="106" />
+      <edge source="105" target="107" />
+      <edge source="106" target="108" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="19" name="sample index: 497, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="109" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21040.0" z="3574.0" />
+      <node bitDepth="8" id="110" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20970.0" z="3574.0" />
+      <node bitDepth="8" id="111" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="21110.0" z="3574.0" />
+      <node bitDepth="8" id="112" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20970.0" z="3574.0" />
+      <node bitDepth="8" id="113" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21110.0" z="3574.0" />
+      <node bitDepth="8" id="114" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21109.0" z="3574.0" />
+    </nodes>
+    <edges>
+      <edge source="109" target="110" />
+      <edge source="109" target="111" />
+      <edge source="109" target="112" />
+      <edge source="109" target="113" />
+      <edge source="110" target="111" />
+      <edge source="110" target="112" />
+      <edge source="111" target="113" />
+      <edge source="112" target="114" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="20" name="sample index: 627, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="115" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20900.0" z="3580.0" />
+      <node bitDepth="8" id="116" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20830.0" z="3580.0" />
+      <node bitDepth="8" id="117" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20970.0" z="3580.0" />
+      <node bitDepth="8" id="118" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20830.0" z="3580.0" />
+      <node bitDepth="8" id="119" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20970.0" z="3580.0" />
+      <node bitDepth="8" id="120" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20969.0" z="3580.0" />
+    </nodes>
+    <edges>
+      <edge source="115" target="116" />
+      <edge source="115" target="117" />
+      <edge source="115" target="118" />
+      <edge source="115" target="119" />
+      <edge source="116" target="117" />
+      <edge source="116" target="118" />
+      <edge source="117" target="119" />
+      <edge source="118" target="120" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="21" name="sample index: 632, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="121" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20935.0" z="3580.0" />
+      <node bitDepth="8" id="122" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20865.0" z="3580.0" />
+      <node bitDepth="8" id="123" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="21005.0" z="3580.0" />
+      <node bitDepth="8" id="124" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20865.0" z="3580.0" />
+      <node bitDepth="8" id="125" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21005.0" z="3580.0" />
+      <node bitDepth="8" id="126" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21004.0" z="3580.0" />
+    </nodes>
+    <edges>
+      <edge source="121" target="122" />
+      <edge source="121" target="123" />
+      <edge source="121" target="124" />
+      <edge source="121" target="125" />
+      <edge source="122" target="123" />
+      <edge source="122" target="124" />
+      <edge source="123" target="125" />
+      <edge source="124" target="126" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="22" name="sample index: 637, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="127" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20970.0" z="3580.0" />
+      <node bitDepth="8" id="128" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20900.0" z="3580.0" />
+      <node bitDepth="8" id="129" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="21040.0" z="3580.0" />
+      <node bitDepth="8" id="130" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20900.0" z="3580.0" />
+      <node bitDepth="8" id="131" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21040.0" z="3580.0" />
+      <node bitDepth="8" id="132" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21039.0" z="3580.0" />
+    </nodes>
+    <edges>
+      <edge source="127" target="128" />
+      <edge source="127" target="129" />
+      <edge source="127" target="130" />
+      <edge source="127" target="131" />
+      <edge source="128" target="129" />
+      <edge source="128" target="130" />
+      <edge source="129" target="131" />
+      <edge source="130" target="132" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="23" name="sample index: 642, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="133" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21005.0" z="3580.0" />
+      <node bitDepth="8" id="134" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20935.0" z="3580.0" />
+      <node bitDepth="8" id="135" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="21075.0" z="3580.0" />
+      <node bitDepth="8" id="136" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20935.0" z="3580.0" />
+      <node bitDepth="8" id="137" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21075.0" z="3580.0" />
+      <node bitDepth="8" id="138" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21074.0" z="3580.0" />
+    </nodes>
+    <edges>
+      <edge source="133" target="134" />
+      <edge source="133" target="135" />
+      <edge source="133" target="136" />
+      <edge source="133" target="137" />
+      <edge source="134" target="135" />
+      <edge source="134" target="136" />
+      <edge source="135" target="137" />
+      <edge source="136" target="138" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="24" name="sample index: 853, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="139" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="20900.0" z="3589.0" />
+      <node bitDepth="8" id="140" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="20830.0" z="3589.0" />
+      <node bitDepth="8" id="141" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="20970.0" z="3589.0" />
+      <node bitDepth="8" id="142" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="20830.0" z="3589.0" />
+      <node bitDepth="8" id="143" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="20970.0" z="3589.0" />
+      <node bitDepth="8" id="144" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="20969.0" z="3589.0" />
+    </nodes>
+    <edges>
+      <edge source="139" target="140" />
+      <edge source="139" target="141" />
+      <edge source="139" target="142" />
+      <edge source="139" target="143" />
+      <edge source="140" target="141" />
+      <edge source="140" target="142" />
+      <edge source="141" target="143" />
+      <edge source="142" target="144" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="25" name="sample index: 858, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="145" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="20935.0" z="3589.0" />
+      <node bitDepth="8" id="146" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="20865.0" z="3589.0" />
+      <node bitDepth="8" id="147" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="21005.0" z="3589.0" />
+      <node bitDepth="8" id="148" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="20865.0" z="3589.0" />
+      <node bitDepth="8" id="149" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="21005.0" z="3589.0" />
+      <node bitDepth="8" id="150" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="21004.0" z="3589.0" />
+    </nodes>
+    <edges>
+      <edge source="145" target="146" />
+      <edge source="145" target="147" />
+      <edge source="145" target="148" />
+      <edge source="145" target="149" />
+      <edge source="146" target="147" />
+      <edge source="146" target="148" />
+      <edge source="147" target="149" />
+      <edge source="148" target="150" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="26" name="sample index: 874, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="151" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21040.0" z="3589.0" />
+      <node bitDepth="8" id="152" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20970.0" z="3589.0" />
+      <node bitDepth="8" id="153" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21110.0" z="3589.0" />
+      <node bitDepth="8" id="154" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25206.0" y="20970.0" z="3589.0" />
+      <node bitDepth="8" id="155" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25206.0" y="21110.0" z="3589.0" />
+      <node bitDepth="8" id="156" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25206.0" y="21109.0" z="3589.0" />
+    </nodes>
+    <edges>
+      <edge source="151" target="152" />
+      <edge source="151" target="153" />
+      <edge source="151" target="154" />
+      <edge source="151" target="155" />
+      <edge source="152" target="153" />
+      <edge source="152" target="154" />
+      <edge source="153" target="155" />
+      <edge source="154" target="156" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="27" name="sample index: 933, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="157" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="20935.0" z="3592.0" />
+      <node bitDepth="8" id="158" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="20865.0" z="3592.0" />
+      <node bitDepth="8" id="159" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="21005.0" z="3592.0" />
+      <node bitDepth="8" id="160" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="20865.0" z="3592.0" />
+      <node bitDepth="8" id="161" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="21005.0" z="3592.0" />
+      <node bitDepth="8" id="162" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="21004.0" z="3592.0" />
+    </nodes>
+    <edges>
+      <edge source="157" target="158" />
+      <edge source="157" target="159" />
+      <edge source="157" target="160" />
+      <edge source="157" target="161" />
+      <edge source="158" target="159" />
+      <edge source="158" target="160" />
+      <edge source="159" target="161" />
+      <edge source="160" target="162" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="28" name="sample index: 942, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="163" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21005.0" z="3592.0" />
+      <node bitDepth="8" id="164" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20935.0" z="3592.0" />
+      <node bitDepth="8" id="165" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="21075.0" z="3592.0" />
+      <node bitDepth="8" id="166" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20935.0" z="3592.0" />
+      <node bitDepth="8" id="167" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21075.0" z="3592.0" />
+      <node bitDepth="8" id="168" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21074.0" z="3592.0" />
+    </nodes>
+    <edges>
+      <edge source="163" target="164" />
+      <edge source="163" target="165" />
+      <edge source="163" target="166" />
+      <edge source="163" target="167" />
+      <edge source="164" target="165" />
+      <edge source="164" target="166" />
+      <edge source="165" target="167" />
+      <edge source="166" target="168" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="29" name="sample index: 945, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="169" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="21040.0" z="3592.0" />
+      <node bitDepth="8" id="170" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="20970.0" z="3592.0" />
+      <node bitDepth="8" id="171" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="21110.0" z="3592.0" />
+      <node bitDepth="8" id="172" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20970.0" z="3592.0" />
+      <node bitDepth="8" id="173" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21110.0" z="3592.0" />
+      <node bitDepth="8" id="174" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21109.0" z="3592.0" />
+    </nodes>
+    <edges>
+      <edge source="169" target="170" />
+      <edge source="169" target="171" />
+      <edge source="169" target="172" />
+      <edge source="169" target="173" />
+      <edge source="170" target="171" />
+      <edge source="170" target="172" />
+      <edge source="171" target="173" />
+      <edge source="172" target="174" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="30" name="sample index: 946, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="175" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="21040.0" z="3592.0" />
+      <node bitDepth="8" id="176" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24961.0" y="20970.0" z="3592.0" />
+      <node bitDepth="8" id="177" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24961.0" y="21110.0" z="3592.0" />
+      <node bitDepth="8" id="178" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="20970.0" z="3592.0" />
+      <node bitDepth="8" id="179" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="21110.0" z="3592.0" />
+      <node bitDepth="8" id="180" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="21109.0" z="3592.0" />
+    </nodes>
+    <edges>
+      <edge source="175" target="176" />
+      <edge source="175" target="177" />
+      <edge source="175" target="178" />
+      <edge source="175" target="179" />
+      <edge source="176" target="177" />
+      <edge source="176" target="178" />
+      <edge source="177" target="179" />
+      <edge source="178" target="180" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="31" name="sample index: 947, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="181" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21040.0" z="3592.0" />
+      <node bitDepth="8" id="182" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20970.0" z="3592.0" />
+      <node bitDepth="8" id="183" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="21110.0" z="3592.0" />
+      <node bitDepth="8" id="184" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20970.0" z="3592.0" />
+      <node bitDepth="8" id="185" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21110.0" z="3592.0" />
+      <node bitDepth="8" id="186" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21109.0" z="3592.0" />
+    </nodes>
+    <edges>
+      <edge source="181" target="182" />
+      <edge source="181" target="183" />
+      <edge source="181" target="184" />
+      <edge source="181" target="185" />
+      <edge source="182" target="183" />
+      <edge source="182" target="184" />
+      <edge source="183" target="185" />
+      <edge source="184" target="186" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="32" name="sample index: 1025, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="187" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20900.0" z="3596.0" />
+      <node bitDepth="8" id="188" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="20830.0" z="3596.0" />
+      <node bitDepth="8" id="189" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24926.0" y="20970.0" z="3596.0" />
+      <node bitDepth="8" id="190" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20830.0" z="3596.0" />
+      <node bitDepth="8" id="191" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20970.0" z="3596.0" />
+      <node bitDepth="8" id="192" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20969.0" z="3596.0" />
+    </nodes>
+    <edges>
+      <edge source="187" target="188" />
+      <edge source="187" target="189" />
+      <edge source="187" target="190" />
+      <edge source="187" target="191" />
+      <edge source="188" target="189" />
+      <edge source="188" target="190" />
+      <edge source="189" target="191" />
+      <edge source="190" target="192" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="33" name="sample index: 1026, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="193" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="20900.0" z="3596.0" />
+      <node bitDepth="8" id="194" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24961.0" y="20830.0" z="3596.0" />
+      <node bitDepth="8" id="195" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24961.0" y="20970.0" z="3596.0" />
+      <node bitDepth="8" id="196" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="20830.0" z="3596.0" />
+      <node bitDepth="8" id="197" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="20970.0" z="3596.0" />
+      <node bitDepth="8" id="198" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="20969.0" z="3596.0" />
+    </nodes>
+    <edges>
+      <edge source="193" target="194" />
+      <edge source="193" target="195" />
+      <edge source="193" target="196" />
+      <edge source="193" target="197" />
+      <edge source="194" target="195" />
+      <edge source="194" target="196" />
+      <edge source="195" target="197" />
+      <edge source="196" target="198" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="34" name="sample index: 1027, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="199" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20900.0" z="3596.0" />
+      <node bitDepth="8" id="200" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20830.0" z="3596.0" />
+      <node bitDepth="8" id="201" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20970.0" z="3596.0" />
+      <node bitDepth="8" id="202" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20830.0" z="3596.0" />
+      <node bitDepth="8" id="203" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20970.0" z="3596.0" />
+      <node bitDepth="8" id="204" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20969.0" z="3596.0" />
+    </nodes>
+    <edges>
+      <edge source="199" target="200" />
+      <edge source="199" target="201" />
+      <edge source="199" target="202" />
+      <edge source="199" target="203" />
+      <edge source="200" target="201" />
+      <edge source="200" target="202" />
+      <edge source="201" target="203" />
+      <edge source="202" target="204" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="35" name="sample index: 1028, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="205" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="20900.0" z="3596.0" />
+      <node bitDepth="8" id="206" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="20830.0" z="3596.0" />
+      <node bitDepth="8" id="207" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="20970.0" z="3596.0" />
+      <node bitDepth="8" id="208" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="20830.0" z="3596.0" />
+      <node bitDepth="8" id="209" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="20970.0" z="3596.0" />
+      <node bitDepth="8" id="210" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="20969.0" z="3596.0" />
+    </nodes>
+    <edges>
+      <edge source="205" target="206" />
+      <edge source="205" target="207" />
+      <edge source="205" target="208" />
+      <edge source="205" target="209" />
+      <edge source="206" target="207" />
+      <edge source="206" target="208" />
+      <edge source="207" target="209" />
+      <edge source="208" target="210" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="36" name="sample index: 1237, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="211" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20970.0" z="3604.0" />
+      <node bitDepth="8" id="212" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20900.0" z="3604.0" />
+      <node bitDepth="8" id="213" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="21040.0" z="3604.0" />
+      <node bitDepth="8" id="214" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20900.0" z="3604.0" />
+      <node bitDepth="8" id="215" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21040.0" z="3604.0" />
+      <node bitDepth="8" id="216" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21039.0" z="3604.0" />
+    </nodes>
+    <edges>
+      <edge source="211" target="212" />
+      <edge source="211" target="213" />
+      <edge source="211" target="214" />
+      <edge source="211" target="215" />
+      <edge source="212" target="213" />
+      <edge source="212" target="214" />
+      <edge source="213" target="215" />
+      <edge source="214" target="216" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="37" name="sample index: 1238, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="217" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="20970.0" z="3604.0" />
+      <node bitDepth="8" id="218" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="20900.0" z="3604.0" />
+      <node bitDepth="8" id="219" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="21040.0" z="3604.0" />
+      <node bitDepth="8" id="220" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="20900.0" z="3604.0" />
+      <node bitDepth="8" id="221" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="21040.0" z="3604.0" />
+      <node bitDepth="8" id="222" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="21039.0" z="3604.0" />
+    </nodes>
+    <edges>
+      <edge source="217" target="218" />
+      <edge source="217" target="219" />
+      <edge source="217" target="220" />
+      <edge source="217" target="221" />
+      <edge source="218" target="219" />
+      <edge source="218" target="220" />
+      <edge source="219" target="221" />
+      <edge source="220" target="222" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="38" name="sample index: 1239, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="223" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20970.0" z="3604.0" />
+      <node bitDepth="8" id="224" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20900.0" z="3604.0" />
+      <node bitDepth="8" id="225" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21040.0" z="3604.0" />
+      <node bitDepth="8" id="226" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25206.0" y="20900.0" z="3604.0" />
+      <node bitDepth="8" id="227" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25206.0" y="21040.0" z="3604.0" />
+      <node bitDepth="8" id="228" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25206.0" y="21039.0" z="3604.0" />
+    </nodes>
+    <edges>
+      <edge source="223" target="224" />
+      <edge source="223" target="225" />
+      <edge source="223" target="226" />
+      <edge source="223" target="227" />
+      <edge source="224" target="225" />
+      <edge source="224" target="226" />
+      <edge source="225" target="227" />
+      <edge source="226" target="228" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="39" name="sample index: 1242, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="229" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21005.0" z="3604.0" />
+      <node bitDepth="8" id="230" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20935.0" z="3604.0" />
+      <node bitDepth="8" id="231" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="21075.0" z="3604.0" />
+      <node bitDepth="8" id="232" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20935.0" z="3604.0" />
+      <node bitDepth="8" id="233" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21075.0" z="3604.0" />
+      <node bitDepth="8" id="234" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21074.0" z="3604.0" />
+    </nodes>
+    <edges>
+      <edge source="229" target="230" />
+      <edge source="229" target="231" />
+      <edge source="229" target="232" />
+      <edge source="229" target="233" />
+      <edge source="230" target="231" />
+      <edge source="230" target="232" />
+      <edge source="231" target="233" />
+      <edge source="232" target="234" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="40" name="sample index: 1243, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="235" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="21005.0" z="3604.0" />
+      <node bitDepth="8" id="236" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="20935.0" z="3604.0" />
+      <node bitDepth="8" id="237" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="21075.0" z="3604.0" />
+      <node bitDepth="8" id="238" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="20935.0" z="3604.0" />
+      <node bitDepth="8" id="239" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="21075.0" z="3604.0" />
+      <node bitDepth="8" id="240" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="21074.0" z="3604.0" />
+    </nodes>
+    <edges>
+      <edge source="235" target="236" />
+      <edge source="235" target="237" />
+      <edge source="235" target="238" />
+      <edge source="235" target="239" />
+      <edge source="236" target="237" />
+      <edge source="236" target="238" />
+      <edge source="237" target="239" />
+      <edge source="238" target="240" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="41" name="sample index: 1244, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="241" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21005.0" z="3604.0" />
+      <node bitDepth="8" id="242" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20935.0" z="3604.0" />
+      <node bitDepth="8" id="243" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21075.0" z="3604.0" />
+      <node bitDepth="8" id="244" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25206.0" y="20935.0" z="3604.0" />
+      <node bitDepth="8" id="245" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25206.0" y="21075.0" z="3604.0" />
+      <node bitDepth="8" id="246" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25206.0" y="21074.0" z="3604.0" />
+    </nodes>
+    <edges>
+      <edge source="241" target="242" />
+      <edge source="241" target="243" />
+      <edge source="241" target="244" />
+      <edge source="241" target="245" />
+      <edge source="242" target="243" />
+      <edge source="242" target="244" />
+      <edge source="243" target="245" />
+      <edge source="244" target="246" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="42" name="sample index: 1247, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="247" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21040.0" z="3604.0" />
+      <node bitDepth="8" id="248" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="20970.0" z="3604.0" />
+      <node bitDepth="8" id="249" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="24996.0" y="21110.0" z="3604.0" />
+      <node bitDepth="8" id="250" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="20970.0" z="3604.0" />
+      <node bitDepth="8" id="251" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21110.0" z="3604.0" />
+      <node bitDepth="8" id="252" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21109.0" z="3604.0" />
+    </nodes>
+    <edges>
+      <edge source="247" target="248" />
+      <edge source="247" target="249" />
+      <edge source="247" target="250" />
+      <edge source="247" target="251" />
+      <edge source="248" target="249" />
+      <edge source="248" target="250" />
+      <edge source="249" target="251" />
+      <edge source="250" target="252" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="43" name="sample index: 1248, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="253" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25101.0" y="21040.0" z="3604.0" />
+      <node bitDepth="8" id="254" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="20970.0" z="3604.0" />
+      <node bitDepth="8" id="255" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25031.0" y="21110.0" z="3604.0" />
+      <node bitDepth="8" id="256" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="20970.0" z="3604.0" />
+      <node bitDepth="8" id="257" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="21110.0" z="3604.0" />
+      <node bitDepth="8" id="258" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25171.0" y="21109.0" z="3604.0" />
+    </nodes>
+    <edges>
+      <edge source="253" target="254" />
+      <edge source="253" target="255" />
+      <edge source="253" target="256" />
+      <edge source="253" target="257" />
+      <edge source="254" target="255" />
+      <edge source="254" target="256" />
+      <edge source="255" target="257" />
+      <edge source="256" target="258" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="44" name="sample index: 1249, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="259" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25136.0" y="21040.0" z="3604.0" />
+      <node bitDepth="8" id="260" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="20970.0" z="3604.0" />
+      <node bitDepth="8" id="261" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25066.0" y="21110.0" z="3604.0" />
+      <node bitDepth="8" id="262" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25206.0" y="20970.0" z="3604.0" />
+      <node bitDepth="8" id="263" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25206.0" y="21110.0" z="3604.0" />
+      <node bitDepth="8" id="264" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25206.0" y="21109.0" z="3604.0" />
+    </nodes>
+    <edges>
+      <edge source="259" target="260" />
+      <edge source="259" target="261" />
+      <edge source="259" target="262" />
+      <edge source="259" target="263" />
+      <edge source="260" target="261" />
+      <edge source="260" target="262" />
+      <edge source="261" target="263" />
+      <edge source="262" target="264" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="45" name="sample index: 2105, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="265" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29092.0" y="25031.0" z="5630.0" />
+      <node bitDepth="8" id="266" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29022.0" y="24961.0" z="5630.0" />
+      <node bitDepth="8" id="267" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29022.0" y="25101.0" z="5630.0" />
+      <node bitDepth="8" id="268" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="24961.0" z="5630.0" />
+      <node bitDepth="8" id="269" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25101.0" z="5630.0" />
+      <node bitDepth="8" id="270" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25100.0" z="5630.0" />
+    </nodes>
+    <edges>
+      <edge source="265" target="266" />
+      <edge source="265" target="267" />
+      <edge source="265" target="268" />
+      <edge source="265" target="269" />
+      <edge source="266" target="267" />
+      <edge source="266" target="268" />
+      <edge source="267" target="269" />
+      <edge source="268" target="270" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="46" name="sample index: 2108, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="271" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29197.0" y="25031.0" z="5630.0" />
+      <node bitDepth="8" id="272" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29127.0" y="24961.0" z="5630.0" />
+      <node bitDepth="8" id="273" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29127.0" y="25101.0" z="5630.0" />
+      <node bitDepth="8" id="274" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29267.0" y="24961.0" z="5630.0" />
+      <node bitDepth="8" id="275" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29267.0" y="25101.0" z="5630.0" />
+      <node bitDepth="8" id="276" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29267.0" y="25100.0" z="5630.0" />
+    </nodes>
+    <edges>
+      <edge source="271" target="272" />
+      <edge source="271" target="273" />
+      <edge source="271" target="274" />
+      <edge source="271" target="275" />
+      <edge source="272" target="273" />
+      <edge source="272" target="274" />
+      <edge source="273" target="275" />
+      <edge source="274" target="276" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="47" name="sample index: 2110, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="277" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29092.0" y="25066.0" z="5630.0" />
+      <node bitDepth="8" id="278" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29022.0" y="24996.0" z="5630.0" />
+      <node bitDepth="8" id="279" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29022.0" y="25136.0" z="5630.0" />
+      <node bitDepth="8" id="280" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="24996.0" z="5630.0" />
+      <node bitDepth="8" id="281" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25136.0" z="5630.0" />
+      <node bitDepth="8" id="282" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25135.0" z="5630.0" />
+    </nodes>
+    <edges>
+      <edge source="277" target="278" />
+      <edge source="277" target="279" />
+      <edge source="277" target="280" />
+      <edge source="277" target="281" />
+      <edge source="278" target="279" />
+      <edge source="278" target="280" />
+      <edge source="279" target="281" />
+      <edge source="280" target="282" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="48" name="sample index: 2182, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="283" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25031.0" z="5633.0" />
+      <node bitDepth="8" id="284" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29092.0" y="24961.0" z="5633.0" />
+      <node bitDepth="8" id="285" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29092.0" y="25101.0" z="5633.0" />
+      <node bitDepth="8" id="286" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29232.0" y="24961.0" z="5633.0" />
+      <node bitDepth="8" id="287" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29232.0" y="25101.0" z="5633.0" />
+      <node bitDepth="8" id="288" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29232.0" y="25100.0" z="5633.0" />
+    </nodes>
+    <edges>
+      <edge source="283" target="284" />
+      <edge source="283" target="285" />
+      <edge source="283" target="286" />
+      <edge source="283" target="287" />
+      <edge source="284" target="285" />
+      <edge source="284" target="286" />
+      <edge source="285" target="287" />
+      <edge source="286" target="288" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="49" name="sample index: 2183, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="289" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29197.0" y="25031.0" z="5633.0" />
+      <node bitDepth="8" id="290" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29127.0" y="24961.0" z="5633.0" />
+      <node bitDepth="8" id="291" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29127.0" y="25101.0" z="5633.0" />
+      <node bitDepth="8" id="292" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29267.0" y="24961.0" z="5633.0" />
+      <node bitDepth="8" id="293" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29267.0" y="25101.0" z="5633.0" />
+      <node bitDepth="8" id="294" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29267.0" y="25100.0" z="5633.0" />
+    </nodes>
+    <edges>
+      <edge source="289" target="290" />
+      <edge source="289" target="291" />
+      <edge source="289" target="292" />
+      <edge source="289" target="293" />
+      <edge source="290" target="291" />
+      <edge source="290" target="292" />
+      <edge source="291" target="293" />
+      <edge source="292" target="294" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="50" name="sample index: 2184, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="295" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29232.0" y="25031.0" z="5633.0" />
+      <node bitDepth="8" id="296" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="24961.0" z="5633.0" />
+      <node bitDepth="8" id="297" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25101.0" z="5633.0" />
+      <node bitDepth="8" id="298" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29302.0" y="24961.0" z="5633.0" />
+      <node bitDepth="8" id="299" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29302.0" y="25101.0" z="5633.0" />
+      <node bitDepth="8" id="300" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29302.0" y="25100.0" z="5633.0" />
+    </nodes>
+    <edges>
+      <edge source="295" target="296" />
+      <edge source="295" target="297" />
+      <edge source="295" target="298" />
+      <edge source="295" target="299" />
+      <edge source="296" target="297" />
+      <edge source="296" target="298" />
+      <edge source="297" target="299" />
+      <edge source="298" target="300" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="51" name="sample index: 2406, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="301" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29127.0" y="25031.0" z="5642.0" />
+      <node bitDepth="8" id="302" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29057.0" y="24961.0" z="5642.0" />
+      <node bitDepth="8" id="303" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29057.0" y="25101.0" z="5642.0" />
+      <node bitDepth="8" id="304" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29197.0" y="24961.0" z="5642.0" />
+      <node bitDepth="8" id="305" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29197.0" y="25101.0" z="5642.0" />
+      <node bitDepth="8" id="306" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29197.0" y="25100.0" z="5642.0" />
+    </nodes>
+    <edges>
+      <edge source="301" target="302" />
+      <edge source="301" target="303" />
+      <edge source="301" target="304" />
+      <edge source="301" target="305" />
+      <edge source="302" target="303" />
+      <edge source="302" target="304" />
+      <edge source="303" target="305" />
+      <edge source="304" target="306" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="52" name="sample index: 2407, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="307" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25031.0" z="5642.0" />
+      <node bitDepth="8" id="308" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29092.0" y="24961.0" z="5642.0" />
+      <node bitDepth="8" id="309" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29092.0" y="25101.0" z="5642.0" />
+      <node bitDepth="8" id="310" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29232.0" y="24961.0" z="5642.0" />
+      <node bitDepth="8" id="311" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29232.0" y="25101.0" z="5642.0" />
+      <node bitDepth="8" id="312" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29232.0" y="25100.0" z="5642.0" />
+    </nodes>
+    <edges>
+      <edge source="307" target="308" />
+      <edge source="307" target="309" />
+      <edge source="307" target="310" />
+      <edge source="307" target="311" />
+      <edge source="308" target="309" />
+      <edge source="308" target="310" />
+      <edge source="309" target="311" />
+      <edge source="310" target="312" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="53" name="sample index: 2408, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="313" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29197.0" y="25031.0" z="5642.0" />
+      <node bitDepth="8" id="314" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29127.0" y="24961.0" z="5642.0" />
+      <node bitDepth="8" id="315" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29127.0" y="25101.0" z="5642.0" />
+      <node bitDepth="8" id="316" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29267.0" y="24961.0" z="5642.0" />
+      <node bitDepth="8" id="317" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29267.0" y="25101.0" z="5642.0" />
+      <node bitDepth="8" id="318" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29267.0" y="25100.0" z="5642.0" />
+    </nodes>
+    <edges>
+      <edge source="313" target="314" />
+      <edge source="313" target="315" />
+      <edge source="313" target="316" />
+      <edge source="313" target="317" />
+      <edge source="314" target="315" />
+      <edge source="314" target="316" />
+      <edge source="315" target="317" />
+      <edge source="316" target="318" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="54" name="sample index: 2409, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="319" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29232.0" y="25031.0" z="5642.0" />
+      <node bitDepth="8" id="320" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="24961.0" z="5642.0" />
+      <node bitDepth="8" id="321" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25101.0" z="5642.0" />
+      <node bitDepth="8" id="322" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29302.0" y="24961.0" z="5642.0" />
+      <node bitDepth="8" id="323" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29302.0" y="25101.0" z="5642.0" />
+      <node bitDepth="8" id="324" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29302.0" y="25100.0" z="5642.0" />
+    </nodes>
+    <edges>
+      <edge source="319" target="320" />
+      <edge source="319" target="321" />
+      <edge source="319" target="322" />
+      <edge source="319" target="323" />
+      <edge source="320" target="321" />
+      <edge source="320" target="322" />
+      <edge source="321" target="323" />
+      <edge source="322" target="324" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="55" name="sample index: 2654, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="325" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29232.0" y="24996.0" z="5652.0" />
+      <node bitDepth="8" id="326" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="24926.0" z="5652.0" />
+      <node bitDepth="8" id="327" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25066.0" z="5652.0" />
+      <node bitDepth="8" id="328" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29302.0" y="24926.0" z="5652.0" />
+      <node bitDepth="8" id="329" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29302.0" y="25066.0" z="5652.0" />
+      <node bitDepth="8" id="330" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29302.0" y="25065.0" z="5652.0" />
+    </nodes>
+    <edges>
+      <edge source="325" target="326" />
+      <edge source="325" target="327" />
+      <edge source="325" target="328" />
+      <edge source="325" target="329" />
+      <edge source="326" target="327" />
+      <edge source="326" target="328" />
+      <edge source="327" target="329" />
+      <edge source="328" target="330" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="56" name="sample index: 2655, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="331" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29092.0" y="25031.0" z="5652.0" />
+      <node bitDepth="8" id="332" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29022.0" y="24961.0" z="5652.0" />
+      <node bitDepth="8" id="333" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29022.0" y="25101.0" z="5652.0" />
+      <node bitDepth="8" id="334" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="24961.0" z="5652.0" />
+      <node bitDepth="8" id="335" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25101.0" z="5652.0" />
+      <node bitDepth="8" id="336" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25100.0" z="5652.0" />
+    </nodes>
+    <edges>
+      <edge source="331" target="332" />
+      <edge source="331" target="333" />
+      <edge source="331" target="334" />
+      <edge source="331" target="335" />
+      <edge source="332" target="333" />
+      <edge source="332" target="334" />
+      <edge source="333" target="335" />
+      <edge source="334" target="336" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="57" name="sample index: 2659, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="337" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29232.0" y="25031.0" z="5652.0" />
+      <node bitDepth="8" id="338" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="24961.0" z="5652.0" />
+      <node bitDepth="8" id="339" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25101.0" z="5652.0" />
+      <node bitDepth="8" id="340" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29302.0" y="24961.0" z="5652.0" />
+      <node bitDepth="8" id="341" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29302.0" y="25101.0" z="5652.0" />
+      <node bitDepth="8" id="342" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29302.0" y="25100.0" z="5652.0" />
+    </nodes>
+    <edges>
+      <edge source="337" target="338" />
+      <edge source="337" target="339" />
+      <edge source="337" target="340" />
+      <edge source="337" target="341" />
+      <edge source="338" target="339" />
+      <edge source="338" target="340" />
+      <edge source="339" target="341" />
+      <edge source="340" target="342" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="58" name="sample index: 2665, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="343" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29092.0" y="25101.0" z="5652.0" />
+      <node bitDepth="8" id="344" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29022.0" y="25031.0" z="5652.0" />
+      <node bitDepth="8" id="345" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29022.0" y="25171.0" z="5652.0" />
+      <node bitDepth="8" id="346" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25031.0" z="5652.0" />
+      <node bitDepth="8" id="347" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25171.0" z="5652.0" />
+      <node bitDepth="8" id="348" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25170.0" z="5652.0" />
+    </nodes>
+    <edges>
+      <edge source="343" target="344" />
+      <edge source="343" target="345" />
+      <edge source="343" target="346" />
+      <edge source="343" target="347" />
+      <edge source="344" target="345" />
+      <edge source="344" target="346" />
+      <edge source="345" target="347" />
+      <edge source="346" target="348" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="59" name="sample index: 2670, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="349" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29092.0" y="25136.0" z="5652.0" />
+      <node bitDepth="8" id="350" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29022.0" y="25066.0" z="5652.0" />
+      <node bitDepth="8" id="351" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29022.0" y="25206.0" z="5652.0" />
+      <node bitDepth="8" id="352" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25066.0" z="5652.0" />
+      <node bitDepth="8" id="353" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25206.0" z="5652.0" />
+      <node bitDepth="8" id="354" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29162.0" y="25205.0" z="5652.0" />
+    </nodes>
+    <edges>
+      <edge source="349" target="350" />
+      <edge source="349" target="351" />
+      <edge source="349" target="352" />
+      <edge source="349" target="353" />
+      <edge source="350" target="351" />
+      <edge source="350" target="352" />
+      <edge source="351" target="353" />
+      <edge source="352" target="354" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="60" name="sample index: 2671, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="355" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29127.0" y="25136.0" z="5652.0" />
+      <node bitDepth="8" id="356" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29057.0" y="25066.0" z="5652.0" />
+      <node bitDepth="8" id="357" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29057.0" y="25206.0" z="5652.0" />
+      <node bitDepth="8" id="358" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29197.0" y="25066.0" z="5652.0" />
+      <node bitDepth="8" id="359" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29197.0" y="25206.0" z="5652.0" />
+      <node bitDepth="8" id="360" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29197.0" y="25205.0" z="5652.0" />
+    </nodes>
+    <edges>
+      <edge source="355" target="356" />
+      <edge source="355" target="357" />
+      <edge source="355" target="358" />
+      <edge source="355" target="359" />
+      <edge source="356" target="357" />
+      <edge source="356" target="358" />
+      <edge source="357" target="359" />
+      <edge source="358" target="360" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="61" name="sample index: 2713, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="361" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29197.0" y="25066.0" z="5654.0" />
+      <node bitDepth="8" id="362" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29127.0" y="24996.0" z="5654.0" />
+      <node bitDepth="8" id="363" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29127.0" y="25136.0" z="5654.0" />
+      <node bitDepth="8" id="364" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29267.0" y="24996.0" z="5654.0" />
+      <node bitDepth="8" id="365" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29267.0" y="25136.0" z="5654.0" />
+      <node bitDepth="8" id="366" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29267.0" y="25135.0" z="5654.0" />
+    </nodes>
+    <edges>
+      <edge source="361" target="362" />
+      <edge source="361" target="363" />
+      <edge source="361" target="364" />
+      <edge source="361" target="365" />
+      <edge source="362" target="363" />
+      <edge source="362" target="364" />
+      <edge source="363" target="365" />
+      <edge source="364" target="366" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="62" name="sample index: 2831, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="367" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29127.0" y="25031.0" z="5659.0" />
+      <node bitDepth="8" id="368" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29057.0" y="24961.0" z="5659.0" />
+      <node bitDepth="8" id="369" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29057.0" y="25101.0" z="5659.0" />
+      <node bitDepth="8" id="370" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29197.0" y="24961.0" z="5659.0" />
+      <node bitDepth="8" id="371" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29197.0" y="25101.0" z="5659.0" />
+      <node bitDepth="8" id="372" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="29197.0" y="25100.0" z="5659.0" />
+    </nodes>
+    <edges>
+      <edge source="367" target="368" />
+      <edge source="367" target="369" />
+      <edge source="367" target="370" />
+      <edge source="367" target="371" />
+      <edge source="368" target="369" />
+      <edge source="368" target="370" />
+      <edge source="369" target="371" />
+      <edge source="370" target="372" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="63" name="sample index: 3125, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="373" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15780.0" z="1518.0" />
+      <node bitDepth="8" id="374" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15710.0" z="1518.0" />
+      <node bitDepth="8" id="375" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15850.0" z="1518.0" />
+      <node bitDepth="8" id="376" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15710.0" z="1518.0" />
+      <node bitDepth="8" id="377" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15850.0" z="1518.0" />
+      <node bitDepth="8" id="378" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15849.0" z="1518.0" />
+    </nodes>
+    <edges>
+      <edge source="373" target="374" />
+      <edge source="373" target="375" />
+      <edge source="373" target="376" />
+      <edge source="373" target="377" />
+      <edge source="374" target="375" />
+      <edge source="374" target="376" />
+      <edge source="375" target="377" />
+      <edge source="376" target="378" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="64" name="sample index: 3126, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="379" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20935.0" y="15780.0" z="1518.0" />
+      <node bitDepth="8" id="380" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20865.0" y="15710.0" z="1518.0" />
+      <node bitDepth="8" id="381" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20865.0" y="15850.0" z="1518.0" />
+      <node bitDepth="8" id="382" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15710.0" z="1518.0" />
+      <node bitDepth="8" id="383" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15850.0" z="1518.0" />
+      <node bitDepth="8" id="384" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15849.0" z="1518.0" />
+    </nodes>
+    <edges>
+      <edge source="379" target="380" />
+      <edge source="379" target="381" />
+      <edge source="379" target="382" />
+      <edge source="379" target="383" />
+      <edge source="380" target="381" />
+      <edge source="380" target="382" />
+      <edge source="381" target="383" />
+      <edge source="382" target="384" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="65" name="sample index: 3127, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="385" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15780.0" z="1518.0" />
+      <node bitDepth="8" id="386" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15710.0" z="1518.0" />
+      <node bitDepth="8" id="387" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15850.0" z="1518.0" />
+      <node bitDepth="8" id="388" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15710.0" z="1518.0" />
+      <node bitDepth="8" id="389" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15850.0" z="1518.0" />
+      <node bitDepth="8" id="390" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15849.0" z="1518.0" />
+    </nodes>
+    <edges>
+      <edge source="385" target="386" />
+      <edge source="385" target="387" />
+      <edge source="385" target="388" />
+      <edge source="385" target="389" />
+      <edge source="386" target="387" />
+      <edge source="386" target="388" />
+      <edge source="387" target="389" />
+      <edge source="388" target="390" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="66" name="sample index: 3128, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="391" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15780.0" z="1518.0" />
+      <node bitDepth="8" id="392" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20935.0" y="15710.0" z="1518.0" />
+      <node bitDepth="8" id="393" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20935.0" y="15850.0" z="1518.0" />
+      <node bitDepth="8" id="394" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21075.0" y="15710.0" z="1518.0" />
+      <node bitDepth="8" id="395" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21075.0" y="15850.0" z="1518.0" />
+      <node bitDepth="8" id="396" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21075.0" y="15849.0" z="1518.0" />
+    </nodes>
+    <edges>
+      <edge source="391" target="392" />
+      <edge source="391" target="393" />
+      <edge source="391" target="394" />
+      <edge source="391" target="395" />
+      <edge source="392" target="393" />
+      <edge source="392" target="394" />
+      <edge source="393" target="395" />
+      <edge source="394" target="396" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="67" name="sample index: 3129, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="397" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15780.0" z="1518.0" />
+      <node bitDepth="8" id="398" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15710.0" z="1518.0" />
+      <node bitDepth="8" id="399" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15850.0" z="1518.0" />
+      <node bitDepth="8" id="400" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21110.0" y="15710.0" z="1518.0" />
+      <node bitDepth="8" id="401" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21110.0" y="15850.0" z="1518.0" />
+      <node bitDepth="8" id="402" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21110.0" y="15849.0" z="1518.0" />
+    </nodes>
+    <edges>
+      <edge source="397" target="398" />
+      <edge source="397" target="399" />
+      <edge source="397" target="400" />
+      <edge source="397" target="401" />
+      <edge source="398" target="399" />
+      <edge source="398" target="400" />
+      <edge source="399" target="401" />
+      <edge source="400" target="402" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="68" name="sample index: 3130, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="403" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15815.0" z="1518.0" />
+      <node bitDepth="8" id="404" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15745.0" z="1518.0" />
+      <node bitDepth="8" id="405" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15885.0" z="1518.0" />
+      <node bitDepth="8" id="406" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15745.0" z="1518.0" />
+      <node bitDepth="8" id="407" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15885.0" z="1518.0" />
+      <node bitDepth="8" id="408" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15884.0" z="1518.0" />
+    </nodes>
+    <edges>
+      <edge source="403" target="404" />
+      <edge source="403" target="405" />
+      <edge source="403" target="406" />
+      <edge source="403" target="407" />
+      <edge source="404" target="405" />
+      <edge source="404" target="406" />
+      <edge source="405" target="407" />
+      <edge source="406" target="408" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="69" name="sample index: 3131, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="409" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20935.0" y="15815.0" z="1518.0" />
+      <node bitDepth="8" id="410" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20865.0" y="15745.0" z="1518.0" />
+      <node bitDepth="8" id="411" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20865.0" y="15885.0" z="1518.0" />
+      <node bitDepth="8" id="412" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15745.0" z="1518.0" />
+      <node bitDepth="8" id="413" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15885.0" z="1518.0" />
+      <node bitDepth="8" id="414" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15884.0" z="1518.0" />
+    </nodes>
+    <edges>
+      <edge source="409" target="410" />
+      <edge source="409" target="411" />
+      <edge source="409" target="412" />
+      <edge source="409" target="413" />
+      <edge source="410" target="411" />
+      <edge source="410" target="412" />
+      <edge source="411" target="413" />
+      <edge source="412" target="414" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="70" name="sample index: 3132, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="415" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15815.0" z="1518.0" />
+      <node bitDepth="8" id="416" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15745.0" z="1518.0" />
+      <node bitDepth="8" id="417" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15885.0" z="1518.0" />
+      <node bitDepth="8" id="418" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15745.0" z="1518.0" />
+      <node bitDepth="8" id="419" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15885.0" z="1518.0" />
+      <node bitDepth="8" id="420" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15884.0" z="1518.0" />
+    </nodes>
+    <edges>
+      <edge source="415" target="416" />
+      <edge source="415" target="417" />
+      <edge source="415" target="418" />
+      <edge source="415" target="419" />
+      <edge source="416" target="417" />
+      <edge source="416" target="418" />
+      <edge source="417" target="419" />
+      <edge source="418" target="420" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="71" name="sample index: 3133, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="421" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15815.0" z="1518.0" />
+      <node bitDepth="8" id="422" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20935.0" y="15745.0" z="1518.0" />
+      <node bitDepth="8" id="423" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20935.0" y="15885.0" z="1518.0" />
+      <node bitDepth="8" id="424" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21075.0" y="15745.0" z="1518.0" />
+      <node bitDepth="8" id="425" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21075.0" y="15885.0" z="1518.0" />
+      <node bitDepth="8" id="426" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21075.0" y="15884.0" z="1518.0" />
+    </nodes>
+    <edges>
+      <edge source="421" target="422" />
+      <edge source="421" target="423" />
+      <edge source="421" target="424" />
+      <edge source="421" target="425" />
+      <edge source="422" target="423" />
+      <edge source="422" target="424" />
+      <edge source="423" target="425" />
+      <edge source="424" target="426" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="72" name="sample index: 3134, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="427" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15815.0" z="1518.0" />
+      <node bitDepth="8" id="428" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15745.0" z="1518.0" />
+      <node bitDepth="8" id="429" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15885.0" z="1518.0" />
+      <node bitDepth="8" id="430" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21110.0" y="15745.0" z="1518.0" />
+      <node bitDepth="8" id="431" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21110.0" y="15885.0" z="1518.0" />
+      <node bitDepth="8" id="432" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21110.0" y="15884.0" z="1518.0" />
+    </nodes>
+    <edges>
+      <edge source="427" target="428" />
+      <edge source="427" target="429" />
+      <edge source="427" target="430" />
+      <edge source="427" target="431" />
+      <edge source="428" target="429" />
+      <edge source="428" target="430" />
+      <edge source="429" target="431" />
+      <edge source="430" target="432" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="73" name="sample index: 3135, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="433" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15850.0" z="1518.0" />
+      <node bitDepth="8" id="434" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15780.0" z="1518.0" />
+      <node bitDepth="8" id="435" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15920.0" z="1518.0" />
+      <node bitDepth="8" id="436" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15780.0" z="1518.0" />
+      <node bitDepth="8" id="437" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15920.0" z="1518.0" />
+      <node bitDepth="8" id="438" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15919.0" z="1518.0" />
+    </nodes>
+    <edges>
+      <edge source="433" target="434" />
+      <edge source="433" target="435" />
+      <edge source="433" target="436" />
+      <edge source="433" target="437" />
+      <edge source="434" target="435" />
+      <edge source="434" target="436" />
+      <edge source="435" target="437" />
+      <edge source="436" target="438" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="74" name="sample index: 3136, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="439" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20935.0" y="15850.0" z="1518.0" />
+      <node bitDepth="8" id="440" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20865.0" y="15780.0" z="1518.0" />
+      <node bitDepth="8" id="441" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20865.0" y="15920.0" z="1518.0" />
+      <node bitDepth="8" id="442" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15780.0" z="1518.0" />
+      <node bitDepth="8" id="443" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15920.0" z="1518.0" />
+      <node bitDepth="8" id="444" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15919.0" z="1518.0" />
+    </nodes>
+    <edges>
+      <edge source="439" target="440" />
+      <edge source="439" target="441" />
+      <edge source="439" target="442" />
+      <edge source="439" target="443" />
+      <edge source="440" target="441" />
+      <edge source="440" target="442" />
+      <edge source="441" target="443" />
+      <edge source="442" target="444" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="75" name="sample index: 3137, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="445" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15850.0" z="1518.0" />
+      <node bitDepth="8" id="446" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15780.0" z="1518.0" />
+      <node bitDepth="8" id="447" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15920.0" z="1518.0" />
+      <node bitDepth="8" id="448" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15780.0" z="1518.0" />
+      <node bitDepth="8" id="449" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15920.0" z="1518.0" />
+      <node bitDepth="8" id="450" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15919.0" z="1518.0" />
+    </nodes>
+    <edges>
+      <edge source="445" target="446" />
+      <edge source="445" target="447" />
+      <edge source="445" target="448" />
+      <edge source="445" target="449" />
+      <edge source="446" target="447" />
+      <edge source="446" target="448" />
+      <edge source="447" target="449" />
+      <edge source="448" target="450" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="76" name="sample index: 3138, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="451" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15850.0" z="1518.0" />
+      <node bitDepth="8" id="452" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20935.0" y="15780.0" z="1518.0" />
+      <node bitDepth="8" id="453" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20935.0" y="15920.0" z="1518.0" />
+      <node bitDepth="8" id="454" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21075.0" y="15780.0" z="1518.0" />
+      <node bitDepth="8" id="455" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21075.0" y="15920.0" z="1518.0" />
+      <node bitDepth="8" id="456" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21075.0" y="15919.0" z="1518.0" />
+    </nodes>
+    <edges>
+      <edge source="451" target="452" />
+      <edge source="451" target="453" />
+      <edge source="451" target="454" />
+      <edge source="451" target="455" />
+      <edge source="452" target="453" />
+      <edge source="452" target="454" />
+      <edge source="453" target="455" />
+      <edge source="454" target="456" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="77" name="sample index: 3139, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="457" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15850.0" z="1518.0" />
+      <node bitDepth="8" id="458" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15780.0" z="1518.0" />
+      <node bitDepth="8" id="459" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15920.0" z="1518.0" />
+      <node bitDepth="8" id="460" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21110.0" y="15780.0" z="1518.0" />
+      <node bitDepth="8" id="461" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21110.0" y="15920.0" z="1518.0" />
+      <node bitDepth="8" id="462" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21110.0" y="15919.0" z="1518.0" />
+    </nodes>
+    <edges>
+      <edge source="457" target="458" />
+      <edge source="457" target="459" />
+      <edge source="457" target="460" />
+      <edge source="457" target="461" />
+      <edge source="458" target="459" />
+      <edge source="458" target="460" />
+      <edge source="459" target="461" />
+      <edge source="460" target="462" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="78" name="sample index: 3140, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="463" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15885.0" z="1518.0" />
+      <node bitDepth="8" id="464" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15815.0" z="1518.0" />
+      <node bitDepth="8" id="465" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15955.0" z="1518.0" />
+      <node bitDepth="8" id="466" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15815.0" z="1518.0" />
+      <node bitDepth="8" id="467" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15955.0" z="1518.0" />
+      <node bitDepth="8" id="468" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15954.0" z="1518.0" />
+    </nodes>
+    <edges>
+      <edge source="463" target="464" />
+      <edge source="463" target="465" />
+      <edge source="463" target="466" />
+      <edge source="463" target="467" />
+      <edge source="464" target="465" />
+      <edge source="464" target="466" />
+      <edge source="465" target="467" />
+      <edge source="466" target="468" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="79" name="sample index: 3145, AK: clean, Flo: debris, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="469" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15920.0" z="1518.0" />
+      <node bitDepth="8" id="470" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15850.0" z="1518.0" />
+      <node bitDepth="8" id="471" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15990.0" z="1518.0" />
+      <node bitDepth="8" id="472" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15850.0" z="1518.0" />
+      <node bitDepth="8" id="473" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15990.0" z="1518.0" />
+      <node bitDepth="8" id="474" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15989.0" z="1518.0" />
+    </nodes>
+    <edges>
+      <edge source="469" target="470" />
+      <edge source="469" target="471" />
+      <edge source="469" target="472" />
+      <edge source="469" target="473" />
+      <edge source="470" target="471" />
+      <edge source="470" target="472" />
+      <edge source="471" target="473" />
+      <edge source="472" target="474" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="80" name="sample index: 3400, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="475" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15780.0" z="1529.0" />
+      <node bitDepth="8" id="476" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15710.0" z="1529.0" />
+      <node bitDepth="8" id="477" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15850.0" z="1529.0" />
+      <node bitDepth="8" id="478" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15710.0" z="1529.0" />
+      <node bitDepth="8" id="479" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15850.0" z="1529.0" />
+      <node bitDepth="8" id="480" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15849.0" z="1529.0" />
+    </nodes>
+    <edges>
+      <edge source="475" target="476" />
+      <edge source="475" target="477" />
+      <edge source="475" target="478" />
+      <edge source="475" target="479" />
+      <edge source="476" target="477" />
+      <edge source="476" target="478" />
+      <edge source="477" target="479" />
+      <edge source="478" target="480" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="81" name="sample index: 3401, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="481" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20935.0" y="15780.0" z="1529.0" />
+      <node bitDepth="8" id="482" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20865.0" y="15710.0" z="1529.0" />
+      <node bitDepth="8" id="483" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20865.0" y="15850.0" z="1529.0" />
+      <node bitDepth="8" id="484" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15710.0" z="1529.0" />
+      <node bitDepth="8" id="485" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15850.0" z="1529.0" />
+      <node bitDepth="8" id="486" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15849.0" z="1529.0" />
+    </nodes>
+    <edges>
+      <edge source="481" target="482" />
+      <edge source="481" target="483" />
+      <edge source="481" target="484" />
+      <edge source="481" target="485" />
+      <edge source="482" target="483" />
+      <edge source="482" target="484" />
+      <edge source="483" target="485" />
+      <edge source="484" target="486" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="82" name="sample index: 3402, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="487" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15780.0" z="1529.0" />
+      <node bitDepth="8" id="488" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15710.0" z="1529.0" />
+      <node bitDepth="8" id="489" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15850.0" z="1529.0" />
+      <node bitDepth="8" id="490" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15710.0" z="1529.0" />
+      <node bitDepth="8" id="491" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15850.0" z="1529.0" />
+      <node bitDepth="8" id="492" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15849.0" z="1529.0" />
+    </nodes>
+    <edges>
+      <edge source="487" target="488" />
+      <edge source="487" target="489" />
+      <edge source="487" target="490" />
+      <edge source="487" target="491" />
+      <edge source="488" target="489" />
+      <edge source="488" target="490" />
+      <edge source="489" target="491" />
+      <edge source="490" target="492" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="83" name="sample index: 3405, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="493" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15815.0" z="1529.0" />
+      <node bitDepth="8" id="494" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15745.0" z="1529.0" />
+      <node bitDepth="8" id="495" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15885.0" z="1529.0" />
+      <node bitDepth="8" id="496" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15745.0" z="1529.0" />
+      <node bitDepth="8" id="497" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15885.0" z="1529.0" />
+      <node bitDepth="8" id="498" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15884.0" z="1529.0" />
+    </nodes>
+    <edges>
+      <edge source="493" target="494" />
+      <edge source="493" target="495" />
+      <edge source="493" target="496" />
+      <edge source="493" target="497" />
+      <edge source="494" target="495" />
+      <edge source="494" target="496" />
+      <edge source="495" target="497" />
+      <edge source="496" target="498" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="84" name="sample index: 3406, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="499" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20935.0" y="15815.0" z="1529.0" />
+      <node bitDepth="8" id="500" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20865.0" y="15745.0" z="1529.0" />
+      <node bitDepth="8" id="501" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20865.0" y="15885.0" z="1529.0" />
+      <node bitDepth="8" id="502" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15745.0" z="1529.0" />
+      <node bitDepth="8" id="503" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15885.0" z="1529.0" />
+      <node bitDepth="8" id="504" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15884.0" z="1529.0" />
+    </nodes>
+    <edges>
+      <edge source="499" target="500" />
+      <edge source="499" target="501" />
+      <edge source="499" target="502" />
+      <edge source="499" target="503" />
+      <edge source="500" target="501" />
+      <edge source="500" target="502" />
+      <edge source="501" target="503" />
+      <edge source="502" target="504" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="85" name="sample index: 3407, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="505" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15815.0" z="1529.0" />
+      <node bitDepth="8" id="506" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15745.0" z="1529.0" />
+      <node bitDepth="8" id="507" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15885.0" z="1529.0" />
+      <node bitDepth="8" id="508" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15745.0" z="1529.0" />
+      <node bitDepth="8" id="509" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15885.0" z="1529.0" />
+      <node bitDepth="8" id="510" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15884.0" z="1529.0" />
+    </nodes>
+    <edges>
+      <edge source="505" target="506" />
+      <edge source="505" target="507" />
+      <edge source="505" target="508" />
+      <edge source="505" target="509" />
+      <edge source="506" target="507" />
+      <edge source="506" target="508" />
+      <edge source="507" target="509" />
+      <edge source="508" target="510" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="86" name="sample index: 3412, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="511" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15850.0" z="1529.0" />
+      <node bitDepth="8" id="512" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15780.0" z="1529.0" />
+      <node bitDepth="8" id="513" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15920.0" z="1529.0" />
+      <node bitDepth="8" id="514" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15780.0" z="1529.0" />
+      <node bitDepth="8" id="515" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15920.0" z="1529.0" />
+      <node bitDepth="8" id="516" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15919.0" z="1529.0" />
+    </nodes>
+    <edges>
+      <edge source="511" target="512" />
+      <edge source="511" target="513" />
+      <edge source="511" target="514" />
+      <edge source="511" target="515" />
+      <edge source="512" target="513" />
+      <edge source="512" target="514" />
+      <edge source="513" target="515" />
+      <edge source="514" target="516" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="87" name="sample index: 3417, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="517" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15885.0" z="1529.0" />
+      <node bitDepth="8" id="518" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15815.0" z="1529.0" />
+      <node bitDepth="8" id="519" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15955.0" z="1529.0" />
+      <node bitDepth="8" id="520" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15815.0" z="1529.0" />
+      <node bitDepth="8" id="521" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15955.0" z="1529.0" />
+      <node bitDepth="8" id="522" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15954.0" z="1529.0" />
+    </nodes>
+    <edges>
+      <edge source="517" target="518" />
+      <edge source="517" target="519" />
+      <edge source="517" target="520" />
+      <edge source="517" target="521" />
+      <edge source="518" target="519" />
+      <edge source="518" target="520" />
+      <edge source="519" target="521" />
+      <edge source="520" target="522" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="88" name="sample index: 3422, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="523" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15920.0" z="1529.0" />
+      <node bitDepth="8" id="524" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15850.0" z="1529.0" />
+      <node bitDepth="8" id="525" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15990.0" z="1529.0" />
+      <node bitDepth="8" id="526" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15850.0" z="1529.0" />
+      <node bitDepth="8" id="527" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15990.0" z="1529.0" />
+      <node bitDepth="8" id="528" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15989.0" z="1529.0" />
+    </nodes>
+    <edges>
+      <edge source="523" target="524" />
+      <edge source="523" target="525" />
+      <edge source="523" target="526" />
+      <edge source="523" target="527" />
+      <edge source="524" target="525" />
+      <edge source="524" target="526" />
+      <edge source="525" target="527" />
+      <edge source="526" target="528" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="89" name="sample index: 3445, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="529" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15920.0" z="1530.0" />
+      <node bitDepth="8" id="530" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15850.0" z="1530.0" />
+      <node bitDepth="8" id="531" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15990.0" z="1530.0" />
+      <node bitDepth="8" id="532" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15850.0" z="1530.0" />
+      <node bitDepth="8" id="533" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15990.0" z="1530.0" />
+      <node bitDepth="8" id="534" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15989.0" z="1530.0" />
+    </nodes>
+    <edges>
+      <edge source="529" target="530" />
+      <edge source="529" target="531" />
+      <edge source="529" target="532" />
+      <edge source="529" target="533" />
+      <edge source="530" target="531" />
+      <edge source="530" target="532" />
+      <edge source="531" target="533" />
+      <edge source="532" target="534" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="90" name="sample index: 3457, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="535" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15815.0" z="1531.0" />
+      <node bitDepth="8" id="536" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15745.0" z="1531.0" />
+      <node bitDepth="8" id="537" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15885.0" z="1531.0" />
+      <node bitDepth="8" id="538" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15745.0" z="1531.0" />
+      <node bitDepth="8" id="539" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15885.0" z="1531.0" />
+      <node bitDepth="8" id="540" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21040.0" y="15884.0" z="1531.0" />
+    </nodes>
+    <edges>
+      <edge source="535" target="536" />
+      <edge source="535" target="537" />
+      <edge source="535" target="538" />
+      <edge source="535" target="539" />
+      <edge source="536" target="537" />
+      <edge source="536" target="538" />
+      <edge source="537" target="539" />
+      <edge source="538" target="540" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="91" name="sample index: 3746, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="541" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20935.0" y="15920.0" z="1542.0" />
+      <node bitDepth="8" id="542" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20865.0" y="15850.0" z="1542.0" />
+      <node bitDepth="8" id="543" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20865.0" y="15990.0" z="1542.0" />
+      <node bitDepth="8" id="544" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15850.0" z="1542.0" />
+      <node bitDepth="8" id="545" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15990.0" z="1542.0" />
+      <node bitDepth="8" id="546" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="21005.0" y="15989.0" z="1542.0" />
+    </nodes>
+    <edges>
+      <edge source="541" target="542" />
+      <edge source="541" target="543" />
+      <edge source="541" target="544" />
+      <edge source="541" target="545" />
+      <edge source="542" target="543" />
+      <edge source="542" target="544" />
+      <edge source="543" target="545" />
+      <edge source="544" target="546" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="92" name="sample index: 4230, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="547" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15815.0" z="1562.0" />
+      <node bitDepth="8" id="548" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15745.0" z="1562.0" />
+      <node bitDepth="8" id="549" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15885.0" z="1562.0" />
+      <node bitDepth="8" id="550" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15745.0" z="1562.0" />
+      <node bitDepth="8" id="551" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15885.0" z="1562.0" />
+      <node bitDepth="8" id="552" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15884.0" z="1562.0" />
+    </nodes>
+    <edges>
+      <edge source="547" target="548" />
+      <edge source="547" target="549" />
+      <edge source="547" target="550" />
+      <edge source="547" target="551" />
+      <edge source="548" target="549" />
+      <edge source="548" target="550" />
+      <edge source="549" target="551" />
+      <edge source="550" target="552" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="93" name="sample index: 4235, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="553" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15850.0" z="1562.0" />
+      <node bitDepth="8" id="554" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15780.0" z="1562.0" />
+      <node bitDepth="8" id="555" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15920.0" z="1562.0" />
+      <node bitDepth="8" id="556" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15780.0" z="1562.0" />
+      <node bitDepth="8" id="557" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15920.0" z="1562.0" />
+      <node bitDepth="8" id="558" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15919.0" z="1562.0" />
+    </nodes>
+    <edges>
+      <edge source="553" target="554" />
+      <edge source="553" target="555" />
+      <edge source="553" target="556" />
+      <edge source="553" target="557" />
+      <edge source="554" target="555" />
+      <edge source="554" target="556" />
+      <edge source="555" target="557" />
+      <edge source="556" target="558" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="94" name="sample index: 4240, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="559" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15885.0" z="1562.0" />
+      <node bitDepth="8" id="560" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15815.0" z="1562.0" />
+      <node bitDepth="8" id="561" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15955.0" z="1562.0" />
+      <node bitDepth="8" id="562" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15815.0" z="1562.0" />
+      <node bitDepth="8" id="563" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15955.0" z="1562.0" />
+      <node bitDepth="8" id="564" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15954.0" z="1562.0" />
+    </nodes>
+    <edges>
+      <edge source="559" target="560" />
+      <edge source="559" target="561" />
+      <edge source="559" target="562" />
+      <edge source="559" target="563" />
+      <edge source="560" target="561" />
+      <edge source="560" target="562" />
+      <edge source="561" target="563" />
+      <edge source="562" target="564" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="95" name="sample index: 4245, AK: debris, Flo: clean, your opinion:">
+    <nodes>
+      <node bitDepth="8" id="565" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20900.0" y="15920.0" z="1562.0" />
+      <node bitDepth="8" id="566" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15850.0" z="1562.0" />
+      <node bitDepth="8" id="567" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20830.0" y="15990.0" z="1562.0" />
+      <node bitDepth="8" id="568" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15850.0" z="1562.0" />
+      <node bitDepth="8" id="569" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15990.0" z="1562.0" />
+      <node bitDepth="8" id="570" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20970.0" y="15989.0" z="1562.0" />
+    </nodes>
+    <edges>
+      <edge source="565" target="566" />
+      <edge source="565" target="567" />
+      <edge source="565" target="568" />
+      <edge source="565" target="569" />
+      <edge source="566" target="567" />
+      <edge source="566" target="568" />
+      <edge source="567" target="569" />
+      <edge source="568" target="570" />
+    </edges>
+  </thing>
+  <branchpoints />
+  <comments>
+    <comment content="" node="1" />
+    <comment content="" node="2" />
+    <comment content="" node="3" />
+    <comment content="" node="4" />
+    <comment content="" node="5" />
+    <comment content="" node="6" />
+    <comment content="" node="7" />
+    <comment content="" node="8" />
+    <comment content="" node="9" />
+    <comment content="" node="10" />
+    <comment content="" node="11" />
+    <comment content="" node="12" />
+    <comment content="" node="13" />
+    <comment content="" node="14" />
+    <comment content="" node="15" />
+    <comment content="" node="16" />
+    <comment content="" node="17" />
+    <comment content="" node="18" />
+    <comment content="" node="19" />
+    <comment content="" node="20" />
+    <comment content="" node="21" />
+    <comment content="" node="22" />
+    <comment content="" node="23" />
+    <comment content="" node="24" />
+    <comment content="" node="25" />
+    <comment content="" node="26" />
+    <comment content="" node="27" />
+    <comment content="" node="28" />
+    <comment content="" node="29" />
+    <comment content="" node="30" />
+    <comment content="" node="31" />
+    <comment content="" node="32" />
+    <comment content="" node="33" />
+    <comment content="" node="34" />
+    <comment content="" node="35" />
+    <comment content="" node="36" />
+    <comment content="" node="37" />
+    <comment content="" node="38" />
+    <comment content="" node="39" />
+    <comment content="" node="40" />
+    <comment content="" node="41" />
+    <comment content="" node="42" />
+    <comment content="" node="43" />
+    <comment content="" node="44" />
+    <comment content="" node="45" />
+    <comment content="" node="46" />
+    <comment content="" node="47" />
+    <comment content="" node="48" />
+    <comment content="" node="49" />
+    <comment content="" node="50" />
+    <comment content="" node="51" />
+    <comment content="" node="52" />
+    <comment content="" node="53" />
+    <comment content="" node="54" />
+    <comment content="" node="55" />
+    <comment content="" node="56" />
+    <comment content="" node="57" />
+    <comment content="" node="58" />
+    <comment content="" node="59" />
+    <comment content="" node="60" />
+    <comment content="" node="61" />
+    <comment content="" node="62" />
+    <comment content="" node="63" />
+    <comment content="" node="64" />
+    <comment content="" node="65" />
+    <comment content="" node="66" />
+    <comment content="" node="67" />
+    <comment content="" node="68" />
+    <comment content="" node="69" />
+    <comment content="" node="70" />
+    <comment content="" node="71" />
+    <comment content="" node="72" />
+    <comment content="" node="73" />
+    <comment content="" node="74" />
+    <comment content="" node="75" />
+    <comment content="" node="76" />
+    <comment content="" node="77" />
+    <comment content="" node="78" />
+    <comment content="" node="79" />
+    <comment content="" node="80" />
+    <comment content="" node="81" />
+    <comment content="" node="82" />
+    <comment content="" node="83" />
+    <comment content="" node="84" />
+    <comment content="" node="85" />
+    <comment content="" node="86" />
+    <comment content="" node="87" />
+    <comment content="" node="88" />
+    <comment content="" node="89" />
+    <comment content="" node="90" />
+    <comment content="" node="91" />
+    <comment content="" node="92" />
+    <comment content="" node="93" />
+    <comment content="" node="94" />
+    <comment content="" node="95" />
+    <comment content="" node="96" />
+    <comment content="" node="97" />
+    <comment content="" node="98" />
+    <comment content="" node="99" />
+    <comment content="" node="100" />
+    <comment content="" node="101" />
+    <comment content="" node="102" />
+    <comment content="" node="103" />
+    <comment content="" node="104" />
+    <comment content="" node="105" />
+    <comment content="" node="106" />
+    <comment content="" node="107" />
+    <comment content="" node="108" />
+    <comment content="" node="109" />
+    <comment content="" node="110" />
+    <comment content="" node="111" />
+    <comment content="" node="112" />
+    <comment content="" node="113" />
+    <comment content="" node="114" />
+    <comment content="" node="115" />
+    <comment content="" node="116" />
+    <comment content="" node="117" />
+    <comment content="" node="118" />
+    <comment content="" node="119" />
+    <comment content="" node="120" />
+    <comment content="" node="121" />
+    <comment content="" node="122" />
+    <comment content="" node="123" />
+    <comment content="" node="124" />
+    <comment content="" node="125" />
+    <comment content="" node="126" />
+    <comment content="" node="127" />
+    <comment content="" node="128" />
+    <comment content="" node="129" />
+    <comment content="" node="130" />
+    <comment content="" node="131" />
+    <comment content="" node="132" />
+    <comment content="" node="133" />
+    <comment content="" node="134" />
+    <comment content="" node="135" />
+    <comment content="" node="136" />
+    <comment content="" node="137" />
+    <comment content="" node="138" />
+    <comment content="" node="139" />
+    <comment content="" node="140" />
+    <comment content="" node="141" />
+    <comment content="" node="142" />
+    <comment content="" node="143" />
+    <comment content="" node="144" />
+    <comment content="" node="145" />
+    <comment content="" node="146" />
+    <comment content="" node="147" />
+    <comment content="" node="148" />
+    <comment content="" node="149" />
+    <comment content="" node="150" />
+    <comment content="" node="151" />
+    <comment content="" node="152" />
+    <comment content="" node="153" />
+    <comment content="" node="154" />
+    <comment content="" node="155" />
+    <comment content="" node="156" />
+    <comment content="" node="157" />
+    <comment content="" node="158" />
+    <comment content="" node="159" />
+    <comment content="" node="160" />
+    <comment content="" node="161" />
+    <comment content="" node="162" />
+    <comment content="" node="163" />
+    <comment content="" node="164" />
+    <comment content="" node="165" />
+    <comment content="" node="166" />
+    <comment content="" node="167" />
+    <comment content="" node="168" />
+    <comment content="" node="169" />
+    <comment content="" node="170" />
+    <comment content="" node="171" />
+    <comment content="" node="172" />
+    <comment content="" node="173" />
+    <comment content="" node="174" />
+    <comment content="" node="175" />
+    <comment content="" node="176" />
+    <comment content="" node="177" />
+    <comment content="" node="178" />
+    <comment content="" node="179" />
+    <comment content="" node="180" />
+    <comment content="" node="181" />
+    <comment content="" node="182" />
+    <comment content="" node="183" />
+    <comment content="" node="184" />
+    <comment content="" node="185" />
+    <comment content="" node="186" />
+    <comment content="" node="187" />
+    <comment content="" node="188" />
+    <comment content="" node="189" />
+    <comment content="" node="190" />
+    <comment content="" node="191" />
+    <comment content="" node="192" />
+    <comment content="" node="193" />
+    <comment content="" node="194" />
+    <comment content="" node="195" />
+    <comment content="" node="196" />
+    <comment content="" node="197" />
+    <comment content="" node="198" />
+    <comment content="" node="199" />
+    <comment content="" node="200" />
+    <comment content="" node="201" />
+    <comment content="" node="202" />
+    <comment content="" node="203" />
+    <comment content="" node="204" />
+    <comment content="" node="205" />
+    <comment content="" node="206" />
+    <comment content="" node="207" />
+    <comment content="" node="208" />
+    <comment content="" node="209" />
+    <comment content="" node="210" />
+    <comment content="" node="211" />
+    <comment content="" node="212" />
+    <comment content="" node="213" />
+    <comment content="" node="214" />
+    <comment content="" node="215" />
+    <comment content="" node="216" />
+    <comment content="" node="217" />
+    <comment content="" node="218" />
+    <comment content="" node="219" />
+    <comment content="" node="220" />
+    <comment content="" node="221" />
+    <comment content="" node="222" />
+    <comment content="" node="223" />
+    <comment content="" node="224" />
+    <comment content="" node="225" />
+    <comment content="" node="226" />
+    <comment content="" node="227" />
+    <comment content="" node="228" />
+    <comment content="" node="229" />
+    <comment content="" node="230" />
+    <comment content="" node="231" />
+    <comment content="" node="232" />
+    <comment content="" node="233" />
+    <comment content="" node="234" />
+    <comment content="" node="235" />
+    <comment content="" node="236" />
+    <comment content="" node="237" />
+    <comment content="" node="238" />
+    <comment content="" node="239" />
+    <comment content="" node="240" />
+    <comment content="" node="241" />
+    <comment content="" node="242" />
+    <comment content="" node="243" />
+    <comment content="" node="244" />
+    <comment content="" node="245" />
+    <comment content="" node="246" />
+    <comment content="" node="247" />
+    <comment content="" node="248" />
+    <comment content="" node="249" />
+    <comment content="" node="250" />
+    <comment content="" node="251" />
+    <comment content="" node="252" />
+    <comment content="" node="253" />
+    <comment content="" node="254" />
+    <comment content="" node="255" />
+    <comment content="" node="256" />
+    <comment content="" node="257" />
+    <comment content="" node="258" />
+    <comment content="" node="259" />
+    <comment content="" node="260" />
+    <comment content="" node="261" />
+    <comment content="" node="262" />
+    <comment content="" node="263" />
+    <comment content="" node="264" />
+    <comment content="" node="265" />
+    <comment content="" node="266" />
+    <comment content="" node="267" />
+    <comment content="" node="268" />
+    <comment content="" node="269" />
+    <comment content="" node="270" />
+    <comment content="" node="271" />
+    <comment content="" node="272" />
+    <comment content="" node="273" />
+    <comment content="" node="274" />
+    <comment content="" node="275" />
+    <comment content="" node="276" />
+    <comment content="" node="277" />
+    <comment content="" node="278" />
+    <comment content="" node="279" />
+    <comment content="" node="280" />
+    <comment content="" node="281" />
+    <comment content="" node="282" />
+    <comment content="" node="283" />
+    <comment content="" node="284" />
+    <comment content="" node="285" />
+    <comment content="" node="286" />
+    <comment content="" node="287" />
+    <comment content="" node="288" />
+    <comment content="" node="289" />
+    <comment content="" node="290" />
+    <comment content="" node="291" />
+    <comment content="" node="292" />
+    <comment content="" node="293" />
+    <comment content="" node="294" />
+    <comment content="" node="295" />
+    <comment content="" node="296" />
+    <comment content="" node="297" />
+    <comment content="" node="298" />
+    <comment content="" node="299" />
+    <comment content="" node="300" />
+    <comment content="" node="301" />
+    <comment content="" node="302" />
+    <comment content="" node="303" />
+    <comment content="" node="304" />
+    <comment content="" node="305" />
+    <comment content="" node="306" />
+    <comment content="" node="307" />
+    <comment content="" node="308" />
+    <comment content="" node="309" />
+    <comment content="" node="310" />
+    <comment content="" node="311" />
+    <comment content="" node="312" />
+    <comment content="" node="313" />
+    <comment content="" node="314" />
+    <comment content="" node="315" />
+    <comment content="" node="316" />
+    <comment content="" node="317" />
+    <comment content="" node="318" />
+    <comment content="" node="319" />
+    <comment content="" node="320" />
+    <comment content="" node="321" />
+    <comment content="" node="322" />
+    <comment content="" node="323" />
+    <comment content="" node="324" />
+    <comment content="" node="325" />
+    <comment content="" node="326" />
+    <comment content="" node="327" />
+    <comment content="" node="328" />
+    <comment content="" node="329" />
+    <comment content="" node="330" />
+    <comment content="" node="331" />
+    <comment content="" node="332" />
+    <comment content="" node="333" />
+    <comment content="" node="334" />
+    <comment content="" node="335" />
+    <comment content="" node="336" />
+    <comment content="" node="337" />
+    <comment content="" node="338" />
+    <comment content="" node="339" />
+    <comment content="" node="340" />
+    <comment content="" node="341" />
+    <comment content="" node="342" />
+    <comment content="" node="343" />
+    <comment content="" node="344" />
+    <comment content="" node="345" />
+    <comment content="" node="346" />
+    <comment content="" node="347" />
+    <comment content="" node="348" />
+    <comment content="" node="349" />
+    <comment content="" node="350" />
+    <comment content="" node="351" />
+    <comment content="" node="352" />
+    <comment content="" node="353" />
+    <comment content="" node="354" />
+    <comment content="" node="355" />
+    <comment content="" node="356" />
+    <comment content="" node="357" />
+    <comment content="" node="358" />
+    <comment content="" node="359" />
+    <comment content="" node="360" />
+    <comment content="" node="361" />
+    <comment content="" node="362" />
+    <comment content="" node="363" />
+    <comment content="" node="364" />
+    <comment content="" node="365" />
+    <comment content="" node="366" />
+    <comment content="" node="367" />
+    <comment content="" node="368" />
+    <comment content="" node="369" />
+    <comment content="" node="370" />
+    <comment content="" node="371" />
+    <comment content="" node="372" />
+    <comment content="" node="373" />
+    <comment content="" node="374" />
+    <comment content="" node="375" />
+    <comment content="" node="376" />
+    <comment content="" node="377" />
+    <comment content="" node="378" />
+    <comment content="" node="379" />
+    <comment content="" node="380" />
+    <comment content="" node="381" />
+    <comment content="" node="382" />
+    <comment content="" node="383" />
+    <comment content="" node="384" />
+    <comment content="" node="385" />
+    <comment content="" node="386" />
+    <comment content="" node="387" />
+    <comment content="" node="388" />
+    <comment content="" node="389" />
+    <comment content="" node="390" />
+    <comment content="" node="391" />
+    <comment content="" node="392" />
+    <comment content="" node="393" />
+    <comment content="" node="394" />
+    <comment content="" node="395" />
+    <comment content="" node="396" />
+    <comment content="" node="397" />
+    <comment content="" node="398" />
+    <comment content="" node="399" />
+    <comment content="" node="400" />
+    <comment content="" node="401" />
+    <comment content="" node="402" />
+    <comment content="" node="403" />
+    <comment content="" node="404" />
+    <comment content="" node="405" />
+    <comment content="" node="406" />
+    <comment content="" node="407" />
+    <comment content="" node="408" />
+    <comment content="" node="409" />
+    <comment content="" node="410" />
+    <comment content="" node="411" />
+    <comment content="" node="412" />
+    <comment content="" node="413" />
+    <comment content="" node="414" />
+    <comment content="" node="415" />
+    <comment content="" node="416" />
+    <comment content="" node="417" />
+    <comment content="" node="418" />
+    <comment content="" node="419" />
+    <comment content="" node="420" />
+    <comment content="" node="421" />
+    <comment content="" node="422" />
+    <comment content="" node="423" />
+    <comment content="" node="424" />
+    <comment content="" node="425" />
+    <comment content="" node="426" />
+    <comment content="" node="427" />
+    <comment content="" node="428" />
+    <comment content="" node="429" />
+    <comment content="" node="430" />
+    <comment content="" node="431" />
+    <comment content="" node="432" />
+    <comment content="" node="433" />
+    <comment content="" node="434" />
+    <comment content="" node="435" />
+    <comment content="" node="436" />
+    <comment content="" node="437" />
+    <comment content="" node="438" />
+    <comment content="" node="439" />
+    <comment content="" node="440" />
+    <comment content="" node="441" />
+    <comment content="" node="442" />
+    <comment content="" node="443" />
+    <comment content="" node="444" />
+    <comment content="" node="445" />
+    <comment content="" node="446" />
+    <comment content="" node="447" />
+    <comment content="" node="448" />
+    <comment content="" node="449" />
+    <comment content="" node="450" />
+    <comment content="" node="451" />
+    <comment content="" node="452" />
+    <comment content="" node="453" />
+    <comment content="" node="454" />
+    <comment content="" node="455" />
+    <comment content="" node="456" />
+    <comment content="" node="457" />
+    <comment content="" node="458" />
+    <comment content="" node="459" />
+    <comment content="" node="460" />
+    <comment content="" node="461" />
+    <comment content="" node="462" />
+    <comment content="" node="463" />
+    <comment content="" node="464" />
+    <comment content="" node="465" />
+    <comment content="" node="466" />
+    <comment content="" node="467" />
+    <comment content="" node="468" />
+    <comment content="" node="469" />
+    <comment content="" node="470" />
+    <comment content="" node="471" />
+    <comment content="" node="472" />
+    <comment content="" node="473" />
+    <comment content="" node="474" />
+    <comment content="" node="475" />
+    <comment content="" node="476" />
+    <comment content="" node="477" />
+    <comment content="" node="478" />
+    <comment content="" node="479" />
+    <comment content="" node="480" />
+    <comment content="" node="481" />
+    <comment content="" node="482" />
+    <comment content="" node="483" />
+    <comment content="" node="484" />
+    <comment content="" node="485" />
+    <comment content="" node="486" />
+    <comment content="" node="487" />
+    <comment content="" node="488" />
+    <comment content="" node="489" />
+    <comment content="" node="490" />
+    <comment content="" node="491" />
+    <comment content="" node="492" />
+    <comment content="" node="493" />
+    <comment content="" node="494" />
+    <comment content="" node="495" />
+    <comment content="" node="496" />
+    <comment content="" node="497" />
+    <comment content="" node="498" />
+    <comment content="" node="499" />
+    <comment content="" node="500" />
+    <comment content="" node="501" />
+    <comment content="" node="502" />
+    <comment content="" node="503" />
+    <comment content="" node="504" />
+    <comment content="" node="505" />
+    <comment content="" node="506" />
+    <comment content="" node="507" />
+    <comment content="" node="508" />
+    <comment content="" node="509" />
+    <comment content="" node="510" />
+    <comment content="" node="511" />
+    <comment content="" node="512" />
+    <comment content="" node="513" />
+    <comment content="" node="514" />
+    <comment content="" node="515" />
+    <comment content="" node="516" />
+    <comment content="" node="517" />
+    <comment content="" node="518" />
+    <comment content="" node="519" />
+    <comment content="" node="520" />
+    <comment content="" node="521" />
+    <comment content="" node="522" />
+    <comment content="" node="523" />
+    <comment content="" node="524" />
+    <comment content="" node="525" />
+    <comment content="" node="526" />
+    <comment content="" node="527" />
+    <comment content="" node="528" />
+    <comment content="" node="529" />
+    <comment content="" node="530" />
+    <comment content="" node="531" />
+    <comment content="" node="532" />
+    <comment content="" node="533" />
+    <comment content="" node="534" />
+    <comment content="" node="535" />
+    <comment content="" node="536" />
+    <comment content="" node="537" />
+    <comment content="" node="538" />
+    <comment content="" node="539" />
+    <comment content="" node="540" />
+    <comment content="" node="541" />
+    <comment content="" node="542" />
+    <comment content="" node="543" />
+    <comment content="" node="544" />
+    <comment content="" node="545" />
+    <comment content="" node="546" />
+    <comment content="" node="547" />
+    <comment content="" node="548" />
+    <comment content="" node="549" />
+    <comment content="" node="550" />
+    <comment content="" node="551" />
+    <comment content="" node="552" />
+    <comment content="" node="553" />
+    <comment content="" node="554" />
+    <comment content="" node="555" />
+    <comment content="" node="556" />
+    <comment content="" node="557" />
+    <comment content="" node="558" />
+    <comment content="" node="559" />
+    <comment content="" node="560" />
+    <comment content="" node="561" />
+    <comment content="" node="562" />
+    <comment content="" node="563" />
+    <comment content="" node="564" />
+    <comment content="" node="565" />
+    <comment content="" node="566" />
+    <comment content="" node="567" />
+    <comment content="" node="568" />
+    <comment content="" node="569" />
+    <comment content="" node="570" />
+  </comments>
+  <groups />
+</things>

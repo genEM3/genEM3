@@ -461,6 +461,13 @@ class WkwData(Dataset):
 
         return source_idx, bbox
 
+    def get_center_for_sample_idx(self, sample_idx: int, sample_type: str = 'input'):
+        """Get the coordinate of the center(mesh) of the sample given by sample idx"""
+        source_idx, mesh_inds = self.get_source_mesh_for_sample_idx(sample_idx)
+        this_mesh = self.data_meshes[source_idx][sample_type]
+        center = [this_mesh[dim][mesh_inds[0], mesh_inds[1], mesh_inds[2]] for dim in['x', 'y', 'z']]
+        return center
+    
     def get_source_mesh_for_sample_idx(self, sample_idx):
         # Get appropriate training data cube sample_idx based on global linear sample_idx
         source_idx = int(np.argmax(np.asarray(self.data_inds_max) >= int(sample_idx)))

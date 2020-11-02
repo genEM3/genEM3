@@ -61,3 +61,40 @@ def get_volume_df(skeletons: Sequence[Skeleton]):
                 }, ignore_index=True)
             volume_df = volume_df.append(plane_df)
     return volume_df
+
+
+def add_bbox_tree(coord_center, input_shape, tree_name, skel):
+    """Adds a bbox skeleton at specified coordinate to skeleton""" 
+    cx, cy, cz = coord_center
+    positions = np.array([
+        [cx, cy, cz],
+        [cx - input_shape[0]/2, cy - input_shape[1]/2, cz],
+        [cx - input_shape[0]/2, cy + input_shape[1]/2, cz],
+        [cx + input_shape[0]/2, cy - input_shape[1]/2, cz],
+        [cx + input_shape[0]/2, cy + input_shape[1]/2, cz],
+        [cx + input_shape[0]/2, cy + input_shape[1]/2 - 1, cz]
+    ])
+    min_id = skel.max_node_id() + 1
+    max_id = min_id + positions.shape[0] - 1
+    nodes = skel.define_nodes(
+        position_x=positions[:, 0].tolist(),
+        position_y=positions[:, 1].tolist(),
+        position_z=positions[:, 2].tolist(),
+        id=list(range(min_id, max_id + 1))
+    )
+    edges = np.array([
+        [1, 2],
+        [1, 3],
+        [1, 4],
+        [1, 5],
+        [2, 3],
+        [2, 4],
+        [3, 5],
+        [4, 6]
+    ]) + skel.max_node_id()
+    
+    
+    skel.add_tree(
+        nodes=nodes,
+        edges=edges,
+        name=tree_name)
