@@ -2,13 +2,14 @@ import os
 import numpy as np
 from wkskel import Skeleton, Parameters, Nodes
 from genEM3.data.wkwdata import WkwData, DataSource
+from genEM3.util.path import get_runs_dir
 
 bbox_val_dims_um = (10, 10, 2)
 scale = (32, 32, 35)
 input_shape = (140, 140, 1)
 target_shape = (1, 1, 1)
 stride = (35, 35, 1)
-path_in = '/home/drawitschf/Code/genEM3/runs/inference/ae_classify_11_parallel/test_top'
+path_in = os.path.join(get_runs_dir(), 'inference/ae_classify_11_parallel/test_top')
 path_datasources = os.path.join(path_in, 'datasources.json')
 path_nml_out = os.path.join(path_in, 'bbox.nml')
 
@@ -31,7 +32,7 @@ meshes_max = np.floor(meshes_center + n_fits/2).astype(int)
 
 meshes_val = {key: meshes[key][meshes_min[0]:meshes_max[0], meshes_min[1]:meshes_max[1], meshes_min[2]:meshes_max[2]] for key in meshes}
 
-skel = Skeleton('/home/drawitschf/Code/genEM3/runs/inference/ae_classify_11_parallel/empty.nml')
+skel = Skeleton(os.path.join(get_runs_dir(), 'inference/ae_classify_11_parallel/empty.nml'))
 min_id = 1
 for idx in range(np.prod(n_fits)):
     print('adding trees {}/{}'.format(idx, np.prod(n_fits)))
@@ -79,9 +80,4 @@ for idx in range(np.prod(n_fits)):
     min_id = max_id + 1
 
 
-skel.write_nml(path_nml_out)
-
-
-
-
-
+#skel.write_nml(path_nml_out)
