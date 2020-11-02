@@ -100,7 +100,7 @@ class Classifier(nn.Module):
 
 class Classifier3Layered(nn.Module):
 
-    def __init__(self, n_latent):
+    def __init__(self, n_latent, n_output: int = 2):
         super().__init__()
 
         self.input = nn.Sequential(
@@ -110,7 +110,7 @@ class Classifier3Layered(nn.Module):
             nn.Conv2d(256, 24, kernel_size=1),
             nn.LeakyReLU())
         self.output = nn.Sequential(
-            nn.Conv2d(24, 2, kernel_size=1),
+            nn.Conv2d(24, n_output, kernel_size=1),
             nn.LogSoftmax(dim=1))
 
     def forward(self, x):
