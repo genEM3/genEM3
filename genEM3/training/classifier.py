@@ -112,7 +112,7 @@ class Trainer:
                 num_items = len(cur_data_loaders[phase].batch_sampler.sampler)
 
                 inputs_phase = -np.ones((num_items, 1, 140, 140)).astype(float)
-                outputs_phase = -np.ones((num_items, 2)).astype(float)
+                outputs_phase = -np.ones((num_items, self.model.classifier.num_output)).astype(float)
                 predictions_phase = -np.ones(num_items).astype(int)
                 targets_phase = -np.ones(num_items).astype(int)
                 correct_phase = -np.ones(num_items).astype(int)

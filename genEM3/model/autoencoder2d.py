@@ -99,10 +99,11 @@ class Classifier(nn.Module):
 
 
 class Classifier3Layered(nn.Module):
-
+    """3-layered MLP classifier"""
     def __init__(self, n_latent, n_output: int = 2):
-        super().__init__()
 
+        super().__init__()
+        self.num_output = n_output
         self.input = nn.Sequential(
             nn.Conv2d(n_latent, 256, kernel_size=1),
             nn.LeakyReLU())
