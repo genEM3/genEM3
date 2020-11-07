@@ -5,6 +5,7 @@ import os
 from typing import Sequence, Tuple
 
 import matplotlib.pyplot as plt
+import numpy as np
 
 from genEM3.data.wkwdata import DataSource, WkwData
 from genEM3.util.path import getDataDir
@@ -59,3 +60,41 @@ def merge_json_from_data_dir(fnames: Sequence[str], output_fname: str):
     full_output_name = os.path.join(getDataDir(), output_fname)
     all_ds = WkwData.concat_datasources(json_paths_in=full_fnames, json_path_out=full_output_name)
     return all_ds
+
+
+def patch_source_list_from_dataset(dataset: WkwData, 
+                                   margin: int = 35,
+                                   roi_size: int = 140):
+    """Return two data_sources from the image patches contained in a dataset. One data source has a larger bbox for annotations"""
+    corner_xy_index = [0,1]
+    length_xy_index = [3,4]
+    large_bboxes_idx = []
+    bboxes_idx = []
+    for idx in range(len(dataset)):
+        (source_idx, original_cur_bbox) = dataset.get_bbox_for_sample_idx(idx)
+        bboxes_idx.append((source_idx, original_cur_bbox))
+        cur_bbox = np.asarray(original_cur_bbox)
+        cur_bbox[corner_xy_index] = cur_bbox[corner_xy_index] - margin
+        cur_bbox[length_xy_index] = cur_bbox[length_xy_index] + margin*2
+        # large bbox append
+        large_bboxes_idx.append((source_idx, cur_bbox.tolist()))
+
+    assert len(large_bboxes_idx) == len(dataset) == len(bboxes_idx)
+    larger_sources = update_data_source_bbox(dataset, large_bboxes_idx)
+    patch_source_list = update_data_source_bbox(dataset, bboxes_idx)
+    return {'original': patch_source_list,'large':larger_sources}
+
+
+def divide_range(total_size: int, chunk_size: int = 1000,):
+    """Break down the range into partitions of 1000"""
+    chunk_size = 1000
+    num_thousand, remainder = divmod(total_size, chunk_size)
+    list_ranges = []
+    # Create a list of ranges
+    for i in range(num_thousand):
+        list_ranges.append(range(i*chunk_size, (i+1)*chunk_size))
+    if remainder > 0:
+        final_range = range(num_thousand*chunk_size, num_thousand*chunk_size+remainder)
+        list_ranges.append(final_range)
+
+    return list_ranges
