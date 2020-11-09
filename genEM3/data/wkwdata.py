@@ -2,7 +2,7 @@ import os
 import json
 import random
 from collections import namedtuple
-from typing import Tuple, Sequence, List, Callable
+from typing import Tuple, Sequence, List, Callable, Dict
 from functools import lru_cache
 
 import numpy as np
@@ -53,8 +53,7 @@ class WkwData(Dataset):
                  pad_target: bool = False,
                  cache_RAM: bool = True,
                  cache_HDD: bool = False,
-                 cache_HDD_root: str = None
-                 ):
+                 cache_HDD_root: str = None):
 
         """
                 Args:
@@ -102,7 +101,6 @@ class WkwData(Dataset):
                         the same path).
                     cache_HDD_root:
                         Path on the local filesystem where HDD cache should be created
-
                 """
 
         if cache_HDD_root is None:
@@ -125,7 +123,6 @@ class WkwData(Dataset):
         self.cache_HDD = cache_HDD
 
         self.cache_HDD_root = cache_HDD_root
-
         self.data_cache_input = dict()
         self.data_cache_output = dict()
         self.data_meshes = []
@@ -144,7 +141,7 @@ class WkwData(Dataset):
 
         if cache_RAM | cache_HDD:
             self.fill_caches()
-
+    
     def __len__(self):
         """This method returns the length of the dataset"""
         return self.data_inds_max[-1] + 1

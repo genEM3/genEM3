@@ -54,7 +54,7 @@ num_epoch = 1000
 # controls the interval at which the dataloader's imbalance gets updated
 loader_interval = 50
 # The range of the imbalance (frequency ratio clean/debris)
-weight_range = [1, 19]
+weight_range = [1, 1]
 weight_range_epoch = np.linspace(weight_range[0], weight_range[1], num=int(num_epoch/loader_interval))
 class_info = (('Non_myelin', 0, 1.0), ('Debris', 1, 1.0) , ('Myelin', 2, 1.0))
 debris_index = [c[1] for c in class_info if c[0]=='Debris']
