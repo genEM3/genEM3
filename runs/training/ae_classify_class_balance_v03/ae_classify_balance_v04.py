@@ -19,7 +19,7 @@ cache_RAM = True
 cache_HDD = False
 batch_size = 256
 num_workers = 8
-datasources_json_path = os.path.join(getDataDir(), 'dense_3X_10_10_2_um/original_merged_with_myelin_v01.json')
+datasources_json_path = os.path.join(getDataDir(), 'dense_3X_10_10_2_um/original_merged_without_myelin_v01.json')
 data_sources = WkwData.datasources_from_json(datasources_json_path)
 
 transforms = transforms.Compose([
@@ -39,7 +39,7 @@ train_dataset = WkwData(
 
 ## Test dataset: 10 bboxes of size 9 x 9 x 1 um:
 # test dataset  
-test_json_path = os.path.join(getDataDir(), '10x_test_bboxes/10X_9_9_1_um_with_myelin_v01.json')  
+test_json_path = os.path.join(getDataDir(), '10x_test_bboxes/10X_9_9_1_um_without_myelin_v01.json')  
 test_sources = WkwData.datasources_from_json(test_json_path)    
 test_dataset = WkwData( 
     input_shape=input_shape,
@@ -54,9 +54,9 @@ num_epoch = 1000
 # controls the interval at which the dataloader's imbalance gets updated
 loader_interval = 50
 # The range of the imbalance (frequency ratio clean/debris)
-weight_range = [1, 1]
+weight_range = [1.0, round(1.0/19.0,3)]
 weight_range_epoch = np.linspace(weight_range[0], weight_range[1], num=int(num_epoch/loader_interval))
-class_info = (('Non_myelin', 0, 1.0), ('Debris', 1, 1.0) , ('Myelin', 2, 1.0))
+class_info = (('Non_myelin', 0, 1.0), ('Debris', 1, 1.0))
 debris_index = [c[1] for c in class_info if c[0]=='Debris']
 assert len(debris_index) == 1 
 # list of data loaders each contains a dictionary for train and validation loaders
@@ -81,7 +81,7 @@ n_fmaps = 16  # fixed in model class
 n_latent = 2048
 model = AE_Encoder_Classifier(
     Encoder_4_sampling_bn_1px_deep_convonly_skip(input_size, kernel_size, stride, n_latent=n_latent),
-    Classifier3Layered(n_latent=n_latent, n_output=3))
+    Classifier3Layered(n_latent=n_latent, n_output=len(class_info)))
 
 # Load the encoder from the AE and freeze most weights
 state_dict_path = '/u/flod/code/genEM3/runs/training/ae_v05_skip/.log/epoch_60/model_state_dict'
@@ -99,11 +99,11 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.00000075)
 
 log_int = 5
 device = 'cuda'
-gpu_id = 1
+gpu_id = 0
 save = True
 save_int = 25
 resume = False
-run_name = f'class_balance_run_with_myelin_factor_{weight_range[0]}_{weight_range[1]}_{gethostnameTimeString()}'
+run_name = f'class_balance_run_with_myelin_factor_{weight_range[0]:.3f}_{weight_range[1]:.3f}_{gethostnameTimeString()}'
 class_target_value = [(c[1], c[0]) for c in class_info]
 # Training Loop
 trainer = Trainer(run_name=run_name,

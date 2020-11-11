@@ -200,13 +200,13 @@ class Trainer:
                 confusion_matrix_phase = sk_metrics.confusion_matrix(targets_phase, predictions_phase)
                 fig_confusion = self.plot_confusion_matrix(confusion_matrix_phase)
                 figname_confusion = 'confusion_matrix_'
-                fig_confusion.savefig(os.path.join(self.log_root, epoch_root, figname_confusion + phase + '.png'))
+                fig_confusion.savefig(os.path.join(self.log_root, epoch_root, figname_confusion + phase + '.png'), dpi=300)
                 writer.add_figure(figname_confusion + phase, fig_confusion, epoch)
                 
                 # confusion normalized
                 fig_confusion_norm = self.plot_confusion_matrix(confusion_matrix_phase, normalize_dim=1)
                 figname_confusion_norm = 'confusion_matrix_normalized_'
-                fig_confusion_norm.savefig(os.path.join(self.log_root, epoch_root, figname_confusion_norm + phase + '.png'))
+                fig_confusion_norm.savefig(os.path.join(self.log_root, epoch_root, figname_confusion_norm + phase + '.png'), dpi=300)
                 writer.add_figure(figname_confusion_norm + phase, fig_confusion_norm, epoch)
 
                 # Example images
@@ -219,7 +219,7 @@ class Trainer:
                                         class_idx=debris_idx,
                                         )
                 figname = 'Image_examples_with_highest_loss_'
-                fig.savefig(os.path.join(self.log_root, epoch_root, figname + '_' + phase + '.png'))
+                fig.savefig(os.path.join(self.log_root, epoch_root, figname + '_' + phase + '.png'), dpi=300)
                 writer.add_figure(figname + phase, fig, epoch)
 
                 # Precision/Recall curves
@@ -282,7 +282,9 @@ class Trainer:
         # ... and label them with the respective list entries
         ax.set_xticklabels(group_names)
         ax.set_yticklabels(group_names)
-        
+        # Give axis labels as well:
+        ax.set_xlabel('Predicted class')
+        ax.set_ylabel('Human label class')
         # Rotate the tick labels and set their alignment.
         plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
                  rotation_mode="anchor")
@@ -355,16 +357,17 @@ class Trainer:
             target = np.tile(gray_val_target, target_shape)
             fused = np.concatenate((output, prediction, target), axis=0)
             axs[1, i].imshow(fused, cmap='gray_r', vmin=0, vmax=1)
-            axs[1, i].text(0.5, 0.875, 'sample_idx: {}'.format(sample_idx),
+            axs[1, i].text(0.5, 1.0, 'Probability, Non-Myl/deb/Myl:\n{}'.format(np.exp(outputs[i]).round(2).tolist()),
                            transform=axs[1, i].transAxes, ha='center', va='center', c=[0.8, 0.8, 0.2])
-            axs[1, i].text(0.5, 0.75, 'Probability (class {}): {:01.2f}'.format(target_names[class_idx], np.exp((outputs[i][class_idx]))),
+            axs[1, i].text(0.5, 0.80, 'sample_idx: {}'.format(sample_idx),
+                           transform=axs[1, i].transAxes, ha='center', va='center', c=[0.8, 0.8, 0.2])
+            axs[1, i].text(0.5, 0.70, 'Probability {}: {:01.2f}'.format(target_names[class_idx], np.exp((outputs[i][class_idx]))),
                              transform=axs[1, i].transAxes, ha='center', va='center', c=[0.8, 0.8, 0.2])
             axs[1, i].text(0.5, 0.5, 'Prediction class: {}'.format(target_names[int(predictions[i])]),
                              transform=axs[1, i].transAxes, ha='center', va='center', c=[0.5, 0.5, 0.5])
             axs[1, i].text(0.5, 0.2, 'Target class: {}'.format(target_names[int(targets[i])]),
                              transform=axs[1, i].transAxes, ha='center', va='center', c=[0.5, 0.5, 0.5])
             axs[1, i].axis('off')
-            axs[0, i].set_ylabel('sample_idx: {}'.format(sample_idx))
 
         plt.tight_layout()
 

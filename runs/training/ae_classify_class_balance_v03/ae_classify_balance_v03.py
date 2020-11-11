@@ -19,7 +19,7 @@ cache_RAM = True
 cache_HDD = False
 batch_size = 256
 num_workers = 8
-datasources_json_path = os.path.join(getDataDir(), 'dense_3X_10_10_2_um/original_merged_with_myelin_v01.json')
+datasources_json_path = os.path.join(getDataDir(), 'dense_3X_10_10_2_um/test_data_three_bboxes_with_myelin_v01.json')
 data_sources = WkwData.datasources_from_json(datasources_json_path)
 
 transforms = transforms.Compose([
@@ -50,11 +50,11 @@ test_dataset = WkwData(
 # Data Loaders:
 # Create the weighted samplers which create imbalance given the factor
 # The sampler is linear between the given the clean sample imbalabce factor ranges
-num_epoch = 1000
+num_epoch = 10000
 # controls the interval at which the dataloader's imbalance gets updated
-loader_interval = 50
+loader_interval = 250
 # The range of the imbalance (frequency ratio clean/debris)
-weight_range = [1, 19]
+weight_range = [1, round(1.0/19.0,3)]
 weight_range_epoch = np.linspace(weight_range[0], weight_range[1], num=int(num_epoch/loader_interval))
 class_info = (('Non_myelin', 0, 1.0), ('Debris', 1, 1.0) , ('Myelin', 2, 1.0))
 debris_index = [c[1] for c in class_info if c[0]=='Debris']
@@ -99,11 +99,11 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.00000075)
 
 log_int = 5
 device = 'cuda'
-gpu_id = 1
+gpu_id = 0
 save = True
 save_int = 25
 resume = False
-run_name = f'class_balance_run_with_myelin_factor_{weight_range[0]}_{weight_range[1]}_{gethostnameTimeString()}'
+run_name = f'test_class_balance_run_10000epochs_with_myelin_factor_{weight_range[0]:.3f}_{weight_range[1]:.3f}_{gethostnameTimeString()}'
 class_target_value = [(c[1], c[0]) for c in class_info]
 # Training Loop
 trainer = Trainer(run_name=run_name,
