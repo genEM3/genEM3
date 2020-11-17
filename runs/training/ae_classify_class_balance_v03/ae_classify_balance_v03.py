@@ -9,7 +9,7 @@ from genEM3.model.autoencoder2d import Encoder_4_sampling_bn_1px_deep_convonly_s
 from genEM3.training.multiclass import Trainer, subsetWeightedSampler
 from genEM3.util.path import get_data_dir, gethostnameTimeString
 
-## Train dataset: Create the dataset for training data
+# Train dataset: Create the dataset for training data
 run_root = os.path.dirname(os.path.abspath(__file__))
 input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
@@ -103,7 +103,7 @@ gpu_id = 0
 save = True
 save_int = 25
 resume = False
-run_name = f'test_class_balance_run_10000epochs_with_myelin_factor_{weight_range[0]:.3f}_{weight_range[1]:.3f}_{gethostnameTimeString()}'
+run_name = f'__class_balance_run_epochs_with_myelin_factor_{weight_range[0]:.3f}_{weight_range[1]:.3f}_{gethostnameTimeString()}'
 class_target_value = [(c[1], c[0]) for c in class_info]
 # Training Loop
 trainer = Trainer(run_name=run_name,

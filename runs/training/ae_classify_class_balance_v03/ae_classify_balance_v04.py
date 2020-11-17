@@ -9,7 +9,15 @@ from genEM3.model.autoencoder2d import Encoder_4_sampling_bn_1px_deep_convonly_s
 from genEM3.training.multiclass import Trainer, subsetWeightedSampler
 from genEM3.util.path import get_data_dir, gethostnameTimeString
 
-## Train dataset: Create the dataset for training data
+# use non X-window backend for matplotlib, it throws following error:
+# qt.qpa.screen: QXcbConnection: Could not connect to display localhost:10.0
+# Could not connect to any X display. Apart from not showing the plots by using 'Agg' backend you can use one of the following:
+# two solutions 1. use X11 forwarding to port
+#               2. Run in interactive window of VS code, which I doesn't seem great.
+import matplotlib
+# Force matplotlib to not use any Xwindows backend.
+matplotlib.use('Agg')
+# Train dataset: Create the dataset for training data
 run_root = os.path.dirname(os.path.abspath(__file__))
 input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
@@ -54,7 +62,7 @@ num_epoch = 1000
 # controls the interval at which the dataloader's imbalance gets updated
 loader_interval = 50
 # The range of the imbalance (frequency ratio clean/debris)
-weight_range = [1.0, round(1.0/19.0,3)]
+weight_range = [1.0, 1.0]
 weight_range_epoch = np.linspace(weight_range[0], weight_range[1], num=int(num_epoch/loader_interval))
 class_info = (('Clean', 0, 1.0), ('Debris', 1, 1.0))
 debris_index = [c[1] for c in class_info if c[0]=='Debris']
