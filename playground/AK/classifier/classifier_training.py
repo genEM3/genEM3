@@ -84,7 +84,3 @@ trainer = Trainer(run_name=run_name,
                   resume=resume)
 
 trainer.train()
-
-
-
-

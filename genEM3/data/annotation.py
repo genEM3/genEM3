@@ -10,7 +10,8 @@ import numpy as np
 from genEM3.data.wkwdata import DataSource, WkwData
 from genEM3.util.path import get_data_dir
 
-def update_data_source_targets(dataset: WkwData, 
+
+def update_data_source_targets(dataset: WkwData,
                                target_index_tuple_list: Sequence[Tuple[int, float]]):
     """Create an updated list of datasources from a wkwdataset and a list of sample index, target_class pair"""
     list_source_idx = [dataset.get_source_idx_from_sample_idx(sample_idx) for (sample_idx, _) in target_index_tuple_list]
@@ -26,10 +27,10 @@ def update_data_source_targets(dataset: WkwData,
     return source_list
 
 
-def update_data_source_bbox(dataset: WkwData, 
+def update_data_source_bbox(dataset: WkwData,
                             bbox_list: Sequence[Tuple[int, Sequence[int]]]):
     """Create an updated list of datasources from a wkwdataset and a list of index and bounding box tuples"""
-    assert len(bbox_list)==len(dataset)
+    assert len(bbox_list) == len(dataset)
     source_list = []
     for sample_idx, (source_idx, cur_bbox) in enumerate(bbox_list):
         s = dataset.data_sources[source_idx]
@@ -66,8 +67,8 @@ def patch_source_list_from_dataset(dataset: WkwData,
                                    margin: int = 35,
                                    roi_size: int = 140):
     """Return two data_sources from the image patches contained in a dataset. One data source has a larger bbox for annotations"""
-    corner_xy_index = [0,1]
-    length_xy_index = [3,4]
+    corner_xy_index = [0, 1]
+    length_xy_index = [3, 4]
     large_bboxes_idx = []
     bboxes_idx = []
     for idx in range(len(dataset)):
