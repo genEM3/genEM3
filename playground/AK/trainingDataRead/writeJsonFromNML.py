@@ -1,11 +1,11 @@
 import os
 import wkskel
 import numpy as np
-from genEM3.util.path import getDataDir, getMag8DatasetDir
+from genEM3.util.path import get_data_dir, getMag8DatasetDir
 from genEM3.data.wkwdata import DataSource, WkwData
 from genEM3.data.skeleton import getAllTreeCoordinates
 from genEM3.util.image import bboxesFromArray
-nmlPath = os.path.join(getDataDir(), 'artefact_trainingData.nml')
+nmlPath = os.path.join(get_data_dir(), 'artefact_trainingData.nml')
 skel = wkskel.Skeleton(nmlPath)
 
 # Get coordinates of the debris locations
@@ -62,5 +62,5 @@ for idx, curBbox in enumerate(bboxes_clean):
                            target_binary=1)
     dataSources.append(curSource)
 # write to JSON file
-jsonPath = os.path.join(getDataDir(), 'debris_clean_datasource.json')
+jsonPath = os.path.join(get_data_dir(), 'debris_clean_datasource.json')
 WkwData.datasources_to_json(dataSources, jsonPath)

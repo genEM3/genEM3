@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from genEM3.data.wkwdata import DataSource, WkwData
-from genEM3.util.path import getDataDir
+from genEM3.util.path import get_data_dir
 
 def update_data_source_targets(dataset: WkwData, 
                                target_index_tuple_list: Sequence[Tuple[int, float]]):
@@ -53,11 +53,11 @@ def merge_json_from_data_dir(fnames: Sequence[str], output_fname: str):
     # Test concatenating jsons
     full_fnames = []
     for fname in fnames:
-        full_fname = os.path.join(getDataDir(), fname)
+        full_fname = os.path.join(get_data_dir(), fname)
         full_fnames.append(full_fname)
 
     # Concatenate the test and training data sets
-    full_output_name = os.path.join(getDataDir(), output_fname)
+    full_output_name = os.path.join(get_data_dir(), output_fname)
     all_ds = WkwData.concat_datasources(json_paths_in=full_fnames, json_path_out=full_output_name)
     return all_ds
 

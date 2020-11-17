@@ -14,7 +14,7 @@ def WkwDataSetConstructor():
     """ Construsts a WkwData[set] from fixed parameters. These parameters can also be explored for 
         further testing"""    
     # Get data source from example json
-    json_dir = gpath.getDataDir()
+    json_dir = gpath.get_data_dir()
     datasources_json_path = os.path.join(json_dir, 'datasource_20X_980_980_1000bboxes.json')
     data_sources = WkwData.datasources_from_json(datasources_json_path)
     # Only pick the first two bboxes for faster epoch

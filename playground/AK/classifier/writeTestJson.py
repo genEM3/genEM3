@@ -5,7 +5,7 @@ import numpy as np
 
 from wkskel import Skeleton
 from genEM3.data.wkwdata import WkwData, DataSource
-from genEM3.util.path import get_runs_dir, getDataDir
+from genEM3.util.path import get_runs_dir, get_data_dir
 from genEM3.util.image import bboxesFromArray
 from genEM3.data.skeleton import get_volume_df
 
@@ -38,6 +38,6 @@ for i, cur_bbox in enumerate(bboxes):
                                   input_mean=input_mean, input_std=input_std, target_path=target_dir,
                                   target_bbox=cur_bbox.tolist(), target_class=cur_target, target_binary=target_binary))
 # Json name
-json_name = os.path.join(getDataDir(), 'test_data_three_bboxes.json')
+json_name = os.path.join(get_data_dir(), 'test_data_three_bboxes.json')
 # Write to json file
 WkwData.datasources_to_json(source_list, json_name)

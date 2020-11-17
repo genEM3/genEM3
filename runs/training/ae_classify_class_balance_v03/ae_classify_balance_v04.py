@@ -7,7 +7,7 @@ from genEM3.data import transforms
 from genEM3.data.wkwdata import WkwData, DataSplit
 from genEM3.model.autoencoder2d import Encoder_4_sampling_bn_1px_deep_convonly_skip, AE_Encoder_Classifier, Classifier3Layered
 from genEM3.training.multiclass import Trainer, subsetWeightedSampler
-from genEM3.util.path import getDataDir, gethostnameTimeString
+from genEM3.util.path import get_data_dir, gethostnameTimeString
 
 ## Train dataset: Create the dataset for training data
 run_root = os.path.dirname(os.path.abspath(__file__))
@@ -19,7 +19,7 @@ cache_RAM = True
 cache_HDD = False
 batch_size = 256
 num_workers = 8
-datasources_json_path = os.path.join(getDataDir(), 'dense_3X_10_10_2_um/original_merged_without_myelin_v01.json')
+datasources_json_path = os.path.join(get_data_dir(), 'dense_3X_10_10_2_um/original_merged_without_myelin_v01.json')
 data_sources = WkwData.datasources_from_json(datasources_json_path)
 
 transforms = transforms.Compose([
@@ -39,7 +39,7 @@ train_dataset = WkwData(
 
 ## Test dataset: 10 bboxes of size 9 x 9 x 1 um:
 # test dataset  
-test_json_path = os.path.join(getDataDir(), '10x_test_bboxes/10X_9_9_1_um_without_myelin_v01.json')  
+test_json_path = os.path.join(get_data_dir(), '10x_test_bboxes/10X_9_9_1_um_without_myelin_v01.json')  
 test_sources = WkwData.datasources_from_json(test_json_path)    
 test_dataset = WkwData( 
     input_shape=input_shape,

@@ -5,11 +5,11 @@ from torch.utils.data.sampler import SubsetRandomSampler
 from genEM3.data.wkwdata import WkwData, DataSplit
 from genEM3.model.autoencoder2d import Encoder_4_sampling_bn_1px_deep_convonly_skip, AE_Encoder_Classifier, Classifier
 from genEM3.training.classifier import Trainer
-from genEM3.util.path import getDataDir 
+from genEM3.util.path import get_data_dir
 # Parameters
 run_root = '/conndata/alik/genEM3_runs/ae_classifier'
 cache_HDD_root = os.path.join(run_root, '.cache/')
-datasources_json_path = os.path.join(getDataDir(), 'debris_clean_datasource.json')
+datasources_json_path = os.path.join(get_data_dir(), 'debris_clean_datasource.json')
 state_dict_path = '/conndata/alik/genEM3_runs/ae_v05_skip/epoch_60/model_state_dict'
 input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)

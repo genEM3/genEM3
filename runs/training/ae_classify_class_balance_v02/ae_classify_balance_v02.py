@@ -6,11 +6,11 @@ from genEM3.data import transforms
 from genEM3.data.wkwdata import WkwData, DataSplit
 from genEM3.model.autoencoder2d import Encoder_4_sampling_bn_1px_deep_convonly_skip, AE_Encoder_Classifier, Classifier3Layered
 from genEM3.training.classifier import Trainer, subsetWeightedSampler
-from genEM3.util.path import getDataDir, gethostnameTimeString
+from genEM3.util.path import get_data_dir, gethostnameTimeString
 # Parameters
 run_root = os.path.dirname(os.path.abspath(__file__))
-cache_HDD_root = os.path.join(getDataDir(), '.cache/')
-datasources_json_path = os.path.join(getDataDir(), 'train_test_combined.json')
+cache_HDD_root = os.path.join(get_data_dir(), '.cache/')
+datasources_json_path = os.path.join(get_data_dir(), 'train_test_combined.json')
 state_dict_path = '/u/flod/code/genEM3/runs/training/ae_v05_skip/.log/epoch_60/model_state_dict'
 input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)

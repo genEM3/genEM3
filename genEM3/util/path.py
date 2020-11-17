@@ -21,7 +21,7 @@ def getAbsPathRepository():
     return os.sep.join(path_repoElements)
 
 
-def getDataDir():
+def get_data_dir():
     """return the path for the 'data' directory"""
     repoDir = getAbsPathRepository()
     return os.path.join(repoDir, 'data')

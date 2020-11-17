@@ -59,7 +59,7 @@ def main():
     # Parameters
     warmup_kld = True
     connDataDir = '/conndata/alik/genEM3_runs/VAE/'
-    json_dir = gpath.getDataDir()
+    json_dir = gpath.get_data_dir()
     datasources_json_path = os.path.join(json_dir, 'datasource_20X_980_980_1000bboxes.json')
     input_shape = (140, 140, 1)
     output_shape = (140, 140, 1)
