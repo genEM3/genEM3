@@ -56,7 +56,7 @@ loader_interval = 50
 # The range of the imbalance (frequency ratio clean/debris)
 weight_range = [1.0, round(1.0/19.0,3)]
 weight_range_epoch = np.linspace(weight_range[0], weight_range[1], num=int(num_epoch/loader_interval))
-class_info = (('Non_myelin', 0, 1.0), ('Debris', 1, 1.0))
+class_info = (('Clean', 0, 1.0), ('Debris', 1, 1.0))
 debris_index = [c[1] for c in class_info if c[0]=='Debris']
 assert len(debris_index) == 1 
 # list of data loaders each contains a dictionary for train and validation loaders
@@ -103,7 +103,7 @@ gpu_id = 0
 save = True
 save_int = 25
 resume = False
-run_name = f'class_balance_run_with_myelin_factor_{weight_range[0]:.3f}_{weight_range[1]:.3f}_{gethostnameTimeString()}'
+run_name = f'class_balance_run_without_myelin_factor_{weight_range[0]:.3f}_{weight_range[1]:.3f}_{gethostnameTimeString()}'
 class_target_value = [(c[1], c[0]) for c in class_info]
 # Training Loop
 trainer = Trainer(run_name=run_name,
