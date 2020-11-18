@@ -8,12 +8,10 @@ import itertools
 
 import numpy as np
 import matplotlib.pyplot as plt
-from pigeon import annotate
 
 from genEM3.data.wkwdata import WkwData,DataSource
 from genEM3.util.path import get_data_dir
-from genEM3.data.annotation import update_data_source_bbox, update_data_source_targets, display_example 
-
+from genEM3.data.annotation import annotate, update_data_source_bbox, update_data_source_targets, display_example 
 # %%
 # Loaded the json file for the dataset
 datasources_json_path = os.path.join(get_data_dir(), 'debris_clean_added_bboxes2_wiggle_datasource.json') 
@@ -40,8 +38,8 @@ dataset = WkwData(
 # %%
 # Get a set of data sources with the normal bounding boxes to create a patch wise detaset and a larger bounding box for annotation
 margin = 35
-corner_xy_index = [0,1]
-length_xy_index = [3,4]
+corner_xy_index = [0, 1]
+length_xy_index = [3, 4]
 roi_size = 140
 large_bboxes_idx = []
 bboxes_idx = []
@@ -209,5 +207,3 @@ for i in index_disagreement:
     add_bbox_tree(sample_center, input_shape, tree_name, skel)
     
 skel.write_nml(os.path.join(get_data_dir(), 'test_dataset_annotation_disagreement_v01.nml'))
-
-
