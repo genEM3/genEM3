@@ -11,80 +11,35 @@ import matplotlib.pyplot as plt
 
 from genEM3.data.wkwdata import WkwData,DataSource
 from genEM3.util.path import get_data_dir
-from genEM3.data.annotation import annotate, update_data_source_bbox, update_data_source_targets, display_example 
+import genEM3.data.annotation as annotation 
 # %%
 # Loaded the json file for the dataset
 json_dir = os.path.join(get_data_dir(), 'debris_clean_added_bboxes2_wiggle_datasource.json') 
 config = WkwData.config_wkwdata(json_dir)
 dataset = WkwData.init_from_config(config)
-
 # %%
 # Get a set of data sources with the normal bounding boxes to create a patch wise detaset and a larger bounding box for annotation
 margin = 35
-corner_xy_index = [0, 1]
-length_xy_index = [3, 4]
 roi_size = 140
-large_bboxes_idx = []
-bboxes_idx = []
-for idx in range(len(dataset)):
-    (source_idx, original_cur_bbox) = dataset.get_bbox_for_sample_idx(idx)
-    bboxes_idx.append((source_idx, original_cur_bbox))
-    cur_bbox = np.asarray(original_cur_bbox)
-    cur_bbox[corner_xy_index] = cur_bbox[corner_xy_index] - margin
-    cur_bbox[length_xy_index] = cur_bbox[length_xy_index] + margin*2
-    # large bbox append
-    large_bboxes_idx.append((source_idx, cur_bbox.tolist()))
-    
-assert len(large_bboxes_idx) == len(dataset) == len(bboxes_idx)
-larger_sources = update_data_source_bbox(dataset, large_bboxes_idx)
-patch_source_list = update_data_source_bbox(dataset, bboxes_idx)
+source_dict = annotation.patch_source_list_from_dataset(dataset=dataset,
+                                                        margin=margin,
+                                                        roi_size=roi_size)
+dataset_dict = dict.fromkeys(source_dict)
 
-
-# %%
-# Create a dataset with updated data source for annotation
-input_shape = tuple(large_bboxes_idx[0][1][3:6])
-larger_dataset = WkwData(
-    input_shape=input_shape,
-    target_shape=input_shape,
-    data_sources=larger_sources,
-    cache_RAM=cache_RAM,
-    cache_HDD=cache_HDD,
-    cache_HDD_root=cache_HDD_root
-)
-
-
-# %%
-input_shape = tuple(bboxes_idx[0][1][3:6])
-patch_dataset = WkwData(
-    input_shape=input_shape,
-    target_shape=input_shape,
-    data_sources=patch_source_list,
-    cache_RAM=cache_RAM,
-    cache_HDD=cache_HDD,
-    cache_HDD_root=cache_HDD_root
-)
-
-
-# %%
-print(patch_dataset.data_sources[-1])
-print(patch_source_list[-1])
-
-
-# %%
+for key in source_dict:
+    cur_source = source_dict[key]
+    cur_patch_shape = tuple(cur_source[0].input_bbox[3:6])
+    cur_config = WkwData.config_wkwdata(datasources_json_path=None,
+                                        input_shape=cur_patch_shape,
+                                        output_shape=cur_patch_shape)
+    dataset_dict[key] = WkwData.init_from_config(cur_config, source_dict[key])
+# assert larger and small datasets have the same length
+dataset_lengths = [len(d) for d in dataset_dict.values()]
+assert all(l == dataset_lengths[0] for l in dataset_lengths)
 # break down the range into partitions of 1000
 range_size = 1000
-num_thousand, remainder = divmod(len(larger_dataset), range_size)
-list_ranges = []
-# Create a list of ranges
-for i in range(num_thousand):
-    list_ranges.append(range(i*range_size, (i+1)*range_size))
-if remainder > 0:
-    final_range = range(num_thousand*range_size, num_thousand*range_size+remainder)
-    list_ranges.append(final_range)
-
-print(list_ranges)
-
-
+list_ranges = annotation.divide_range(total_size=len(dataset_dict['large']),
+                                      chunk_size=range_size)
 # %%
 #Annotate data using pigeon
 annotation_fun = lambda i: display_example(i, dataset=larger_dataset, margin=margin, roi_size=roi_size)

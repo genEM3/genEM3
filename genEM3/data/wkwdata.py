@@ -539,12 +539,17 @@ class WkwData(Dataset):
         plt.show()
 
     @classmethod
-    def init_from_config(cls, config: NamedTuple):
+    def init_from_config(cls, config: NamedTuple, data_source_list: List = None):
         """
         class method to initialize a dataset from a configuration named tuple
         """
-        data_sources = WkwData.datasources_from_json(config.datasources_json_path)
-
+        # if data sources are not given, read them from the json directory
+        if data_source_list is None:
+            assert config.datasources_json_path is not None
+            data_sources = WkwData.datasources_from_json(config.datasources_json_path)
+        else:
+            data_sources = data_source_list
+        # create the wkwdataset
         dataset = cls(
             input_shape=config.input_shape,
             target_shape=config.output_shape,
@@ -556,17 +561,23 @@ class WkwData(Dataset):
         return dataset
 
     @staticmethod
-    def config_wkwdata(json_path: str):
+    def config_wkwdata(datasources_json_path: str = None,
+                       input_shape: Tuple = (140, 140, 1),
+                       output_shape: Tuple = (140, 140, 1),
+                       cache_HDD: bool = False,
+                       cache_RAM: bool = False,
+                       batch_size: int = 256,
+                       num_workers: int = 8):
         """ Return a named tuple with the parameters for initialization of a wkwdata"""
-        fieldnames = 'input_shape, output_shape, cache_RAM, cachde_HDD, batch_size, num_workers, cache_HDD_root, datasources_json_path'
+        fieldnames = 'input_shape, output_shape, cache_RAM, cache_HDD, batch_size, num_workers, cache_HDD_root, datasources_json_path'
         config = namedtuple('config', fieldnames)
-        config.datasources_json_path = json_path
-        config.input_shape = (140, 140, 1)
-        config.output_shape = (140, 140, 1)
-        config.cache_RAM = False
-        config.cache_HDD = False
-        config.batch_size = 256
-        config.num_workers = 8
+        config.datasources_json_path = datasources_json_path
+        config.input_shape = input_shape
+        config.output_shape = output_shape
+        config.cache_RAM = cache_RAM
+        config.cache_HDD = cache_HDD
+        config.batch_size = batch_size
+        config.num_workers = num_workers
         config.cache_HDD_root = os.path.join(get_data_dir(), '.cache/')
         return config
     

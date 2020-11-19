@@ -222,9 +222,9 @@ def patch_source_list_from_dataset(dataset: WkwData,
         large_bboxes_idx.append((source_idx, cur_bbox.tolist()))
 
     assert len(large_bboxes_idx) == len(dataset) == len(bboxes_idx)
-    larger_sources = update_data_source_bbox(dataset, large_bboxes_idx)
+    large_source_list = update_data_source_bbox(dataset, large_bboxes_idx)
     patch_source_list = update_data_source_bbox(dataset, bboxes_idx)
-    return {'original': patch_source_list,'large':larger_sources}
+    return {'original': patch_source_list,'large':large_source_list}
 
 
 def divide_range(total_size: int, chunk_size: int = 1000,):
