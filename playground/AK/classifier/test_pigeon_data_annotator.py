@@ -5,7 +5,7 @@ import os
 import time
 import pickle
 import itertools
-
+from collections import namedtuple
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -14,26 +14,9 @@ from genEM3.util.path import get_data_dir
 from genEM3.data.annotation import annotate, update_data_source_bbox, update_data_source_targets, display_example 
 # %%
 # Loaded the json file for the dataset
-datasources_json_path = os.path.join(get_data_dir(), 'debris_clean_added_bboxes2_wiggle_datasource.json') 
-input_shape = (140, 140, 1)
-output_shape = (140, 140, 1)
-cache_RAM = False
-cache_HDD = False
-batch_size = 256
-num_workers = 8
-cache_HDD_root = os.path.join(get_data_dir(), '.cache/')
-
-data_sources = WkwData.datasources_from_json(datasources_json_path)
-
-dataset = WkwData(
-    input_shape=input_shape,
-    target_shape=output_shape,
-    data_sources=data_sources,
-    cache_RAM=cache_RAM,
-    cache_HDD=cache_HDD,
-    cache_HDD_root=cache_HDD_root
-)
-
+json_dir = os.path.join(get_data_dir(), 'debris_clean_added_bboxes2_wiggle_datasource.json') 
+config = WkwData.config_wkwdata(json_dir)
+dataset = WkwData.init_from_config(config)
 
 # %%
 # Get a set of data sources with the normal bounding boxes to create a patch wise detaset and a larger bounding box for annotation

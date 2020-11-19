@@ -2,7 +2,7 @@ import os
 import json
 import random
 from collections import namedtuple
-from typing import Tuple, Sequence, List, Callable, Dict
+from typing import Tuple, Sequence, List, Callable, Dict, NamedTuple
 from functools import lru_cache
 
 import numpy as np
@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 import torch
 from torch.utils.data import Dataset
 import wkw
+
+from genEM3.util.path import get_data_dir
 
 np.random.seed(1337)
 
@@ -536,6 +538,38 @@ class WkwData(Dataset):
         # AK: Add to pipe the figure through X11
         plt.show()
 
+    @classmethod
+    def init_from_config(cls, config: NamedTuple):
+        """
+        class method to initialize a dataset from a configuration named tuple
+        """
+        data_sources = WkwData.datasources_from_json(config.datasources_json_path)
+
+        dataset = cls(
+            input_shape=config.input_shape,
+            target_shape=config.output_shape,
+            data_sources=data_sources,
+            cache_RAM=config.cache_RAM,
+            cache_HDD=config.cache_HDD,
+            cache_HDD_root=config.cache_HDD_root
+        )
+        return dataset
+
+    @staticmethod
+    def config_wkwdata(json_path: str):
+        """ Return a named tuple with the parameters for initialization of a wkwdata"""
+        fieldnames = 'input_shape, output_shape, cache_RAM, cachde_HDD, batch_size, num_workers, cache_HDD_root, datasources_json_path'
+        config = namedtuple('config', fieldnames)
+        config.datasources_json_path = json_path
+        config.input_shape = (140, 140, 1)
+        config.output_shape = (140, 140, 1)
+        config.cache_RAM = False
+        config.cache_HDD = False
+        config.batch_size = 256
+        config.num_workers = 8
+        config.cache_HDD_root = os.path.join(get_data_dir(), '.cache/')
+        return config
+    
     @staticmethod
     def collate_fn(batch):
         input_ = torch.cat([torch.unsqueeze(item['input'], dim=0) for item in batch], dim=0)

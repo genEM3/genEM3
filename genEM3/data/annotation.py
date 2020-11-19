@@ -3,6 +3,7 @@ Functions used in relation to data annotation that might not fit in other module
 """
 import os
 from typing import Sequence, Tuple
+from collections import namedtuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -15,6 +16,7 @@ import random
 import functools
 from IPython.display import display, clear_output
 from ipywidgets import Button, Dropdown, HTML, HBox, IntSlider, FloatSlider, Textarea, Output
+
 
 def annotate(examples,
              options=None,
