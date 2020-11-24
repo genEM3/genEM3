@@ -4,6 +4,8 @@ Functions used in relation to data annotation that might not fit in other module
 import os
 from typing import Sequence, Tuple
 from collections import namedtuple
+from functools import partial, partialmethod
+
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -15,149 +17,132 @@ from genEM3.util.path import get_data_dir
 import random
 import functools
 from IPython.display import display, clear_output
-from ipywidgets import Button, Dropdown, HTML, HBox, IntSlider, FloatSlider, Textarea, Output
+import ipywidgets as widgets
 
 
-def annotate(examples,
-             options=None,
-             shuffle=False,
-             include_skip=True,
-             display_fn=display):
+class Widget():
     """
     Build an interactive widget for annotating a list of input examples.
 
     Parameters
     ----------
-    examples: list(any), list of items to annotate
-    options: list(any) or tuple(start, end, [step]) or None
-             if list: list of labels for binary classification task (Dropdown or Buttons)
-             if tuple: range for regression task (IntSlider or FloatSlider)
-             if None: arbitrary text input (TextArea)
-    shuffle: bool, shuffle the examples before annotating
-    include_skip: bool, include option to skip example while annotating
-    display_fn: func, function for displaying an example to the user
-
     Returns
     -------
-    annotations : list of tuples, list of annotated examples (example, label)
     """
-    examples = list(examples)
-    if shuffle:
-        random.shuffle(examples)
-
-    annotations = []
-    current_index = -1
-
-    def set_label_text():
-        nonlocal count_label
-        count_label.value = '{} examples annotated, {} examples left'.format(
-            len(annotations), len(examples) - current_index
-        )
-
-    def show_next():
-        nonlocal current_index
-        current_index += 1
-        set_label_text()
-        if current_index >= len(examples):
-            for btn in buttons:
-                btn.disabled = True
-            print('Annotation done.')
-            return
-        with out:
-            clear_output(wait=True)
-            display_fn(examples[current_index])
-
-    def add_annotation(annotation):
-        annotations.append((examples[current_index], annotation))
-        show_next()
-
-    def skip(btn):
-        show_next()
-
-    count_label = HTML()
-    set_label_text()
-    display(count_label)
-
-    if type(options) == list:
-        task_type = 'classification'
-    elif type(options) == tuple and len(options) in [2, 3]:
-        task_type = 'regression'
-    elif options is None:
-        task_type = 'captioning'
-    else:
-        raise Exception('Invalid options')
-
-    buttons = []
+    def __init__(self,
+                 dataset: WkwData=None,
+                 index_range: range=None,
+                 button_names: Sequence[Sequence[str]] = [['No', 'Yes'], ['No', 'Yes']],
+                 target_classes: Sequence[str] = ['Myelin', 'Debris'],
+                 margin: int = 35, 
+                 roi_size: int = 140):
+        self.dataset = dataset
+        self.index_range = index_range
+        self._current_index = min(index_range)
+        self.button_names = button_names
+        self.target_classes = target_classes
+        # elements of the widget
+        # index slider
+        self.index_slider = self.get_slider()
+        # output element for the example image (output of display_example)
+        self.image_output = widgets.Output(layout={'border': '1px solid black', 'width': '50%', 
+                                            'align_self':'center'})
+        # Previous/Next buttons
+        self.prev_next = self.get_prev_next_button()
+        # margin and roi size for drawing each example
+        self.margin = margin
+        self.roi_size = roi_size
     
-    if task_type == 'classification':
-        use_dropdown = len(options) > 5
+    @property
+    def current_index(self):
+        return self._current_index
+    
+    @current_index.setter
+    def current_index(self, current_index):
+        # sync the slider with the current index
+        self.index_slider.value = current_index
+        self._current_index = current_index
 
-        if use_dropdown:
-            dd = Dropdown(options=options)
-            display(dd)
-            btn = Button(description='submit')
-            def on_click(btn):
-                add_annotation(dd.value)
-            btn.on_click(on_click)
-            buttons.append(btn)
+    def display_current(self):
+        """Display an image with a central rectangle for the roi"""
+        _ , ax = plt.subplots(figsize=(10, 10))
+        current_image = self.dataset.get_ordered_sample(self.current_index)['input'].squeeze()
+        ax.imshow(current_image,cmap='gray')
+        # Add a red rectangle
+        rectangle = plt.Rectangle((self.margin, self.margin), 
+                                   self.roi_size, self.roi_size, fill=False, ec="red")
+        ax.add_patch(rectangle)
+        plt.title(f'Sample index: {self.current_index}')
+        # turn off the axis
+        ax.axis('off')
+        # output the plot
+        plt.show()
+
+    
+    def update_image(self, relative_pos: int = 0):
+        """
+        Similar to the display_button_callback without the button input required by the ipywidgets
+        """
+        self.current_index += relative_pos
+        with self.image_output:
+            clear_output(wait=True)
+            self.display_current()
+    
+    def get_prev_next_button(self):
+        b1 = widgets.Button(description="Previous")
+        b2 = widgets.Button(description="Next")
+        b1.on_click(partial(self.display_button_callback, widget_obj=self, relative_pos=-1))
+        b2.on_click(partial(self.display_button_callback, widget_obj=self,relative_pos=1))
+        control_buttons = widgets.HBox([widgets.Label('Controlers: '),b1, b2], layout=widgets.Layout(justify_content='center'))
+        return control_buttons
+    
+    def get_slider(self):
+        "Generate the slider for the index of the "
+        progress = widgets.IntSlider(value=self.current_index,
+                                     min=min(self.index_range),
+                                     max=max(self.index_range),
+                                     step=1,
+                                     description='Index:',
+                                     disabled=False,
+                                     continuous_update=False,
+                                     orientation='horizontal',
+                                     layout=widgets.Layout(width='100%',justify_content='center'))
+        # Change the current index and display the image when slider value is changed
+        def on_change_handler(slider_change):
+            # update current index, note: the current index setter also updates the value of the slider
+            self.current_index = slider_change['new']
+            self.update_image(relative_pos=0)
+        progress.observe(on_change_handler, names='value')
+        return progress
+    
+
+    def show_widget(self):
+        """
+        Concatenate all the widgets and display them
+        """
+        # Load the current image
+        self.update_image()
+        all_widgets = widgets.VBox([self.index_slider, self.prev_next, self.image_output])
+        display(all_widgets)
+
+    @staticmethod 
+    def display_button_callback(btn, widget_obj=None, relative_pos=0):
+        """
+        Update the output image given the relative change as compared to current index
+        Note: The reason for the use of static method is the need for the intial argument to be the btn representation from ipywidgets
+        See here: https://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Events.html
+        """
+        widget_obj.current_index += relative_pos
+        with widget_obj.image_output:
+            clear_output(wait=True)# wait until the next image is loaded
+            widget_obj.display_current()
         
-        else:
-            for label in options:
-                btn = Button(description=label)
-                def on_click(label, btn):
-                    add_annotation(label)
-                btn.on_click(functools.partial(on_click, label))
-                buttons.append(btn)
-
-    elif task_type == 'regression':
-        target_type = type(options[0])
-        if target_type == int:
-            cls = IntSlider
-        else:
-            cls = FloatSlider
-        if len(options) == 2:
-            min_val, max_val = options
-            slider = cls(min=min_val, max=max_val)
-        else:
-            min_val, max_val, step_val = options
-            slider = cls(min=min_val, max=max_val, step=step_val)
-        display(slider)
-        btn = Button(description='submit')
-        def on_click(btn):
-            add_annotation(slider.value)
-        btn.on_click(on_click)
-        buttons.append(btn)
-
-    else:
-        ta = Textarea()
-        display(ta)
-        btn = Button(description='submit')
-        def on_click(btn):
-            add_annotation(ta.value)
-        btn.on_click(on_click)
-        buttons.append(btn)
-
-    if include_skip:
-        btn = Button(description='skip')
-        btn.on_click(skip)
-        buttons.append(btn)
-
-    box = HBox(buttons)
-    display(box)
-
-    out = Output()
-    display(out)
-
-    show_next()
-
-    return annotations
-
 def update_data_source_targets(dataset: WkwData,
                                target_index_tuple_list: Sequence[Tuple[int, float]]):
     """Create an updated list of datasources from a wkwdataset and a list of sample index, target_class pair"""
     list_source_idx = [dataset.get_source_idx_from_sample_idx(sample_idx) for (sample_idx, _) in target_index_tuple_list]
     source_list = []
-    for i, cur_target_tuple in enumerate(target_index_tuple_list):
+    for cur_target_tuple in target_index_tuple_list:
         cur_target = cur_target_tuple[1]
         sample_idx = cur_target_tuple[0]
         s_index = list_source_idx[sample_idx]
@@ -183,10 +168,11 @@ def update_data_source_bbox(dataset: WkwData,
 
 def display_example(index: int, dataset: WkwData, margin: int = 35, roi_size: int = 140):
     """Display an image with a central rectangle for the roi"""
-    fig, ax = plt.subplots(figsize=(10, 10))
+    _ , ax = plt.subplots(figsize=(10, 10))
     ax.imshow(dataset.get_ordered_sample(index)['input'].squeeze(),cmap='gray')
     rectangle = plt.Rectangle((margin,margin), roi_size, roi_size, fill=False, ec="red")
     ax.add_patch(rectangle)
+    ax.axis('off')
     plt.show()
 
 
