@@ -41,14 +41,19 @@ class Widget():
         self._current_index = min(index_range)
         self.button_names = button_names
         self.target_classes = target_classes
+        self.annotation_list = [(index, {cur_class: None for cur_class in target_classes}) for index in index_range]
         # elements of the widget
         # index slider
         self.index_slider = self.get_slider()
         # output element for the example image (output of display_example)
         self.image_output = widgets.Output(layout={'border': '1px solid black', 'width': '50%', 
                                             'align_self':'center'})
+        self.text_output = widgets.Label(value=None, layout=widgets.Layout(display="flex", justify_content="center", align_self='center',
+                                                                width="35%", border="solid"))
+
         # Previous/Next buttons
         self.prev_next = self.get_prev_next_button()
+        self.annotation_buttons = self.get_annotation_buttons()
         # margin and roi size for drawing each example
         self.margin = margin
         self.roi_size = roi_size
@@ -84,10 +89,17 @@ class Widget():
         Similar to the display_button_callback without the button input required by the ipywidgets
         """
         self.current_index += relative_pos
+        self.update_result_text()
         with self.image_output:
             clear_output(wait=True)
             self.display_current()
-    
+
+    def update_result_text(self):
+        """
+        Update the text of the image to represent the current result for it
+        """
+        self.text_output.value = f'Annotation result: {self.annotation_list[self.current_index][1]}'
+
     def get_prev_next_button(self):
         b1 = widgets.Button(description="Previous")
         b2 = widgets.Button(description="Next")
@@ -97,7 +109,9 @@ class Widget():
         return control_buttons
     
     def get_slider(self):
-        "Generate the slider for the index of the "
+        """
+        Generate the slider for the sample indicees
+        """
         progress = widgets.IntSlider(value=self.current_index,
                                      min=min(self.index_range),
                                      max=max(self.index_range),
@@ -115,6 +129,32 @@ class Widget():
         progress.observe(on_change_handler, names='value')
         return progress
     
+    def set_annotation(self, button_value, target_class):
+        """
+        Set the annotation value
+        """
+        self.annotation_list[self.current_index][1][target_class] = button_value
+
+    def get_button(self, button_name, target_class):
+        """Get the button given the button type [Yes or no] and target type [Debris, Myelin]"""
+        assert button_name in ['Yes', 'No'], "Target type should be either 'Yes' or 'No'"
+        button_value = 1.0 if (button_name == 'Yes') else 0.0
+        button = widgets.Button(description=button_name,
+                        disabled=False) 
+        # Callback function of the button
+        def on_click(b):
+            self.set_annotation(button_value, target_class)
+            self.update_result_text()
+        button.on_click(on_click)
+        return button
+
+    def get_annotation_buttons(self):
+        # Get the buttons for setting
+        annotation_buttons = []
+        for index, target in enumerate(self.target_classes):
+            cur_target_buttons = [self.get_button(b_name, target) for b_name in self.button_names[index]]
+            annotation_buttons.append(widgets.HBox([widgets.Label(target+': ')]+cur_target_buttons, layout=widgets.Layout(justify_content='center')))
+        return annotation_buttons
 
     def show_widget(self):
         """
@@ -122,7 +162,7 @@ class Widget():
         """
         # Load the current image
         self.update_image()
-        all_widgets = widgets.VBox([self.index_slider, self.prev_next, self.image_output])
+        all_widgets = widgets.VBox([self.index_slider] + self.annotation_buttons + [self.prev_next, self.text_output, self.image_output])
         display(all_widgets)
 
     @staticmethod 
@@ -133,6 +173,7 @@ class Widget():
         See here: https://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Events.html
         """
         widget_obj.current_index += relative_pos
+        widget_obj.update_result_text()
         with widget_obj.image_output:
             clear_output(wait=True)# wait until the next image is loaded
             widget_obj.display_current()
