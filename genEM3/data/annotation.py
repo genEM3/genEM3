@@ -2,10 +2,10 @@
 Functions used in relation to data annotation that might not fit in other modules
 """
 import os
+import pickle
 from typing import Sequence, Tuple
 from collections import namedtuple
 from functools import partial, partialmethod
-
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -42,6 +42,9 @@ class Widget():
         self.button_names = button_names
         self.target_classes = target_classes
         self.annotation_list = [(index, {cur_class: None for cur_class in target_classes}) for index in index_range]
+        # margin and roi size for drawing each example
+        self.margin = margin
+        self.roi_size = roi_size
         # elements of the widget
         # index slider
         self.index_slider = self.get_slider()
@@ -50,13 +53,13 @@ class Widget():
                                             'align_self':'center'})
         self.text_output = widgets.Label(value=None, layout=widgets.Layout(display="flex", justify_content="center", align_self='center',
                                                                 width="35%", border="solid"))
-
         # Previous/Next buttons
         self.prev_next = self.get_prev_next_button()
         self.annotation_buttons = self.get_annotation_buttons()
-        # margin and roi size for drawing each example
-        self.margin = margin
-        self.roi_size = roi_size
+        
+        # Save/Load properties
+        self.input_to_init = ['dataset','index_range','button_names','target_classes','margin','roi_size']
+        self.additional_save_props = ['annotation_list', '_current_index']
     
     @property
     def current_index(self):
@@ -65,6 +68,7 @@ class Widget():
     @current_index.setter
     def current_index(self, current_index):
         # sync the slider with the current index
+        assert min(self.index_range)<= current_index <= max(self.index_range), f'Index out of range. current: {current_index}, range{self.index_range}'
         self.index_slider.value = current_index
         self._current_index = current_index
 
@@ -164,6 +168,31 @@ class Widget():
         self.update_image()
         all_widgets = widgets.VBox([self.index_slider] + self.annotation_buttons + [self.prev_next, self.text_output, self.image_output])
         display(all_widgets)
+
+    def save(self, file_name):
+        """
+        Save the dictionary of the object to the filename
+        Note: The ipywidget items seem to be not picklable so I just save the necessary items for initiating for load
+        """
+        
+        things2save = self.input_to_init + self.additional_save_props 
+        with open(file_name, 'wb') as output:
+            dict2save = {k: v for k, v in self.__dict__.items() if k in things2save}
+            pickle.dump(dict2save, output, pickle.HIGHEST_PROTOCOL)
+    
+    @classmethod
+    def load(cls, file_name):
+        """Load the dictionary of input and the initialize the object from it"""
+        propertiesAfterLoading = ['annotation_list', '_current_index']
+        with open(file_name, 'rb') as input:
+            saved_dict = pickle.load(input)
+            kwargs = {k: v for k, v in saved_dict.items() if k not in propertiesAfterLoading}
+            loaded_widget = cls(**kwargs)
+        # set the annotation list and the current index as well
+        loaded_widget.annotation_list = saved_dict.get('annotation_list')
+        loaded_widget.current_index = saved_dict.get('_current_index')
+        return loaded_widget
+
 
     @staticmethod 
     def display_button_callback(btn, widget_obj=None, relative_pos=0):
