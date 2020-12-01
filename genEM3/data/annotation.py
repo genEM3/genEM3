@@ -179,7 +179,26 @@ class Widget():
         with open(file_name, 'wb') as output:
             dict2save = {k: v for k, v in self.__dict__.items() if k in things2save}
             pickle.dump(dict2save, output, pickle.HIGHEST_PROTOCOL)
-    
+
+    def update_annotation_from_multiclass(self):
+        """
+        Use the multiclass annotation in the dataset to update the annotation_list
+        """
+        multiclass_targets = [self.dataset.get_target_from_sample_idx(i) for i in self.index_range]
+        for index, item in enumerate(multiclass_targets):
+            item = int(item)
+            if item == 0:
+                self.annotation_list[index][1]['Myelin'] = 0.0
+                self.annotation_list[index][1]['Debris'] = 0.0
+            elif item == 1:
+                self.annotation_list[index][1]['Myelin'] = 0.0
+                self.annotation_list[index][1]['Debris'] = 1.0
+            elif item == 2:
+                self.annotation_list[index][1]['Myelin'] = 1.0
+                self.annotation_list[index][1]['Debris'] = 0.0
+            else:
+                raise ValueError
+
     @classmethod
     def load(cls, file_name):
         """Load the dictionary of input and the initialize the object from it"""
