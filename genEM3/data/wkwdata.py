@@ -351,9 +351,9 @@ class WkwData(Dataset):
     def fill_cache(self, wkw_path, wkw_bbox):
 
         wkw_cache_path = os.path.join(self.cache_HDD_root, wkw_path[1::])
-
-        # Attempt to read from HDD cache if already exists:
-        if os.path.exists(os.path.join(wkw_cache_path, 'header.wkw')):
+        # Attempt to read from HDD cache if already exists AND the user has requested the HDD cache:
+        # Note: This might result in data incompleteness in the cache if another part of the data is already cached
+        if self.cache_HDD and os.path.exists(os.path.join(wkw_cache_path, 'header.wkw')):
             data = self.wkw_read(wkw_cache_path, wkw_bbox)
             # If data incomplete read again from remote source
             if self.assert_data_completeness(data) is False:
