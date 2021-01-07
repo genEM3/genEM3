@@ -8,7 +8,7 @@ from genEM3.data.annotation import Widget
 from genEM3.data.wkwdata import WkwData, DataSource
 
 # Load the annotation widget
-file_name = '/u/alik/code/genEM3/playground/AK/classifier/10X_9_9_1_um_with_myelin_Final.pkl'
+file_name = '/u/alik/code/genEM3/playground/AK/classifier/original_merged_with_myelin_Final.pkl'
 w_loaded = Widget.load(file_name=file_name)
 # Get the datasources
 source_list = []
@@ -24,6 +24,6 @@ for i, cur_source in enumerate(sources_fromWidget):
                               target_bbox=cur_source.target_bbox, target_class=cur_targets, target_binary=cur_source.target_binary))
     
 # Json name
-json_name = os.path.join(get_data_dir(), '10x_test_bboxes', '10X_9_9_1_um_double_binary_v01.json')
+json_name = os.path.join(get_data_dir(), 'dense_3X_10_10_2_um', 'original_merged_double_binary_v01.json')
 # Write to json file
 WkwData.datasources_to_json(source_list, json_name)
