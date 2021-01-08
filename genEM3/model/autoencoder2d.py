@@ -123,6 +123,32 @@ class Classifier3Layered(nn.Module):
         return x
 
 
+class Classifier3LayeredNoLogSoftmax(nn.Module):
+    """
+    3-layered MLP classifier with logit output (no softmax layer)
+    Used for multi-label classification task together with a BCEWithLogitLoss criterion
+    """
+    def __init__(self, n_latent, n_output: int = 2):
+
+        super().__init__()
+        self.num_output = n_output
+        self.input = nn.Sequential(
+            nn.Conv2d(n_latent, 256, kernel_size=1),
+            nn.LeakyReLU())
+        self.hidden = nn.Sequential(
+            nn.Conv2d(256, 24, kernel_size=1),
+            nn.LeakyReLU())
+        self.output = nn.Conv2d(24, n_output, kernel_size=1)
+
+    def forward(self, x):
+
+        x = self.input(x)
+        x = self.hidden(x)
+        x = self.output(x)
+
+        return x
+
+
 class Encoder_4_sampling_1px_deep_convonly_skip(nn.Module):
 
     def __init__(self, input_size, kernel_size, stride, n_fmaps=16, n_latent=2048):
