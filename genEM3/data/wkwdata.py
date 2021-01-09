@@ -248,8 +248,8 @@ class WkwData(Dataset):
         # squeeze out the depth dimension if a singleton
         if self.input_shape[2] == 1 and input_.dim() > 3 and input_.shape[3] == 1:
             input_ = input_.squeeze(3)
-
-        if self.transforms:
+        # Do the transforms only for training data
+        if self.transforms and sample_idx in self.data_train_inds:
             input_ = self.transforms(input_)
 
         # Targets
