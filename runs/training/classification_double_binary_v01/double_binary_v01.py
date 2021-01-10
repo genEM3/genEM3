@@ -17,18 +17,22 @@ from genEM3.util.path import get_data_dir, gethostnameTimeString
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
-# Train dataset: Create the dataset for training data __ WkwData.concat_datasources([train_json_path, test_json_path], os.path.join(get_data_dir(), 'train_test_combined.json'))
+# Train dataset: Create the dataset for training data 
 run_root = os.path.dirname(os.path.abspath(__file__))
 input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
 
-data_split = DataSplit(train=0.85, validation=0.15, test=0.00)
+data_split = DataSplit(train=0.70, validation=0.15, test=0.15)
 cache_RAM = False
 cache_HDD = False
 batch_size = 256
 num_workers = 8
-datasources_json_path = os.path.join(get_data_dir(), 'dense_3X_10_10_2_um/original_merged_double_binary_v01.json')
-data_sources = WkwData.datasources_from_json(datasources_json_path)
+# Original dataset: point annotations and 3X test bboxes of 10x10x2um3
+original_source_path = os.path.join(get_data_dir(), 'dense_3X_10_10_2_um/original_merged_double_binary_v01.json')
+# Test dataset: 10 bboxes of size 9 x 9 x 1 um:
+test_source_path = os.path.join(get_data_dir(), '10x_test_bboxes/10X_9_9_1_um_double_binary_v01.json')  
+# Combine the sources
+data_sources = WkwData.concat_datasources([original_source_path, test_source_path])
 
 transforms = transforms.Compose([
     transforms.RandomFlip(p=0.5, flip_plane=(1, 2)),
@@ -36,23 +40,12 @@ transforms = transforms.Compose([
     transforms.RandomRotation90(p=1.0, mult_90=[0, 1, 2, 3], rot_plane=(1, 2))
 ])
 
-train_dataset = WkwData(
+dataset = WkwData(
     input_shape=input_shape,
     target_shape=output_shape,
     data_sources=data_sources,
     data_split=data_split,
     transforms=transforms,
-    cache_RAM=cache_RAM,
-    cache_HDD=cache_HDD)
-
-## Test dataset: 10 bboxes of size 9 x 9 x 1 um:
-# test dataset  
-test_json_path = os.path.join(get_data_dir(), '10x_test_bboxes/10X_9_9_1_um_double_binary_v01.json')  
-test_sources = WkwData.datasources_from_json(test_json_path)    
-test_dataset = WkwData( 
-    input_shape=input_shape,
-    target_shape=output_shape,
-    data_sources=test_sources,
     cache_RAM=cache_RAM,
     cache_HDD=cache_HDD)
 # Data Loaders:

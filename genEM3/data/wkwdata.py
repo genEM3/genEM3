@@ -690,12 +690,11 @@ class WkwData(Dataset):
             all_ds = all_ds + cur_ds
 
         data_sources_out = []
-        it = 0
-        for cur_data_source in all_ds:
+        for it, cur_data_source in enumerate(all_ds):
             # Correct the id of the data source (sequential starting at 0)
             cur_ds_id_corrected = cur_data_source._replace(id=str(it))
             data_sources_out.append(cur_ds_id_corrected)
-            it += 1
+
         # Write json to a output file if name is given
         if json_path_out is not None:
             WkwData.datasources_to_json(data_sources_out, json_path_out)
