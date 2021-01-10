@@ -388,22 +388,27 @@ class subsetWeightedSampler(Sampler):
     def __init__(self,
                  wkw_dataset: WkwData,
                  subset_indices: List[np.int64],
-                 imbalance_factor,
+                 imbalance_factor: float,
+                 artefact_dim: int,
                  verbose: bool = False):
         self.wkw_dataset = wkw_dataset
         self.subset_indices = subset_indices
         self.imbalance_factor = imbalance_factor
+        self.artefact_dim = artefact_dim
         # Get the target (debris vs. clean) for each sample
         total_sample_range = iter(subset_indices)
         self.index_set = set(subset_indices)
-        # check uniqueness of the train indices
+        # check uniqueness of indices
         assert len(self.index_set) == len(self.subset_indices)
         self.target_class = np.asarray([wkw_dataset.get_target_from_sample_idx(sample_idx) for sample_idx in total_sample_range], dtype=np.int64)
+        self.artefact_targets = self.target_class[:, artefact_dim]
         if verbose:
             self.report_original_numbers()     
+
         # Use the inverse of the number of samples as weight to create balance
         self.class_sample_count = np.array(
-            [len(np.where(self.target_class == t)[0]) for t in np.unique(self.target_class)])
+            [len(np.where(self.artefact_targets == t)[0]) for t in np.unique(self.artefact_targets)])
+
         # Subset dataset
         self.sub_dataset = Subset(wkw_dataset, subset_indices)
 
@@ -427,7 +432,7 @@ class subsetWeightedSampler(Sampler):
     def report_original_numbers(self):
         """print the sample imbalance"""
         print('Target balance for original train set clean/debris: {}/{}'.format(
-            len(np.where(self.target_class == 0)[0]), len(np.where(self.target_class == 1)[0])))
+            len(np.where(self.artefact_targets == 0)[0]), len(np.where(self.artefact_targets == 1)[0])))
 
     @classmethod
     def run_test_case(cls,
@@ -467,7 +472,8 @@ class subsetWeightedSampler(Sampler):
     @classmethod
     def get_data_loaders(cls,
                          dataset: WkwData,
-                         imbalance_factor,
+                         imbalance_factor: float,
+                         artefact_dim: int,
                          test_dataset: WkwData = None,
                          batch_size: int = 256,
                          num_workers: int = 0) -> Dict[str, torch.utils.data.DataLoader]:
@@ -481,12 +487,12 @@ class subsetWeightedSampler(Sampler):
             data_loaders: dictionary of the pytroch data loaders
         """
         # Train sampler
-        train_sampler = cls(dataset, dataset.data_train_inds, imbalance_factor=imbalance_factor)
+        train_sampler = cls(dataset, dataset.data_train_inds, imbalance_factor=imbalance_factor, artefact_dim=artefact_dim)
         train_loader = torch.utils.data.DataLoader(
             dataset=train_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=train_sampler,
             collate_fn=dataset.collate_fn)
         # validation sampler/loader
-        validation_sampler = cls(dataset, dataset.data_validation_inds, imbalance_factor=imbalance_factor)
+        validation_sampler = cls(dataset, dataset.data_validation_inds, imbalance_factor=imbalance_factor, artefact_dim=artefact_dim)
         validation_loader = torch.utils.data.DataLoader(
             dataset=validation_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=validation_sampler,
             collate_fn=dataset.collate_fn)

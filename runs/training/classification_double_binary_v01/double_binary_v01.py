@@ -55,7 +55,7 @@ num_epoch = 1000
 # controls the interval at which the dataloader's imbalance gets updated
 loader_interval = 50
 # The range of the imbalance (frequency ratio clean/debris)
-weight_range = [19.0, 1.0]
+weight_range = [1.0, 3.71]
 weight_range_epoch = np.linspace(weight_range[0], weight_range[1], num=int(num_epoch/loader_interval))
 class_info = (('Clean', 0, 1.0), ('Debris', 1, 1.0))
 debris_index = [c[1] for c in class_info if c[0]=='Debris']
@@ -66,10 +66,10 @@ for w in weight_range_epoch:
     cur_weight_balance = [c[2] for c in class_info] 
     cur_weight_balance[debris_index[0]] = w 
     data_loaders.append(
-                        subsetWeightedSampler.get_data_loaders(train_dataset,
+                        subsetWeightedSampler.get_data_loaders(dataset,
                                                                imbalance_factor=cur_weight_balance,
-                                                               test_dataset=test_dataset,
                                                                batch_size=batch_size,
+                                                               artefact_dim=0,
                                                                num_workers=num_workers)
                         )
 # Model initialization
