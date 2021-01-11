@@ -374,7 +374,6 @@ class Trainer:
         return fig
 
 
-
 class subsetWeightedSampler(Sampler):
     """Sampler for generating a weighted random subset of the given dataset  
 
@@ -419,7 +418,7 @@ class subsetWeightedSampler(Sampler):
         weight = 1.0 / self.class_sample_count
         assert len(self.imbalance_factor) == len(weight)
         weight= [w * f for w, f in zip(weight, self.imbalance_factor)]
-        samples_weight = np.array([weight[t] for t in self.target_class])
+        samples_weight = np.array([weight[t[self.artefact_dim]] for t in self.target_class])
         # Create the weighted sampler
         samples_weight = torch.from_numpy(samples_weight).double()
         sampler = WeightedRandomSampler(samples_weight, len(samples_weight))
@@ -489,7 +488,7 @@ class subsetWeightedSampler(Sampler):
         index_names = {
            "train": "data_train_inds",
            "val": "data_validation_inds",
-           "test": "data_test_inds"}       
+           "test": "data_test_inds"}
         data_loaders = dict.fromkeys(index_names)
         for key in index_names:
             cur_indices = getattr(dataset, index_names.get(key))

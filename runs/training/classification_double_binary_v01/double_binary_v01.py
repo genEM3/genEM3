@@ -53,19 +53,18 @@ loader_interval = 50
 factor_range = [1.0, 3.71]
 factor_range_epoch = np.linspace(factor_range[0], factor_range[1], num=int(num_epoch/loader_interval))
 class_info = (('Debris', 0, 1.0), ('Myelin', 1, 1.0))
-debris_index = [c[1] for c in class_info if c[0]=='Debris']
+debris_index = [c[1] for c in class_info if c[0] == 'Debris']
 # list of data loaders each contains a dictionary for train and validation loaders
 data_loaders = []
 for cur_factor_debris in factor_range_epoch:
-    cur_weight_balance = [c[2] for c in class_info] 
-    cur_weight_balance[debris_index[0]] = cur_factor_debris 
-    data_loaders.append(
-                        subsetWeightedSampler.get_data_loaders(dataset,
-                                                               imbalance_factor=cur_weight_balance,
-                                                               batch_size=batch_size,
-                                                               artefact_dim=0,
-                                                               num_workers=num_workers)
-                        )
+    cur_weight_balance = [c[2] for c in class_info]
+    cur_weight_balance[debris_index[0]] = cur_factor_debris
+    cur_loader = subsetWeightedSampler.get_data_loaders(dataset,
+                                                         imbalance_factor=cur_weight_balance,
+                                                         batch_size=batch_size,
+                                                         artefact_dim=0,
+                                                         num_workers=num_workers)
+    data_loaders.append(cur_loader)
 # Model initialization
 input_size = 140
 output_size = input_size
