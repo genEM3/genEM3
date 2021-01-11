@@ -9,11 +9,6 @@ from genEM3.model.autoencoder2d import Encoder_4_sampling_bn_1px_deep_convonly_s
 from genEM3.training.multiclass import Trainer, subsetWeightedSampler
 from genEM3.util.path import get_data_dir, gethostnameTimeString
 
-# use non X-window backend for matplotlib, it throws following error:
-# qt.qpa.screen: QXcbConnection: Could not connect to display localhost:10.0
-# Could not connect to any X display. Apart from not showing the plots by using 'Agg' backend you can use one of the following:
-# two solutions 1. use X11 forwarding to port
-#               2. Run in interactive window of VS code, which I doesn't seem great.
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
@@ -55,16 +50,15 @@ num_epoch = 1000
 # controls the interval at which the dataloader's imbalance gets updated
 loader_interval = 50
 # The range of the imbalance (frequency ratio clean/debris)
-weight_range = [1.0, 3.71]
-weight_range_epoch = np.linspace(weight_range[0], weight_range[1], num=int(num_epoch/loader_interval))
-class_info = (('Clean', 0, 1.0), ('Debris', 1, 1.0))
+factor_range = [1.0, 3.71]
+factor_range_epoch = np.linspace(factor_range[0], factor_range[1], num=int(num_epoch/loader_interval))
+class_info = (('Debris', 0, 1.0), ('Myelin', 1, 1.0))
 debris_index = [c[1] for c in class_info if c[0]=='Debris']
-assert len(debris_index) == 1 
 # list of data loaders each contains a dictionary for train and validation loaders
 data_loaders = []
-for w in weight_range_epoch:
+for cur_factor_debris in factor_range_epoch:
     cur_weight_balance = [c[2] for c in class_info] 
-    cur_weight_balance[debris_index[0]] = w 
+    cur_weight_balance[debris_index[0]] = cur_factor_debris 
     data_loaders.append(
                         subsetWeightedSampler.get_data_loaders(dataset,
                                                                imbalance_factor=cur_weight_balance,
@@ -104,7 +98,7 @@ gpu_id = 1
 save = True
 save_int = 25
 resume = False
-run_name = f'class_balance_run_without_myelin_factor_{weight_range[0]:.3f}_{weight_range[1]:.3f}_{gethostnameTimeString()}'
+run_name = f'class_balance_run_without_myelin_factor_{factor_range[0]:.3f}_{factor_range[1]:.3f}_{gethostnameTimeString()}'
 class_target_value = [(c[1], c[0]) for c in class_info]
 # Training Loop
 trainer = Trainer(run_name=run_name,

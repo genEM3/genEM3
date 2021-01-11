@@ -486,30 +486,25 @@ class subsetWeightedSampler(Sampler):
         Output:
             data_loaders: dictionary of the pytroch data loaders
         """
-        # Train sampler
-        train_sampler = cls(dataset, dataset.data_train_inds, imbalance_factor=imbalance_factor, artefact_dim=artefact_dim)
-        train_loader = torch.utils.data.DataLoader(
-            dataset=train_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=train_sampler,
-            collate_fn=dataset.collate_fn)
-        # validation sampler/loader
-        validation_sampler = cls(dataset, dataset.data_validation_inds, imbalance_factor=imbalance_factor, artefact_dim=artefact_dim)
-        validation_loader = torch.utils.data.DataLoader(
-            dataset=validation_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=validation_sampler,
-            collate_fn=dataset.collate_fn)
+        index_names = {
+           "train": "data_train_inds",
+           "val": "data_validation_inds",
+           "test": "data_test_inds"}       
+        data_loaders = dict.fromkeys(index_names)
+        for key in index_names:
+            cur_indices = getattr(dataset, index_names.get(key))
+            # Only get the data loader if the indices is not empty. Otherwise leave the entry as None in data_loaders
+            if bool(cur_indices):
+                cur_sampler = cls(dataset, cur_indices, imbalance_factor=imbalance_factor, artefact_dim=artefact_dim)
+                data_loaders[key] = torch.utils.data.DataLoader(
+                    dataset=cur_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=cur_sampler,
+                    collate_fn=dataset.collate_fn)
         # Use a sequential sampler for the 3 test boxes, test sampler/loader
         if test_dataset is not None:
             test_sampler = RandomSampler(test_dataset)
             test_loader = torch.utils.data.DataLoader(
                 dataset=test_dataset, batch_size=batch_size, num_workers=num_workers, sampler=test_sampler,
                 collate_fn=dataset.collate_fn)
-            # combine into one dictionary
-            data_loaders = {
-                "train": train_loader,
-                "val": validation_loader,
-                "test": test_loader}
-        else:
-            # combine into one dictionary
-            data_loaders = {
-                "train": train_loader,
-                "val": validation_loader}
+            # Ignore the test dataset from above and replace it with the given test dataset. This was used when a separate dataset is used for testing
+            data_loaders["test"] = test_loader
         return data_loaders
