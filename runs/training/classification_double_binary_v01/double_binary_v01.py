@@ -49,21 +49,18 @@ dataset = WkwData(
 num_epoch = 1000
 # controls the interval at which the dataloader's imbalance gets updated
 loader_interval = 50
-# The range of the imbalance (frequency ratio clean/debris)
-factor_range = [1.0, 3.71]
-factor_range_epoch = np.linspace(factor_range[0], factor_range[1], num=int(num_epoch/loader_interval))
-class_info = (('Debris', 0, 1.0), ('Myelin', 1, 1.0))
-debris_index = [c[1] for c in class_info if c[0] == 'Debris']
+# The fraction of debris
+fraction_debris = [0.0, 0.2]
+fraction_debris_per_block = np.linspace(fraction_debris[0], fraction_debris[1], num=int(num_epoch/loader_interval))
 # list of data loaders each contains a dictionary for train and validation loaders
 data_loaders = []
-for cur_factor_debris in factor_range_epoch:
-    cur_weight_balance = [c[2] for c in class_info]
-    cur_weight_balance[debris_index[0]] = cur_factor_debris
+for cur_fraction_debris in fraction_debris_per_block:
     cur_loader = subsetWeightedSampler.get_data_loaders(dataset,
-                                                         imbalance_factor=cur_weight_balance,
-                                                         batch_size=batch_size,
-                                                         artefact_dim=0,
-                                                         num_workers=num_workers)
+                                                        fraction_debris=cur_fraction_debris,
+                                                        batch_size=batch_size,
+                                                        artefact_dim=0,
+                                                        num_workers=num_workers)
+    # Look at the iterator
     data_loaders.append(cur_loader)
 # Model initialization
 input_size = 140
@@ -73,9 +70,10 @@ kernel_size = 3
 stride = 1
 n_fmaps = 16  # fixed in model class
 n_latent = 2048
+n_output = 2
 model = AE_Encoder_Classifier(
     Encoder_4_sampling_bn_1px_deep_convonly_skip(input_size, kernel_size, stride, n_latent=n_latent),
-    Classifier3LayeredNoLogSoftmax(n_latent=n_latent, n_output=len(class_info)))
+    Classifier3LayeredNoLogSoftmax(n_latent=n_latent, n_output=n_output))
 
 # Load the encoder from the AE and freeze most weights
 state_dict_path = '/u/flod/code/genEM3/runs/training/ae_v05_skip/.log/epoch_60/model_state_dict'
@@ -98,7 +96,7 @@ save = True
 save_int = 25
 resume = False
 run_name = f'class_balance_run_without_myelin_factor_{factor_range[0]:.3f}_{factor_range[1]:.3f}_{gethostnameTimeString()}'
-class_target_value = [(c[1], c[0]) for c in class_info]
+class_target_value = [(0, 'Clean'), (1, 'Debris')]
 # Training Loop
 trainer = Trainer(run_name=run_name,
                   run_root=run_root,

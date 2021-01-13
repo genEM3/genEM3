@@ -387,12 +387,12 @@ class subsetWeightedSampler(Sampler):
     def __init__(self,
                  wkw_dataset: WkwData,
                  subset_indices: List[np.int64],
-                 imbalance_factor: float,
+                 fraction_debris: float,
                  artefact_dim: int,
                  verbose: bool = False):
         self.wkw_dataset = wkw_dataset
         self.subset_indices = subset_indices
-        self.imbalance_factor = imbalance_factor
+        self.frac_clean_debris = np.asarray([1 - fraction_debris, fraction_debris])
         self.artefact_dim = artefact_dim
         # Get the target (debris vs. clean) for each sample
         total_sample_range = iter(subset_indices)
@@ -413,11 +413,9 @@ class subsetWeightedSampler(Sampler):
 
     def __iter__(self):
         """Method called when iter() calls the sampler. Returns a iterator over the samples.
-        This method directorly returns the iterator from weightedRandomSampler of pytorch.
+        This method directly returns the iterator from weightedRandomSampler of pytorch.
         """
-        weight = 1.0 / self.class_sample_count
-        assert len(self.imbalance_factor) == len(weight)
-        weight= [w * f for w, f in zip(weight, self.imbalance_factor)]
+        weight = self.frac_clean_debris / self.class_sample_count
         samples_weight = np.array([weight[t[self.artefact_dim]] for t in self.target_class])
         # Create the weighted sampler
         samples_weight = torch.from_numpy(samples_weight).double()
@@ -471,7 +469,7 @@ class subsetWeightedSampler(Sampler):
     @classmethod
     def get_data_loaders(cls,
                          dataset: WkwData,
-                         imbalance_factor: float,
+                         fraction_debris: float,
                          artefact_dim: int,
                          test_dataset: WkwData = None,
                          batch_size: int = 256,
@@ -480,7 +478,7 @@ class subsetWeightedSampler(Sampler):
         The balance of two target classes are controled by imbalance factor.
         Arguments:
             dataset: Pytorch dataset with train and validation indices
-            imbalance_factor: The factor to control the ratio of 0/1 classes
+            fraction_debris: The fraction of debris in the dataset
             batch_size and num_workers are inputs to data loader
         Output:
             data_loaders: dictionary of the pytroch data loaders
@@ -494,7 +492,7 @@ class subsetWeightedSampler(Sampler):
             cur_indices = getattr(dataset, index_names.get(key))
             # Only get the data loader if the indices is not empty. Otherwise leave the entry as None in data_loaders
             if bool(cur_indices):
-                cur_sampler = cls(dataset, cur_indices, imbalance_factor=imbalance_factor, artefact_dim=artefact_dim)
+                cur_sampler = cls(dataset, cur_indices, fraction_debris=fraction_debris, artefact_dim=artefact_dim)
                 data_loaders[key] = torch.utils.data.DataLoader(
                     dataset=cur_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=cur_sampler,
                     collate_fn=dataset.collate_fn)
