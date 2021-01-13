@@ -127,7 +127,7 @@ class Trainer:
 
                     # copy input and targets to the device object
                     inputs = data['input'].to(self.device)
-                    targets = data['target'].to(self.device)
+                    targets = data['target'].float().to(self.device)
                     sample_ind_batch = data['sample_idx']
                     sample_ind_phase.extend(sample_ind_batch)
 

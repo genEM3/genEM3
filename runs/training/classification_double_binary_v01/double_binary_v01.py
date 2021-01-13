@@ -12,7 +12,7 @@ from genEM3.util.path import get_data_dir, gethostnameTimeString
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
-# Train dataset: Create the dataset for training data 
+# Train dataset: Create the dataset for training data
 run_root = os.path.dirname(os.path.abspath(__file__))
 input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
@@ -25,7 +25,7 @@ num_workers = 8
 # Original dataset: point annotations and 3X test bboxes of 10x10x2um3
 original_source_path = os.path.join(get_data_dir(), 'dense_3X_10_10_2_um/original_merged_double_binary_v01.json')
 # Test dataset: 10 bboxes of size 9 x 9 x 1 um:
-test_source_path = os.path.join(get_data_dir(), '10x_test_bboxes/10X_9_9_1_um_double_binary_v01.json')  
+test_source_path = os.path.join(get_data_dir(), '10x_test_bboxes/10X_9_9_1_um_double_binary_v01.json')
 # Combine the sources
 data_sources = WkwData.concat_datasources([original_source_path, test_source_path])
 
@@ -43,14 +43,15 @@ dataset = WkwData(
     transforms=transforms,
     cache_RAM=cache_RAM,
     cache_HDD=cache_HDD)
+
 # Data Loaders:
 # Create the weighted samplers which create imbalance given the factor
 # The sampler is linear between the given the clean sample imbalabce factor ranges
 num_epoch = 1000
 # controls the interval at which the dataloader's imbalance gets updated
-loader_interval = 50
+loader_interval = 200
 # The fraction of debris
-fraction_debris = [0.0, 0.2]
+fraction_debris = [0.5, 0.2]
 fraction_debris_per_block = np.linspace(fraction_debris[0], fraction_debris[1], num=int(num_epoch/loader_interval))
 # list of data loaders each contains a dictionary for train and validation loaders
 data_loaders = []
@@ -95,7 +96,7 @@ gpu_id = 1
 save = True
 save_int = 25
 resume = False
-run_name = f'class_balance_run_without_myelin_factor_{factor_range[0]:.3f}_{factor_range[1]:.3f}_{gethostnameTimeString()}'
+run_name = f'class_balance_run_without_myelin_factor_{fraction_debris[0]:.3f}_{fraction_debris[1]:.3f}_{gethostnameTimeString()}'
 class_target_value = [(0, 'Clean'), (1, 'Debris')]
 # Training Loop
 trainer = Trainer(run_name=run_name,
