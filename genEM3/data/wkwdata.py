@@ -204,6 +204,17 @@ class WkwData(Dataset):
             data_validation_inds = list(data_inds_all_rand[train_idx_max:validation_idx_max])
             test_idx_max = validation_idx_max + int(self.data_split.test * maxIndex)
             data_test_inds = list(data_inds_all_rand[validation_idx_max:test_idx_max])
+            # Sometimes one index is left behind from the rounding effect
+            all_inds_set = set(data_inds_all)
+            combined_inds_set = set(data_train_inds + data_validation_inds + data_test_inds)
+            index_left = list(all_inds_set - combined_inds_set)
+            if len(index_left) == 1:
+                # Add the index left behind to the training split
+                data_train_inds = data_train_inds+index_left
+            elif len(index_left) > 1:
+                raise Exception("more than one index left behind in splitting the data into train, val and test")
+            assert len(self) == len(set(data_train_inds + data_validation_inds + data_test_inds)), 'Length check for the splits failed'
+
         else:
             data_train_inds = []
             for i, id in enumerate(self.data_split.train):
