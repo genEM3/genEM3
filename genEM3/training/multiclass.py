@@ -11,7 +11,7 @@ import torch
 from torch import nn
 from torch.utils.tensorboard import SummaryWriter
 from torch import device as torchDevice
-from torch.utils.data import Sampler, Subset, DataLoader, SequentialSampler, RandomSampler
+from torch.utils.data import Sampler, Subset, DataLoader, SequentialSampler, RandomSampler, SubsetRandomSampler
 from torch.utils.data.sampler import WeightedRandomSampler
 from torch.nn.functional import nll_loss
 
@@ -492,10 +492,20 @@ class subsetWeightedSampler(Sampler):
             cur_indices = getattr(dataset, index_names.get(key))
             # Only get the data loader if the indices is not empty. Otherwise leave the entry as None in data_loaders
             if bool(cur_indices):
-                cur_sampler = cls(dataset, cur_indices, fraction_debris=fraction_debris, artefact_dim=artefact_dim)
-                data_loaders[key] = torch.utils.data.DataLoader(
-                    dataset=cur_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=cur_sampler,
-                    collate_fn=dataset.collate_fn)
+                # Only for training data create a balance controlled dataset
+                # The test and validation are random permutation of the same set of data without any class balancing
+                if key == 'train':
+                    cur_sampler = cls(dataset, cur_indices, fraction_debris=fraction_debris, artefact_dim=artefact_dim)
+                    data_loaders[key] = torch.utils.data.DataLoader(
+                        dataset=cur_sampler.sub_dataset, batch_size=batch_size, num_workers=num_workers, sampler=cur_sampler,
+                        collate_fn=dataset.collate_fn)
+                elif key in ['val', 'test']:
+                    data_loaders[key] = torch.utils.data.DataLoader(
+                        dataset=dataset, batch_size=batch_size, num_workers=num_workers, 
+                        sampler=SubsetRandomSampler(cur_indices),
+                        collate_fn=dataset.collate_fn)
+                else:
+                    raise Exception(f'key not defined: {key}')
         # Use a sequential sampler for the 3 test boxes, test sampler/loader
         if test_dataset is not None:
             test_sampler = RandomSampler(test_dataset)
@@ -505,3 +515,24 @@ class subsetWeightedSampler(Sampler):
             # Ignore the test dataset from above and replace it with the given test dataset. This was used when a separate dataset is used for testing
             data_loaders["test"] = test_loader
         return data_loaders
+
+    @staticmethod
+    def report_loader_composition(dataloader_dict):
+        ratio_clean = []
+        cur_dataloader = dataloader_dict['train']
+        for i, data in enumerate(cur_dataloader):
+            print(f'####\nBatch Index: {i}/{len(cur_dataloader)}')
+            # check that all sample indices are part of the total indices
+            batch_idx = data['sample_idx']
+            batch_idx_set = set(batch_idx)
+            repetition_num = len(batch_idx)-len(batch_idx_set)
+            print(f'Repeated/total number of samples in current batch: {repetition_num}/{len(batch_idx)}')
+            y = data['target']
+            clean_num = float((y[:, 0] == 0).sum())
+            debris_num = float((y[:, 0] == 1).sum())
+            fraction_clean = clean_num / (debris_num + clean_num)
+            ratio_clean.append(clean_num / debris_num)
+            print(f'Number of clean/debris samples in mini-batch: {int(clean_num)}/{int(debris_num)}')
+            print(f'Fraction clean: {fraction_clean:.2f}, Ratio clean: {ratio_clean[i]:.2f}')
+        average_ratio_clean = np.asarray(ratio_clean).mean()
+        print(f'The empirical average imbalanced factor: {average_ratio_clean:.2f}')

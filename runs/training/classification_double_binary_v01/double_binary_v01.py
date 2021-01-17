@@ -18,7 +18,7 @@ input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
 
 data_split = DataSplit(train=0.70, validation=0.15, test=0.15)
-cache_RAM = False
+cache_RAM = True
 cache_HDD = False
 batch_size = 256
 num_workers = 8
@@ -63,6 +63,7 @@ for cur_fraction_debris in fraction_debris_per_block:
                                                         num_workers=num_workers)
     # Look at the iterator
     data_loaders.append(cur_loader)
+    subsetWeightedSampler.report_loader_composition(cur_loader)
 # Model initialization
 input_size = 140
 output_size = input_size
