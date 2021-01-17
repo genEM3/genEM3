@@ -55,7 +55,7 @@ fraction_debris = [0.5, 0.2]
 fraction_debris_per_block = np.linspace(fraction_debris[0], fraction_debris[1], num=int(num_epoch/loader_interval))
 # list of data loaders each contains a dictionary for train and validation loaders
 data_loaders = []
-for cur_fraction_debris in fraction_debris_per_block:
+for i, cur_fraction_debris in enumerate(fraction_debris_per_block):
     cur_loader = subsetWeightedSampler.get_data_loaders(dataset,
                                                         fraction_debris=cur_fraction_debris,
                                                         batch_size=batch_size,
@@ -63,7 +63,9 @@ for cur_fraction_debris in fraction_debris_per_block:
                                                         num_workers=num_workers)
     # Look at the iterator
     data_loaders.append(cur_loader)
-    subsetWeightedSampler.report_loader_composition(cur_loader)
+    print(f'**********\nExpected fraction debris in training data loader: {cur_fraction_debris*100} %')
+    print(f'Loader dict ID: {i+1} of {len(fraction_debris_per_block)}\n***********')
+    subsetWeightedSampler.report_loader_composition(dataloader_dict=cur_loader, artefact_dim=0, report_batch_data=False)
 # Model initialization
 input_size = 140
 output_size = input_size

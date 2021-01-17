@@ -432,41 +432,6 @@ class subsetWeightedSampler(Sampler):
             len(np.where(self.artefact_targets == 0)[0]), len(np.where(self.artefact_targets == 1)[0])))
 
     @classmethod
-    def run_test_case(cls,
-                      dataset: WkwData,
-                      factor_range: range = range(1, 20)):
-        """Method to create the sampler with a range of balance factors and report summary statistics"""
-        # imbalance factor clean
-        for factor in factor_range:
-            sampler = cls(dataset, dataset.data_train_inds, factor)
-            # Initialize the data loader using the dataset subset and the sampler
-            subset_weighted_loader = DataLoader(
-                dataset=sampler.sub_dataset, batch_size=256, num_workers=0, sampler=sampler,
-                collate_fn=dataset.collate_fn)
-            print(f'########\nImbalance Factor: {sampler.imbalance_factor}')
-            ratio_clean = list()
-            for i, data in enumerate(subset_weighted_loader):
-                print(f'####\nBatch Index: {i}/{len(subset_weighted_loader)}')
-                # check that all sample indices are part of the total indices
-                batch_idx = data['sample_idx']
-                batch_idx_set = set(batch_idx)
-                assert batch_idx_set.issubset(sampler.index_set)
-                repetition_num = len(batch_idx)-len(batch_idx_set)
-                print(f'Repeated/total number of samples in current batch: {repetition_num}/{len(batch_idx)}')
-                y = data['target']
-                clean_num = float((y == 0).sum())
-                debris_num = float((y == 1).sum())
-                fraction_clean = clean_num / (debris_num + clean_num)
-                ratio_clean.append(clean_num / debris_num)
-                print(f"Number of clean/debris samples in mini-batch: {int(clean_num)}/{int(debris_num)}\nFraction clean: {fraction_clean:.2f}, Ratio clean: {ratio_clean[i]:.2f}")
-            average_ratio_clean = np.asarray(ratio_clean).mean()
-            print(f'The empirical average imbalanced factor: {average_ratio_clean:.2f}')
-            # Show an example from each batch (clean and debris)
-            example_idx = {'clean': np.where(y == 0)[0][0], 'debris': np.where(y == 1)[0][0]}
-            for indexInBatch in example_idx.values():
-                dataset.show_sample(batch_idx[indexInBatch])
-
-    @classmethod
     def get_data_loaders(cls,
                          dataset: WkwData,
                          fraction_debris: float,
@@ -517,22 +482,45 @@ class subsetWeightedSampler(Sampler):
         return data_loaders
 
     @staticmethod
-    def report_loader_composition(dataloader_dict):
-        ratio_clean = []
-        cur_dataloader = dataloader_dict['train']
-        for i, data in enumerate(cur_dataloader):
-            print(f'####\nBatch Index: {i}/{len(cur_dataloader)}')
-            # check that all sample indices are part of the total indices
-            batch_idx = data['sample_idx']
-            batch_idx_set = set(batch_idx)
-            repetition_num = len(batch_idx)-len(batch_idx_set)
-            print(f'Repeated/total number of samples in current batch: {repetition_num}/{len(batch_idx)}')
-            y = data['target']
-            clean_num = float((y[:, 0] == 0).sum())
-            debris_num = float((y[:, 0] == 1).sum())
-            fraction_clean = clean_num / (debris_num + clean_num)
-            ratio_clean.append(clean_num / debris_num)
-            print(f'Number of clean/debris samples in mini-batch: {int(clean_num)}/{int(debris_num)}')
-            print(f'Fraction clean: {fraction_clean:.2f}, Ratio clean: {ratio_clean[i]:.2f}')
-        average_ratio_clean = np.asarray(ratio_clean).mean()
-        print(f'The empirical average imbalanced factor: {average_ratio_clean:.2f}')
+    def report_loader_composition(dataloader_dict: Dict,
+                                  artefact_dim: int = 0,
+                                  report_batch_data: bool = False):
+        """
+        Given a dictionary of data loaders, report on the fraction of clean/debris and 
+        the number of repeating indices in each batch
+        INPUT:
+            dataloader_dict: dictionary of data loaders. Usually: train, val and test key-dataloader pairs
+        """
+        for key in dataloader_dict:
+            total_debris = float(0)
+            total_sample = float(0)
+            fraction_debris = []
+            fraction_repeat = []
+            cur_dataloader = dataloader_dict[key]
+            for i, data in enumerate(cur_dataloader):
+                cur_batch_size = data['input'].shape[0]
+                total_sample += cur_batch_size
+                # check that all sample indices are part of the total indices
+                batch_idx = data['sample_idx']
+                assert len(batch_idx) == cur_batch_size, 'The index length does not match the input first dimension'
+                batch_idx_set = set(batch_idx)
+                repetition_num = cur_batch_size-len(batch_idx_set)
+                cur_repetition_Frac = float(repetition_num) / float(cur_batch_size)
+                fraction_repeat.append(cur_repetition_Frac * 100)
+                y = data['target']
+                clean_num = float((y[:, artefact_dim] == 0).sum())
+                debris_num = float((y[:, artefact_dim] == 1).sum())
+                total_debris += debris_num
+                assert clean_num + debris_num == cur_batch_size, 'Sum check failed'
+                cur_frac_debris = debris_num / cur_batch_size
+                fraction_debris.append(cur_frac_debris * 100)
+                if report_batch_data:
+                    print(f'#####\nBatch of {key} Nr: {i+1}/{len(cur_dataloader)}, Batch size: {cur_batch_size}')
+                    print(f'Batch fraction debris: {cur_frac_debris*100:.2f} %, Batch Fraction repeat: {cur_repetition_Frac*100:.2f} %\n#####')
+            avg_fraction_debris = np.asarray(fraction_debris).mean()
+            average_Frac_repetition = np.asarray(fraction_repeat).mean()
+            # Grand average by summing all debris and sample numbers and dividing them
+            total_frac_debris = total_debris / total_sample
+            print(f'____\nDataLoader type: {key}, Num batches: {len(cur_dataloader)}, Batch size: {cur_dataloader.batch_size}')
+            print(f'Average Fraction debris: {avg_fraction_debris:.2f}%\nAverage Repetition Fraction:{average_Frac_repetition:.2f}%')
+            print(f'Total debris fraction: {total_frac_debris * 100:.2f} %\n_____')
