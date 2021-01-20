@@ -1,4 +1,5 @@
 import os
+from collections import namedtuple
 
 import torch
 import numpy as np
@@ -18,7 +19,7 @@ input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
 
 data_split = DataSplit(train=0.70, validation=0.15, test=0.15)
-cache_RAM = True
+cache_RAM = False
 cache_HDD = False
 batch_size = 256
 num_workers = 8
@@ -53,6 +54,7 @@ loader_interval = 200
 # The fraction of debris
 fraction_debris = [0.5, 0.2]
 fraction_debris_per_block = np.linspace(fraction_debris[0], fraction_debris[1], num=int(num_epoch/loader_interval))
+report_composition = False
 # list of data loaders each contains a dictionary for train and validation loaders
 data_loaders = []
 for i, cur_fraction_debris in enumerate(fraction_debris_per_block):
@@ -63,9 +65,13 @@ for i, cur_fraction_debris in enumerate(fraction_debris_per_block):
                                                         num_workers=num_workers)
     # Look at the iterator
     data_loaders.append(cur_loader)
-    print(f'**********\nExpected fraction debris in training data loader: {cur_fraction_debris*100} %')
-    print(f'Loader dict ID: {i+1} of {len(fraction_debris_per_block)}\n***********')
-    subsetWeightedSampler.report_loader_composition(dataloader_dict=cur_loader, artefact_dim=0, report_batch_data=False)
+    if report_composition:
+        print(f'**********\nExpected fraction debris in training data loader: {cur_fraction_debris*100} %')
+        print(f'Loader dict ID: {i+1} of {len(fraction_debris_per_block)}\n***********')
+        subsetWeightedSampler.report_loader_composition(dataloader_dict=cur_loader,
+                                                        artefact_dim=0,
+                                                        report_batch_data=False)
+
 # Model initialization
 input_size = 140
 output_size = input_size
@@ -100,7 +106,9 @@ save = True
 save_int = 25
 resume = False
 run_name = f'class_balance_run_without_myelin_factor_{fraction_debris[0]:.3f}_{fraction_debris[1]:.3f}_{gethostnameTimeString()}'
-class_target_value = [(0, 'Clean'), (1, 'Debris')]
+target_ntuple = namedtuple('target_description', ['artefact', 'myelin'])
+class_target_value = target_ntuple(artefact=((0, 'Clean'), (1, 'Debris')),
+                                   myelin=((0, 'No-myelin'), (1, 'Myelin')))
 # Training Loop
 trainer = Trainer(run_name=run_name,
                   run_root=run_root,

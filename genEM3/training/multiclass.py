@@ -4,6 +4,7 @@ from typing import List, Union, Dict, Sequence
 import math
 
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 import sklearn.metrics as sk_metrics
@@ -77,10 +78,11 @@ class Trainer:
 
         writer = SummaryWriter(self.log_root)
         self.model = self.model.to(self.device)
-
+        artefact_idx = self.class_target_value._fields.index('artefact')
         epoch = int(self.model.epoch) + 1
         it = int(self.model.iteration)
         sample_inds = dict()
+        sample_count_df = pd.DataFrame(np.zeros([2, 2], dtype=np.int64), columns=self.class_target_value._fields, index=('No', 'Yes'))
         for epoch in range(epoch, epoch + self.num_epoch):
             if isinstance(self.data_loaders, list):
                 # each element of the list is a data loader for an epoch
@@ -99,7 +101,7 @@ class Trainer:
             if not os.path.exists(os.path.join(self.log_root, epoch_root)):
                 os.makedirs(os.path.join(self.log_root, epoch_root))
             for phase in cur_data_loaders.keys():
-                # Keep track of the number of samples from different classes
+                # TODO: Fix using for and comprehension: Keep track of the number of samples from different classes
                 class_counter = {c[1]: 0.0 for c in self.class_target_value}
                 total_sample_counter = 0.0
                 if phase == 'train':
@@ -112,13 +114,12 @@ class Trainer:
                 correct_sum = 0
                 batch_idx_start = 0
 
-                num_items = len(cur_data_loaders[phase].batch_sampler.sampler)
-                
-                inputs_phase = -np.ones((num_items, 1, 140, 140)).astype(float)
-                outputs_phase = -np.ones((num_items, self.model.classifier.num_output)).astype(float)
-                predictions_phase = -np.ones(num_items).astype(int)
-                targets_phase = -np.ones(num_items).astype(int)
-                correct_phase = -np.ones(num_items).astype(int)
+                num_items_phase = len(cur_data_loaders[phase].batch_sampler.sampler)
+                inputs_phase = -np.ones((num_items_phase, 1, 140, 140)).astype(float)
+                outputs_phase = -np.ones((num_items_phase, self.model.classifier.num_output)).astype(float)
+                predictions_phase = -np.ones((num_items_phase, self.model.classifier.num_output)).astype(int)
+                targets_phase = -np.ones((num_items_phase, self.model.classifier.num_output)).astype(int)
+                correct_phase = -np.ones((num_items_phase, self.model.classifier.num_output)).astype(int)
 
                 sample_ind_phase = []
                 for i, data in enumerate(cur_data_loaders[phase]):
@@ -127,6 +128,7 @@ class Trainer:
 
                     # copy input and targets to the device object
                     inputs = data['input'].to(self.device)
+                    cur_batch_size = inputs.shape[0]
                     targets = data['target'].float().to(self.device)
                     sample_ind_batch = data['sample_idx']
                     sample_ind_phase.extend(sample_ind_batch)
@@ -143,29 +145,30 @@ class Trainer:
                         self.optimizer.step()
 
                     inputs, outputs, targets = Trainer.copy2cpu(inputs, outputs, targets)
-
-                    predicted_classes = np.argmax(np.exp(outputs.detach().numpy()), axis=1)
-                    target_classes = targets.detach().numpy()
-                    correct_classes = predicted_classes == target_classes
-                    correct_sum += np.sum(correct_classes)
+                    
+                    # Focus on the debris decision
+                    predicted_classes = (torch.sigmoid(outputs.detach()).numpy() > 0.5).astype(int)
+                    target_classes = targets.detach().numpy().astype(int)
+                    correct_classes = (predicted_classes == target_classes).astype(int)
+                    correct_sum += correct_classes.sum(axis=0)[artefact_idx]
 
                     if i > 0:
                         batch_idx_start = batch_idx_end
                     batch_idx_end = batch_idx_start + len(targets)
                     inputs_phase[batch_idx_start:batch_idx_end, :, :, :] = inputs.detach().numpy()
                     outputs_phase[batch_idx_start:batch_idx_end, :] = outputs.detach().numpy()
-                    predictions_phase[batch_idx_start:batch_idx_end] = predicted_classes
+                    predictions_phase[batch_idx_start:batch_idx_end, :] = predicted_classes
                     targets_phase[batch_idx_start:batch_idx_end] = target_classes
                     correct_phase[batch_idx_start:batch_idx_end] = correct_classes
 
                     running_loss += loss.item()
                     epoch_loss += loss.item()
                     # Gather number of each class in mini batch
-                    total_sample_counter += float(targets.numel())
-                    for c in self.class_target_value:
-                        cur_class_num = float((targets == c[0]).sum())
-                        class_counter[c[1]] += cur_class_num
-                        
+                    total_sample_counter += float(cur_batch_size)
+                    non_zero_count = np.count_nonzero(target_classes, axis=0)
+                    cur_sample_count = np.vstack((cur_batch_size-non_zero_count, non_zero_count))
+                    assert (cur_sample_count.sum(axis=0) == cur_batch_size).all(), 'Sum to batch size check failed'
+                    sample_count_df = sample_count_df + cur_sample_count
                     # logging for the mini-batches
                     if i % self.log_int == 0:
                         running_loss_log = float(running_loss) / batch_idx_end
@@ -177,7 +180,7 @@ class Trainer:
                         writer.add_scalars('running_accuracy', {phase: running_accuracy_log}, it)
 
                 # Number of samples checked two ways
-                assert int(total_sample_counter) == int(num_items)
+                assert int(total_sample_counter) == int(num_items_phase)
                 # Fraction of target classes
                 class_fraction = {key: (val/total_sample_counter) for key,val in class_counter.items()} 
                 assert math.isclose(sum(class_fraction.values()), 1.0)
@@ -185,8 +188,8 @@ class Trainer:
                 # calculate epoch loss and accuracy average over batch samples
 
                 # Epoch error measures:
-                epoch_loss_log = float(epoch_loss) / num_items
-                epoch_accuracy_log = float(correct_sum) / num_items
+                epoch_loss_log = float(epoch_loss) / num_items_phase
+                epoch_accuracy_log = float(correct_sum) / num_items_phase
                 print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ')' + ' Phase: ' + phase +
                       ', epoch: {}: epoch loss: {:0.4f}, epoch accuracy: {:0.3f} '.
                       format(epoch, epoch_loss_log, epoch_accuracy_log))
@@ -214,7 +217,7 @@ class Trainer:
                                         outputs=outputs_phase,
                                         predictions=predictions_phase,
                                         targets=targets_phase,
-                                        target_names = self.get_class_names(),
+                                        target_names=self.get_class_names(),
                                         sample_ind=sample_ind_phase,
                                         class_idx=debris_idx,
                                         )
@@ -345,11 +348,11 @@ class Trainer:
             # Create images for the target values
             output = np.tile(np.exp((outputs[i][class_idx])), target_shape)
             # output values above 1 are shown as zeros (myelin is added to the clean group)
-            if predictions[i]>1:
+            if predictions[i] > 1:
                 gray_val_pred = 0
             else:
                 gray_val_pred = int(predictions[i])
-            if targets[i]>1:
+            if targets[i] > 1:
                 gray_val_target = 0
             else:
                 gray_val_target = int(targets[i])
