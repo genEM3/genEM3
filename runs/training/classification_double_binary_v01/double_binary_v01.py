@@ -96,7 +96,7 @@ model.reset_state()
 for name, param in model.named_parameters():
     print(name, param.requires_grad)
 
-criterion = torch.nn.BCEWithLogitsLoss()
+criterion = torch.nn.BCEWithLogitsLoss(reduction='mean')
 optimizer = torch.optim.Adam(model.parameters(), lr=0.00000075)
 
 log_int = 5
