@@ -82,71 +82,76 @@ class Trainer:
         epoch = int(self.model.epoch) + 1
         batch_index = int(self.model.iteration)
         sample_count_df = pd.DataFrame(np.zeros([2, 2], dtype=np.int64), columns=self.class_target_value._fields, index=('No', 'Yes'))
+        # Epoch loop
         for epoch in range(epoch, epoch + self.num_epoch):
+            # Select data loaders for the current epoch
             if isinstance(self.data_loaders, list):
-                # each element of the list is a data loader for an epoch
+                # Case: List of data loaders. Each loader is a dictionary with fields as phases.
+                # Find which element of the list to choose based on change interval
                 loader_change_interval = self.num_epoch / len(self.data_loaders)
                 division_index, _ = divmod(epoch, loader_change_interval)
                 # Make sure that the index does not exceed the length of the data_loader list
                 index = round(min(division_index, len(self.data_loaders)-1))
-                epoch_data_loaders = self.data_loaders[index]
-            else:
-                # same dataloaders for all epochs
-                epoch_data_loaders = self.data_loaders
+                cur_epoch_loaders = self.data_loaders[index]
+            elif isinstance(self.data_loaders, dict):
+                # Case: a single dictionary of loaders for epochs
+                cur_epoch_loaders = self.data_loaders
             # Dictionary (of dictionaries) to collect four metrics from different phases for tensorboard
             epoch_metric_names = ['epoch_loss', 'epoch_accuracy', 'precision_for_debris', 'recall_for_debris']
-            epoch_metric_dict = {metric_name: dict.fromkeys(epoch_data_loaders.keys()) for metric_name in epoch_metric_names}
+            epoch_metric_dict = {metric_name: dict.fromkeys(cur_epoch_loaders.keys()) for metric_name in epoch_metric_names}
             epoch_root = 'epoch_{:02d}'.format(epoch)
             if not os.path.exists(os.path.join(self.log_root, epoch_root)):
                 os.makedirs(os.path.join(self.log_root, epoch_root))
-            for phase in ['val']: # epoch_data_loaders.keys()
-                cur_loader = epoch_data_loaders[phase]
-                num_batches = len(cur_loader)
-                total_sample_counter = 0
+            # Loop over phases [train, val, test]
+            for phase in ['val']: # cur_epoch_loaders.keys()
+                # Select training state of the NN model
                 if phase == 'train':
                     self.model.train(True)
                 else:
                     self.model.train(False)
 
+                # Select Loader
+                cur_loader = cur_epoch_loaders[phase]
+                # Get the number of batches and individual samples
+                num_batches = len(cur_loader)
+                num_samples = len(cur_loader.batch_sampler.sampler)
+                # initializing variables for keeping track of results for tensorboard reporting
+                total_sample_counter = 0
                 epoch_loss = 0.0
                 running_loss = 0.0
                 correct_sum = 0
                 batch_idx_start = 0
-
-                num_items_phase = len(cur_loader.batch_sampler.sampler)
-                inputs_phase = -np.ones((num_items_phase, 1, 140, 140)).astype(float)
-                outputs_phase = -np.ones((num_items_phase, self.model.classifier.num_output)).astype(float)
-                predictions_phase = -np.ones((num_items_phase, self.model.classifier.num_output)).astype(int)
-                targets_phase = -np.ones((num_items_phase, self.model.classifier.num_output)).astype(int)
-                correct_phase = -np.ones((num_items_phase, self.model.classifier.num_output)).astype(int)
-
+                inputs_phase = -np.ones((num_samples, 1, 140, 140)).astype(float)
+                outputs_phase = -np.ones((num_samples, self.model.classifier.num_output)).astype(float)
+                predictions_phase = -np.ones((num_samples, self.model.classifier.num_output)).astype(int)
+                targets_phase = -np.ones((num_samples, self.model.classifier.num_output)).astype(int)
+                correct_phase = -np.ones((num_samples, self.model.classifier.num_output)).astype(int)
                 sample_ind_phase = []
                 for i, data in enumerate(cur_loader):
                     batch_index += 1
-                    # copy input and targets to the device object
+                    # Copy input and targets to the device object
                     inputs = data['input'].to(self.device)
                     cur_batch_size = inputs.shape[0]
                     targets = data['target'].float().to(self.device)
                     sample_ind_batch = data['sample_idx']
                     sample_ind_phase.extend(sample_ind_batch)
 
-                    # zero the parameter gradients
+                    # Zero the parameter gradients
                     self.optimizer.zero_grad()
-
-                    # forward + backward + optimize
+                    # Forward pass
                     outputs = self.model(inputs).squeeze()
                     loss = self.criterion(outputs, targets)
-
+                    # Backward + Optimize(in training)
                     if phase == 'train':
                         loss.backward()
                         self.optimizer.step()
 
-                    inputs, outputs, targets = Trainer.copy2cpu(inputs, outputs, targets)
-                    
+                    inputs = Trainer.convert2numpy(data['input'])
+                    outputs = Trainer.convert2numpy(Trainer.sigmoid(outputs))
+                    targets = Trainer.convert2numpy(data['target'])
                     # Focus on the debris decision
-                    predicted_classes = (torch.sigmoid(outputs.detach()).numpy() > 0.5).astype(int)
-                    target_classes = targets.detach().numpy().astype(int)
-                    correct_classes = (predicted_classes == target_classes).astype(int)
+                    predicted_classes = (outputs > 0.5).astype(int)
+                    correct_classes = (predicted_classes == targets).astype(int)
                     correct_sum += correct_classes.sum(axis=0)[artefact_idx]
 
                     if i > 0:
@@ -155,14 +160,14 @@ class Trainer:
                     inputs_phase[batch_idx_start:batch_idx_end, :, :, :] = inputs.detach().numpy()
                     outputs_phase[batch_idx_start:batch_idx_end, :] = outputs.detach().numpy()
                     predictions_phase[batch_idx_start:batch_idx_end, :] = predicted_classes
-                    targets_phase[batch_idx_start:batch_idx_end] = target_classes
+                    targets_phase[batch_idx_start:batch_idx_end] = targets
                     correct_phase[batch_idx_start:batch_idx_end] = correct_classes
 
                     running_loss += loss.item()
                     epoch_loss += loss.item()
                     # Gather number of each class in mini batch
                     total_sample_counter += cur_batch_size
-                    non_zero_count = np.count_nonzero(target_classes, axis=0)
+                    non_zero_count = np.count_nonzero(targets, axis=0)
                     cur_sample_count = np.vstack((cur_batch_size-non_zero_count, non_zero_count))
                     assert (cur_sample_count.sum(axis=0) == cur_batch_size).all(), 'Sum to batch size check failed'
                     sample_count_df = sample_count_df + cur_sample_count
@@ -177,7 +182,7 @@ class Trainer:
                         writer.add_scalars('running_accuracy', {phase: running_accuracy_log}, batch_index)
 
                 # Number of samples checked two ways
-                assert total_sample_counter == num_items_phase
+                assert total_sample_counter == num_samples
                 # Fraction for each class of target
                 class_fraction_df = sample_count_df / total_sample_counter
                 assert np.isclose(class_fraction_df.sum(), 1.0).all(), 'All fraction sum to 1.0 failed'
@@ -188,7 +193,7 @@ class Trainer:
                 # calculate epoch loss and accuracy average over batch samples
                 # Epoch error measures:
                 epoch_loss_log = float(epoch_loss) / num_batches
-                epoch_accuracy_log = float(correct_sum) / num_items_phase
+                epoch_accuracy_log = float(correct_sum) / num_samples
                 print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ')' + ' Phase: ' + phase +
                       ', epoch: {}: epoch loss: {:0.4f}, epoch accuracy: {:0.3f} '.
                       format(epoch, epoch_loss_log, epoch_accuracy_log))
@@ -258,7 +263,6 @@ class Trainer:
         assert len(target_index) == 1
         return target_index[0]
 
-    
     def get_class_names(self):
         """Get the index from the class information list"""
         target_names = [c[1] for c in self.class_target_value]
@@ -276,7 +280,6 @@ class Trainer:
             im = ax.imshow(confusion_matrix, cmap='gray',vmin=0,vmax=1)
         else:
             im = ax.imshow(confusion_matrix, cmap='gray')
-        
         # We want to show all ticks...
         num_groups = len(group_names)
         ax.set_xticks(np.arange(num_groups))
@@ -308,14 +311,22 @@ class Trainer:
         return fig
 
     @staticmethod
-    def copy2cpu(inputs, outputs, targets):
-        if inputs.is_cuda:
-            inputs = inputs.cpu()
-        if outputs.is_cuda:
-            outputs = outputs.cpu()
-        if targets.is_cuda:
-            targets = targets.cpu()
-        return inputs, outputs, targets
+    def convert2numpy(tensor):
+        """
+        Convert tensor to a numpy array for tensorboard reporting
+        """
+        if tensor.requires_grad:
+            tensor = tensor.detach()
+        if tensor.is_cuda:
+            tensor = tensor.cpu()
+        tensor = tensor.numpy()
+        return tensor
+
+    @staticmethod
+    def sigmoid(tensor):
+        if tensor.requires_grad:
+            tensor = tensor.detach()
+        return torch.sigmoid(tensor)
 
     @staticmethod
     def n1hw_to_n3hw(data):
@@ -323,17 +334,18 @@ class Trainer:
 
     @staticmethod
     def show_img(inputs, outputs, idx):
-        inputs, outputs = Trainer.copy2cpu(inputs, outputs)
+        inputs = Trainer.convert2numpy(inputs)
+        outputs = Trainer.convert2numpy(outputs)
         fig, axs = plt.subplots(1, 2, figsize=(4, 3))
-        axs[0].imshow(inputs[idx].data.numpy().squeeze(), cmap='gray')
-        axs[1].imshow(outputs[idx].data.numpy().squeeze(), cmap='gray')
+        axs[0].imshow(inputs[idx].squeeze(), cmap='gray')
+        axs[1].imshow(outputs[idx].squeeze(), cmap='gray')
         return fig
 
     @staticmethod
     def show_imgs(inputs, outputs, predictions, targets, sample_ind, target_names, class_idx=1, plot_ind=None):
         # Get the top 5 losses if the indices are not give
         if plot_ind is None:
-            losses = nll_loss(torch.from_numpy(outputs) , torch.from_numpy(targets) , reduction='none')
+            losses = nll_loss(torch.from_numpy(outputs), torch.from_numpy(targets), reduction='none')
             (values_sorted, indices_sorted) = losses.sort(descending=True)
             plot_ind = indices_sorted[range(5)].numpy()
 
