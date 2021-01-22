@@ -67,7 +67,7 @@ class Trainer:
         self.class_target_value = class_target_value
 
     def train(self):
-
+        # Load saved model if resume option selected
         if self.resume:
             print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Resuming training ... ')
             checkpoint = torch.load(os.path.join(self.log_root, 'torch_model'))
@@ -84,25 +84,16 @@ class Trainer:
         sample_count_df = pd.DataFrame(np.zeros([2, 2], dtype=np.int64), columns=self.class_target_value._fields, index=('No', 'Yes'))
         # Epoch loop
         for epoch in range(epoch, epoch + self.num_epoch):
-            # Select data loaders for the current epoch
-            if isinstance(self.data_loaders, list):
-                # Case: List of data loaders. Each loader is a dictionary with fields as phases.
-                # Find which element of the list to choose based on change interval
-                loader_change_interval = self.num_epoch / len(self.data_loaders)
-                division_index, _ = divmod(epoch, loader_change_interval)
-                # Make sure that the index does not exceed the length of the data_loader list
-                index = round(min(division_index, len(self.data_loaders)-1))
-                cur_epoch_loaders = self.data_loaders[index]
-            elif isinstance(self.data_loaders, dict):
-                # Case: a single dictionary of loaders for epochs
-                cur_epoch_loaders = self.data_loaders
-            # Dictionary (of dictionaries) to collect four metrics from different phases for tensorboard
-            epoch_metric_names = ['epoch_loss', 'epoch_accuracy', 'precision_for_debris', 'recall_for_debris']
-            epoch_metric_dict = {metric_name: dict.fromkeys(cur_epoch_loaders.keys()) for metric_name in epoch_metric_names}
+            # Create logging directory
             epoch_root = 'epoch_{:02d}'.format(epoch)
             if not os.path.exists(os.path.join(self.log_root, epoch_root)):
                 os.makedirs(os.path.join(self.log_root, epoch_root))
-            # Loop over phases [train, val, test]
+            # Select data loaders for the current epoch
+            cur_epoch_loaders = self.get_epoch_loaders(epoch)
+            # Dictionary (of dictionaries) to collect four metrics from different phases for tensorboard
+            epoch_metric_names = ['epoch_loss', 'epoch_accuracy', 'precision_for_debris', 'recall_for_debris']
+            epoch_metric_dict = {metric_name: dict.fromkeys(cur_epoch_loaders.keys()) for metric_name in epoch_metric_names}
+            # Loop over phases within one epoch [train, validation, test]
             for phase in ['val']: # cur_epoch_loaders.keys()
                 # Select training state of the NN model
                 if phase == 'train':
@@ -157,8 +148,8 @@ class Trainer:
                     if i > 0:
                         batch_idx_start = batch_idx_end
                     batch_idx_end = batch_idx_start + cur_batch_size
-                    inputs_phase[batch_idx_start:batch_idx_end, :, :, :] = inputs.detach().numpy()
-                    outputs_phase[batch_idx_start:batch_idx_end, :] = outputs.detach().numpy()
+                    inputs_phase[batch_idx_start:batch_idx_end, :, :, :] = inputs
+                    outputs_phase[batch_idx_start:batch_idx_end, :] = outputs
                     predictions_phase[batch_idx_start:batch_idx_end, :] = predicted_classes
                     targets_phase[batch_idx_start:batch_idx_end] = targets
                     correct_phase[batch_idx_start:batch_idx_end] = correct_classes
@@ -256,6 +247,26 @@ class Trainer:
 
         writer.close()
         print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Closed writer ... ')
+
+    def get_epoch_loaders(self, epoch):
+        """
+        Return the data loader. From a list (of dicts) or an individual dict
+        """
+        if isinstance(self.data_loaders, list):
+            # Case: List of data loaders. Each loader is a dictionary with fields as phases.
+            # Find which element of the list to choose based on change interval
+            loader_change_interval = self.num_epoch / len(self.data_loaders)
+            division_index, _ = divmod(epoch, loader_change_interval)
+            # Make sure that the index does not exceed the length of the data_loader list
+            index = round(min(division_index, len(self.data_loaders)-1))
+            epoch_loaders = self.data_loaders[index]
+        elif isinstance(self.data_loaders, dict):
+            # Case: a single dictionary of loaders for epochs
+            epoch_loaders = self.data_loaders
+        else:
+            raise Exception(f'Loader type not defined: {type(self.data_loaders)}')
+        
+        return epoch_loaders
 
     def get_class_index(self, name: str='Debris'):
         """Get the index from the class information list"""
