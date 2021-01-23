@@ -106,17 +106,17 @@ class Trainer:
                 # Get the number of batches and individual samples
                 num_batches = len(cur_loader)
                 num_samples = len(cur_loader.batch_sampler.sampler)
+                num_target_class = self.model.classifier.num_output
                 # initializing variables for keeping track of results for tensorboard reporting
                 total_sample_counter = 0
                 epoch_loss = 0.0
                 running_loss = 0.0
                 correct_sum = 0
-                batch_idx_start = 0
-                inputs_phase = -np.ones((num_samples, 1, 140, 140)).astype(float)
-                outputs_phase = -np.ones((num_samples, self.model.classifier.num_output)).astype(float)
-                predictions_phase = -np.ones((num_samples, self.model.classifier.num_output)).astype(int)
-                targets_phase = -np.ones((num_samples, self.model.classifier.num_output)).astype(int)
-                correct_phase = -np.ones((num_samples, self.model.classifier.num_output)).astype(int)
+                results_phase = {'input': -np.ones((num_samples, 1, 140, 140)).astype(float),
+                                 'output': -np.ones((num_samples, num_target_class)).astype(float),
+                                 'prediction': -np.ones((num_samples, num_target_class)).astype(int),
+                                 'target': -np.ones((num_samples, num_target_class)).astype(int),
+                                 'correct': -np.ones((num_samples, num_target_class)).astype(int)}
                 sample_ind_phase = []
                 for i, data in enumerate(cur_loader):
                     batch_index += 1
@@ -136,36 +136,33 @@ class Trainer:
                     if phase == 'train':
                         loss.backward()
                         self.optimizer.step()
-
-                    inputs = Trainer.convert2numpy(data['input'])
-                    outputs = Trainer.convert2numpy(Trainer.sigmoid(outputs))
-                    targets = Trainer.convert2numpy(data['target'])
+                    # Record results of the operation for the reporting
+                    results_batch = dict.fromkeys(results_phase)
+                    results_batch['input'] = Trainer.convert2numpy(data['input'])
+                    results_batch['output'] = Trainer.convert2numpy(Trainer.sigmoid(outputs))
+                    results_batch['target'] = Trainer.convert2numpy(data['target'])
                     # Focus on the debris decision
-                    predicted_classes = (outputs > 0.5).astype(int)
-                    correct_classes = (predicted_classes == targets).astype(int)
-                    correct_sum += correct_classes.sum(axis=0)[artefact_idx]
-
-                    if i > 0:
-                        batch_idx_start = batch_idx_end
-                    batch_idx_end = batch_idx_start + cur_batch_size
-                    inputs_phase[batch_idx_start:batch_idx_end, :, :, :] = inputs
-                    outputs_phase[batch_idx_start:batch_idx_end, :] = outputs
-                    predictions_phase[batch_idx_start:batch_idx_end, :] = predicted_classes
-                    targets_phase[batch_idx_start:batch_idx_end] = targets
-                    correct_phase[batch_idx_start:batch_idx_end] = correct_classes
+                    decision_thresh = 0.5
+                    results_batch['prediction'] = (results_batch['output'] > decision_thresh).astype(int)
+                    results_batch['correct'] = (results_batch['prediction'] == results_batch['target']).astype(int)
+                    correct_sum += results_batch['correct'].sum(axis=0)[artefact_idx]
+                    # Aggregate results into a phase array for general epoch reporting
+                    batch_idx_range = [i * cur_batch_size, (i * cur_batch_size) + cur_batch_size]
+                    for key in results_phase:
+                        results_phase[key][batch_idx_range[0]:batch_idx_range[1]] = results_batch[key]
 
                     running_loss += loss.item()
                     epoch_loss += loss.item()
                     # Gather number of each class in mini batch
                     total_sample_counter += cur_batch_size
-                    non_zero_count = np.count_nonzero(targets, axis=0)
+                    non_zero_count = np.count_nonzero(results_batch['target'], axis=0)
                     cur_sample_count = np.vstack((cur_batch_size-non_zero_count, non_zero_count))
                     assert (cur_sample_count.sum(axis=0) == cur_batch_size).all(), 'Sum to batch size check failed'
                     sample_count_df = sample_count_df + cur_sample_count
                     # logging for the mini-batches
                     if i % self.log_int == 0:
                         running_loss_log = float(running_loss) / batch_index
-                        running_accuracy_log = float(correct_sum) / batch_idx_end
+                        running_accuracy_log = float(correct_sum) / batch_idx_range[1]
                         print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ')' + ' Phase: ' + phase +
                               ', epoch: {}, batch: {}, running loss: {:0.4f}, running accuracy: {:0.3f} '.
                               format(epoch, i, running_loss_log, running_accuracy_log))

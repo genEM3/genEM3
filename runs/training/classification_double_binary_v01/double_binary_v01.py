@@ -107,7 +107,7 @@ save = True
 save_int = 25
 resume = False
 run_name = f'class_balance_run_without_myelin_factor_{fraction_debris[0]:.3f}_{fraction_debris[1]:.3f}_{gethostnameTimeString()}'
-target_names = pd.DataFrame([['Clean', 'Debris'], ['No-myelin', 'Myelin']], columns=['artefact', 'myelin'])                                                                              
+target_names = pd.DataFrame([['Clean', 'Debris'], ['No-myelin', 'Myelin']], columns=['artefact', 'myelin'])
 # Training Loop
 trainer = Trainer(run_name=run_name,
                   run_root=run_root,
