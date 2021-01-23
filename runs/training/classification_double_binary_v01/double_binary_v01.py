@@ -3,6 +3,7 @@ from collections import namedtuple
 
 import torch
 import numpy as np
+import pandas as pd
 
 from genEM3.data import transforms
 from genEM3.data.wkwdata import WkwData, DataSplit
@@ -106,9 +107,7 @@ save = True
 save_int = 25
 resume = False
 run_name = f'class_balance_run_without_myelin_factor_{fraction_debris[0]:.3f}_{fraction_debris[1]:.3f}_{gethostnameTimeString()}'
-target_ntuple = namedtuple('target_description', ['artefact', 'myelin'])
-class_target_value = target_ntuple(artefact=((0, 'Clean'), (1, 'Debris')),
-                                   myelin=((0, 'No-myelin'), (1, 'Myelin')))
+target_names = pd.DataFrame([['Clean', 'Debris'], ['No-myelin', 'Myelin']], columns=['artefact', 'myelin'])                                                                              
 # Training Loop
 trainer = Trainer(run_name=run_name,
                   run_root=run_root,
@@ -123,5 +122,5 @@ trainer = Trainer(run_name=run_name,
                   save_int=save_int,
                   resume=resume,
                   gpu_id=gpu_id,
-                  class_target_value=class_target_value)
+                  target_names=target_names)
 trainer.train()

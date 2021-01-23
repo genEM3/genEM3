@@ -37,7 +37,7 @@ class Trainer:
                  save_int: int = 1,
                  resume: bool = False,
                  gpu_id: int = None,
-                 class_target_value: List = None):
+                 target_names: List = None):
         self.run_name = run_name
         self.run_root = run_root
         self.model = model
@@ -64,7 +64,7 @@ class Trainer:
             if not os.path.exists(self.log_root):
                 os.makedirs(self.log_root)
         # The information regarding the class indices only useful if discrete target
-        self.class_target_value = class_target_value
+        self.target_names = target_names
 
     def train(self):
         # Load saved model if resume option selected
@@ -78,10 +78,10 @@ class Trainer:
 
         writer = SummaryWriter(self.log_root)
         self.model = self.model.to(self.device)
-        artefact_idx = self.class_target_value._fields.index('artefact')
+        artefact_idx = self.target_names.columns.get_loc('artefact')
         epoch = int(self.model.epoch) + 1
         batch_index = int(self.model.iteration)
-        sample_count_df = pd.DataFrame(np.zeros([2, 2], dtype=np.int64), columns=self.class_target_value._fields, index=('No', 'Yes'))
+        sample_count_df = pd.DataFrame(np.zeros([2, 2], dtype=np.int64), columns=self.target_names.columns, index=('No', 'Yes'))
         # Epoch loop
         for epoch in range(epoch, epoch + self.num_epoch):
             # Create logging directory
@@ -221,7 +221,7 @@ class Trainer:
                 writer.add_figure(figname + phase, fig, epoch)
 
                 # Precision/Recall curves
-                for c in self.class_target_value:
+                for c in self.target_names:
                     cur_binary_targets = (targets_phase==c[0]).astype(int)
                     writer.add_pr_curve(
                         'pr_curve_'+phase+'_'+c[1], labels=cur_binary_targets, predictions=np.exp(outputs_phase[:, c[0]]), global_step=epoch,
@@ -270,19 +270,19 @@ class Trainer:
 
     def get_class_index(self, name: str='Debris'):
         """Get the index from the class information list"""
-        target_index = [c[0] for c in self.class_target_value if c[1]==name]
+        target_index = [c[0] for c in self.target_names if c[1]==name]
         assert len(target_index) == 1
         return target_index[0]
 
     def get_class_names(self):
         """Get the index from the class information list"""
-        target_names = [c[1] for c in self.class_target_value]
+        target_names = [c[1] for c in self.target_names]
         return target_names
 
     def plot_confusion_matrix(self, confusion_matrix, normalize_dim: int = None):
         """Plot the confusion matrix"""
         # Get the group names
-        group_names = [c[1] for c in self.class_target_value]
+        group_names = [c[1] for c in self.target_names]
         fig, ax = plt.subplots(figsize=(5,5))
         # Normalize data if requested. The values are rounded to 2 decimal points
         if normalize_dim is not None:
