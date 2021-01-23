@@ -1,5 +1,4 @@
 import os
-from collections import namedtuple
 
 import torch
 import numpy as np
