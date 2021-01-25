@@ -187,7 +187,10 @@ class Trainer:
                 epoch_acc_dict = self.add_target_names(epoch_accuracy_log)
                 print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ')' + ' Phase: ' + phase +
                       f', epoch: {epoch}: epoch loss: {epoch_loss_log:.3f}, epoch accuracy: {epoch_acc_dict}')
-                error_measures = sk_metrics.precision_recall_fscore_support(targets_phase[:,artefact_idx], predictions_phase[:,artefact_idx], zero_division=0)
+                # Precision, recall and confusion matrix
+                precision, recall, fscore, num_pos = sk_metrics.precision_recall_fscore_support(results_phase['target'], results_phase['prediction'], zero_division=0)
+                assert (np.asarray(sample_count_df.loc['Yes']) == num_pos).all(), 'Number of positive samples matching failed'
+                confusion_matrix = sk_metrics.multilabel_confusion_matrix(results_phase['target'], results_phase['prediction'])
                 debris_idx = 1
                 cur_metrics = [epoch_loss_log, epoch_accuracy_log, error_measures[0][debris_idx], error_measures[1][debris_idx]]
                 for i, metric_name in enumerate(epoch_metric_names):
