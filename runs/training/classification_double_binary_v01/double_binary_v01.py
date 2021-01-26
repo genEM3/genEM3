@@ -50,7 +50,7 @@ dataset = WkwData(
 # The sampler is linear between the given the clean sample imbalabce factor ranges
 num_epoch = 1000
 # controls the interval at which the dataloader's imbalance gets updated
-loader_interval = 200
+loader_interval = 500
 # The fraction of debris
 fraction_debris = [0.5, 0.2]
 fraction_debris_per_block = np.linspace(fraction_debris[0], fraction_debris[1], num=int(num_epoch/loader_interval))
@@ -96,12 +96,12 @@ model.reset_state()
 for name, param in model.named_parameters():
     print(name, param.requires_grad)
 
-criterion = torch.nn.BCEWithLogitsLoss(reduction='mean')
+criterion = torch.nn.BCEWithLogitsLoss(reduction='none')
 optimizer = torch.optim.Adam(model.parameters(), lr=0.00000075)
 
 log_int = 5
 device = 'cuda'
-gpu_id = 1
+gpu_id = 0
 save = True
 save_int = 25
 resume = False

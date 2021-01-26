@@ -51,7 +51,7 @@ class Trainer:
         if device == 'cuda':
             gpu.get_gpu(gpu_id)
             device = torch.device(torch.cuda.current_device())
-        
+
         self.device = torchDevice(device)
         self.log_root = os.path.join(run_root, '.log', run_name)
         self.data_loaders = data_loaders
@@ -69,12 +69,12 @@ class Trainer:
     def train(self):
         # Load saved model if resume option selected
         if self.resume:
-            print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Resuming training ... ')
+            print(Trainer.time_str() + ' Resuming training ... ')
             checkpoint = torch.load(os.path.join(self.log_root, 'torch_model'))
             self.model.load_state_dict(checkpoint['model_state_dict'])
             self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         else:
-            print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Starting training ... ')
+            print(Trainer.time_str() + ' Starting training ... ')
 
         writer = SummaryWriter(self.log_root)
         self.model = self.model.to(self.device)
@@ -91,7 +91,7 @@ class Trainer:
             # Select data loaders for the current epoch
             cur_epoch_loaders = self.get_epoch_loaders(epoch)
             # Dictionary (of dictionaries) to collect four metrics from different phases for tensorboard
-            epoch_metric_names = ['epoch_loss', 'epoch_accuracy', 'precision_for_debris', 'recall_for_debris']
+            epoch_metric_names = ['epoch_loss', 'epoch_accuracy', 'epoch_precision', 'epoch_recall']
             epoch_metric_dict = {metric_name: dict.fromkeys(cur_epoch_loaders.keys()) for metric_name in epoch_metric_names}
             # Loop over phases within one epoch [train, validation, test]
             for phase in ['val']: # cur_epoch_loaders.keys()
@@ -104,15 +104,14 @@ class Trainer:
                 # Select Loader
                 cur_loader = cur_epoch_loaders[phase]
                 # Get the number of batches and individual samples
-                num_batches = len(cur_loader)
+                # num_batches = len(cur_loader)
                 num_samples = len(cur_loader.batch_sampler.sampler)
                 num_target_class = self.model.classifier.num_output
                 # initializing variables for keeping track of results for tensorboard reporting
                 total_sample_counter = 0
-                epoch_loss = 0.0
-                running_loss = 0.0
                 results_phase = {'input': -np.ones((num_samples, 1, 140, 140)).astype(float),
                                  'output': -np.ones((num_samples, num_target_class)).astype(float),
+                                 'loss': -np.ones((num_samples, num_target_class), dtype=np.float32),
                                  'prediction': -np.ones((num_samples, num_target_class)).astype(int),
                                  'target': -np.ones((num_samples, num_target_class)).astype(int),
                                  'correct': -np.ones((num_samples, num_target_class)).astype(int)}
@@ -134,14 +133,14 @@ class Trainer:
                     loss = self.criterion(outputs, targets)
                     # Backward + Optimize(in training)
                     if phase == 'train':
-                        loss.backward()
+                        loss.mean().backward()
                         self.optimizer.step()
                     # Record results of the operation for the reporting
                     results_batch = dict.fromkeys(results_phase)
+                    results_batch['loss'] = Trainer.convert2numpy(loss)
                     results_batch['input'] = Trainer.convert2numpy(data['input'])
                     results_batch['output'] = Trainer.convert2numpy(Trainer.sigmoid(outputs))
                     results_batch['target'] = Trainer.convert2numpy(data['target'])
-                    # Focus on the debris decision
                     decision_thresh = 0.5
                     results_batch['prediction'] = (results_batch['output'] > decision_thresh).astype(int)
                     results_batch['correct'] = (results_batch['prediction'] == results_batch['target']).astype(int)
@@ -149,9 +148,6 @@ class Trainer:
                     batch_idx_range = [i * nominal_batch_size, (i * nominal_batch_size) + cur_batch_size]
                     for key in results_phase:
                         results_phase[key][batch_idx_range[0]:batch_idx_range[1]] = results_batch[key]
-
-                    running_loss += loss.item()
-                    epoch_loss += loss.item()
                     # Gather number of each class in mini batch
                     total_sample_counter += cur_batch_size
                     non_zero_count = np.count_nonzero(results_batch['target'], axis=0)
@@ -160,18 +156,19 @@ class Trainer:
                     sample_count_df = sample_count_df + cur_sample_count
                     # logging for the mini-batches
                     if i % self.log_int == 4:
-                        running_loss_log = float(running_loss) / batch_counter
-                        running_accuracy = results_phase['correct'][:batch_idx_range[1]].sum(axis=0)/batch_idx_range[1]
-                        accuracy_dict = self.add_target_names(running_accuracy)
-                        print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ')' + ' Phase: ' + phase +
-                              ', epoch: {}, batch: {}, running loss: {:0.4f}'.format(epoch, i, running_loss_log))
-                        writer.add_scalars('running_loss', {phase: running_loss_log}, batch_counter)
+                        running_loss_log = results_phase['loss'][:batch_idx_range[1]].mean(axis=0)
+                        running_accuracy = results_phase['correct'][:batch_idx_range[1]].mean(axis=0)
+                        accuracy_dict = self.add_target_names(running_accuracy.round(3))
+                        running_loss_dict = self.add_target_names(running_loss_log.round(3))
+                        print(Trainer.time_str() + ' Phase: ' + phase +
+                             f', epoch: {epoch}, batch: {i}, running loss: {running_loss_dict}, running accuracy: {running_loss_dict}')
+                        writer.add_scalars(f'{phase}/running_loss', running_loss_dict, batch_counter)
                         writer.add_scalars(f'{phase}/running_accuracy', accuracy_dict, batch_counter)
 
                 # Number of samples checked two ways
                 assert total_sample_counter == num_samples
                 # Make sure no -1s left in the phase results (excluding input which throws errors)
-                for key in ['output', 'prediction', 'target', 'correct']:
+                for key in ['loss', 'output', 'prediction', 'target', 'correct']:
                     assert not (results_phase[key] == -1).any()
                 # Fraction for each class of target
                 class_fraction_df = sample_count_df / num_samples
@@ -181,34 +178,25 @@ class Trainer:
                 fraction_positive_dict = class_fraction_df.loc[with_index].to_dict()
                 writer.add_scalars(f'Fraction_with_target_{phase}', fraction_positive_dict, epoch)
                 # calculate epoch loss and accuracy average over batch samples
-                # Epoch error measures:
-                epoch_loss_log = float(epoch_loss) / num_batches
-                epoch_accuracy_log = results_phase['correct'].sum(axis=0).astype(float) / num_samples
-                epoch_acc_dict = self.add_target_names(epoch_accuracy_log)
-                print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ')' + ' Phase: ' + phase +
-                      f', epoch: {epoch}: epoch loss: {epoch_loss_log:.3f}, epoch accuracy: {epoch_acc_dict}')
-                # Precision, recall and confusion matrix
+                # Epoch error measures
+                epoch_loss_log = results_batch['loss'].mean(axis=0)
+                epoch_loss_dict = self.add_target_names(epoch_loss_log.round(3))
+                epoch_accuracy_log = results_phase['correct'].mean(axis=0)
+                epoch_acc_dict = self.add_target_names(epoch_accuracy_log.round(3))
+                print(Trainer.time_str() + ' Phase: ' + phase + f', epoch: {epoch}: epoch loss: {epoch_loss_dict}, epoch accuracy: {epoch_acc_dict}')
+                # Precision, recall, accuracy and loss 
                 precision, recall, fscore, num_pos = sk_metrics.precision_recall_fscore_support(results_phase['target'], results_phase['prediction'], zero_division=0)
                 assert (np.asarray(sample_count_df.loc['Yes']) == num_pos).all(), 'Number of positive samples matching failed'
-                confusion_matrix = sk_metrics.multilabel_confusion_matrix(results_phase['target'], results_phase['prediction'])
-                debris_idx = 1
-                cur_metrics = [epoch_loss_log, epoch_accuracy_log, error_measures[0][debris_idx], error_measures[1][debris_idx]]
+                cur_metrics = [epoch_loss_dict, epoch_acc_dict,
+                               self.add_target_names(precision), self.add_target_names(recall)]
                 for i, metric_name in enumerate(epoch_metric_names):
                     epoch_metric_dict[metric_name][phase] = cur_metrics[i]
-
                 # Confusion matrix
-                confusion_matrix_phase = sk_metrics.confusion_matrix(targets_phase[:,artefact_idx], predictions_phase[:,artefact_idx])
-                fig_confusion = self.plot_confusion_matrix(confusion_matrix_phase)
-                figname_confusion = 'confusion_matrix_'
-                fig_confusion.savefig(os.path.join(self.log_root, epoch_root, figname_confusion + phase + '.png'), dpi=300)
-                writer.add_figure(figname_confusion + phase, fig_confusion, epoch)
-                
-                # confusion normalized
-                fig_confusion_norm = self.plot_confusion_matrix(confusion_matrix_phase, normalize_dim=1)
-                figname_confusion_norm = 'confusion_matrix_normalized_'
-                fig_confusion_norm.savefig(os.path.join(self.log_root, epoch_root, figname_confusion_norm + phase + '.png'), dpi=300)
-                writer.add_figure(figname_confusion_norm + phase, fig_confusion_norm, epoch)
-
+                confusion_matrix = sk_metrics.multilabel_confusion_matrix(results_phase['target'], results_phase['prediction'])
+                fig_confusion_norm = self.plot_confusion_matrix(confusion_matrix, normalize_dim=1)
+                figname_confusion = 'confusion_matrix_normalized_'
+                fig_confusion_norm.savefig(os.path.join(self.log_root, epoch_root, figname_confusion + phase + '.png'), dpi=300)
+                writer.add_figure(figname_confusion + phase, fig_confusion_norm, epoch)
                 # Example images
                 fig = Trainer.show_imgs(inputs=inputs_phase, 
                                         outputs=outputs_phase,
@@ -230,10 +218,10 @@ class Trainer:
                         num_thresholds=50)
                 # save model
                 if self.save & (phase == 'train') & (epoch % self.save_int == 0):
-                    print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Writing model graph ... ')
+                    print(Trainer.time_str() + ' Writing model graph ... ')
                     # writer.add_graph(self.model, inputs)
 
-                    print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Saving model state... ')
+                    print(Trainer.time_str() + ' Saving model state... ')
                     self.model.epoch = torch.nn.Parameter(torch.tensor(epoch), requires_grad=False)
                     self.model.iteration = torch.nn.Parameter(torch.tensor(batch_index), requires_grad=False)
                     torch.save({
@@ -245,10 +233,10 @@ class Trainer:
             # write the epoch related metrics to the tensorboard
             for metric_name in epoch_metric_names:
                 writer.add_scalars(metric_name, epoch_metric_dict[metric_name], epoch)
-        print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Finished training ... ')
+        print(Trainer.time + ' Finished training ... ')
 
         writer.close()
-        print('(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ') Closed writer ... ')
+        print(Trainer.time_str() + ' Closed writer ... ')
 
     def get_epoch_loaders(self, epoch):
         """
@@ -291,7 +279,7 @@ class Trainer:
     def plot_confusion_matrix(self, confusion_matrix, normalize_dim: int = None):
         """Plot the confusion matrix"""
         # Get the group names
-        group_names = [c[1] for c in self.target_names]
+        group_names = list(self.target_names.columns)
         fig, ax = plt.subplots(figsize=(5,5))
         # Normalize data if requested. The values are rounded to 2 decimal points
         if normalize_dim is not None:
@@ -347,7 +335,12 @@ class Trainer:
         if tensor.requires_grad:
             tensor = tensor.detach()
         return torch.sigmoid(tensor)
-
+    @staticmethod
+    def time_str():
+        """
+        Returns the time string for the reporting
+        """
+        return '(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ')'
     @staticmethod
     def n1hw_to_n3hw(data):
         return data.cpu().repeat(1, 3, 1, 1)
