@@ -161,7 +161,7 @@ class Trainer:
                         accuracy_dict = self.add_target_names(running_accuracy.round(3))
                         running_loss_dict = self.add_target_names(running_loss_log.round(3))
                         print(Trainer.time_str() + ' Phase: ' + phase +
-                             f', epoch: {epoch}, batch: {i}, running loss: {running_loss_dict}, running accuracy: {running_loss_dict}')
+                              f', epoch: {epoch}, batch: {i}, running loss: {running_loss_dict}, running accuracy: {running_loss_dict}')
                         writer.add_scalars(f'{phase}/running_loss', running_loss_dict, batch_counter)
                         writer.add_scalars(f'{phase}/running_accuracy', accuracy_dict, batch_counter)
 
@@ -193,8 +193,8 @@ class Trainer:
                     epoch_metric_dict[metric_name][phase] = cur_metrics[i]
                 # Confusion matrix
                 confusion_matrix = sk_metrics.multilabel_confusion_matrix(results_phase['target'], results_phase['prediction'])
-                fig_confusion_norm = self.plot_confusion_matrix(confusion_matrix, normalize_dim=1)
-                figname_confusion = 'confusion_matrix_normalized_'
+                fig_confusion_norm = self.plot_confusion_matrix(confusion_matrix)
+                figname_confusion = 'confusion_matrix_'
                 fig_confusion_norm.savefig(os.path.join(self.log_root, epoch_root, figname_confusion + phase + '.png'), dpi=300)
                 writer.add_figure(figname_confusion + phase, fig_confusion_norm, epoch)
                 # Example images
@@ -279,42 +279,63 @@ class Trainer:
     def plot_confusion_matrix(self, confusion_matrix, normalize_dim: int = None):
         """Plot the confusion matrix"""
         # Get the group names
-        group_names = list(self.target_names.columns)
-        fig, ax = plt.subplots(figsize=(5,5))
+        matrix_shape = confusion_matrix.shape
+        # Get the number of confusion matrices from the third dimension
+        if len(matrix_shape) == 3:
+            nrows = matrix_shape[0]
+        elif len(matrix_shape) == 2:
+            nrows = 1
+            # Expand the first dimension so that the indexing works the same as 3d array of confusion matrices
+            np.expand_dims(confusion_matrix, axis=0)
+        else:
+            raise Exception('Matrix shape invalid')
+
+        num_samples_per_conf = confusion_matrix.sum(axis=tuple(range(1, confusion_matrix.ndim)))
+        assert max(num_samples_per_conf) == min(num_samples_per_conf), 'Sample numbers different for different target types'
+        data_range = [0, num_samples_per_conf[0]]
+        fig, axes = plt.subplots(nrows=nrows, ncols=1, figsize=(5, 5))
         # Normalize data if requested. The values are rounded to 2 decimal points
         if normalize_dim is not None:
             sums_along_dim = confusion_matrix.sum(axis=normalize_dim, keepdims=True)
-            confusion_matrix = np.around(confusion_matrix / sums_along_dim,2)
-            im = ax.imshow(confusion_matrix, cmap='gray',vmin=0,vmax=1)
-        else:
-            im = ax.imshow(confusion_matrix, cmap='gray')
-        # We want to show all ticks...
-        num_groups = len(group_names)
-        ax.set_xticks(np.arange(num_groups))
-        ax.set_yticks(np.arange(num_groups))
-        # ... and label them with the respective list entries
-        ax.set_xticklabels(group_names)
-        ax.set_yticklabels(group_names)
-        # Give axis labels as well:
-        ax.set_xlabel('Predicted class')
-        ax.set_ylabel('Human label class')
-        # Rotate the tick labels and set their alignment.
-        plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
-                 rotation_mode="anchor")
-        max_val = confusion_matrix.max() 
-        # Loop over data dimensions and create text annotations.
-        for i in range(num_groups):
-            for j in range(num_groups):
-                entry = confusion_matrix[i, j]
-                if entry > float(max_val)/2:
-                    color = 'k'
-                else:
-                    color = 'w'
-                text = ax.text(j, i, entry,
-                               ha="center", va="center", color=color)
-
-        ax.set_title("Confusion matrix")
-        fig.colorbar(im)
+            confusion_matrix = np.divide(confusion_matrix,
+                                         sums_along_dim,
+                                         out=np.zeros_like(confusion_matrix, dtype=float),
+                                         where=sums_along_dim != 0).round(3)
+            data_range = [0, 1]
+        # Loop over the targets and plot the confusion matrix
+        for i in range(nrows):
+            ax = axes[i]
+            cur_conf_matrix = confusion_matrix[i]
+            cur_im = ax.imshow(cur_conf_matrix, cmap='gray', vmin=data_range[0], vmax=data_range[1])
+            ax.set_title(f'Confusion matrix {self.target_names.columns[i]}')
+            cur_target_names = list(self.target_names.iloc[:, i])
+            # We want to show all ticks...
+            num_groups = len(cur_target_names)
+            ax.set_xticks(np.arange(num_groups))
+            ax.set_yticks(np.arange(num_groups))
+            # ... and label them with the respective list entries
+            ax.set_xticklabels(cur_target_names)
+            ax.set_yticklabels(cur_target_names)
+            # Give axis labels as well:
+            ax.set_xlabel('Predicted class')
+            ax.set_ylabel('Human label class')
+            # Rotate the tick labels and set their alignment.
+            plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+                     rotation_mode="anchor")
+            max_val = data_range[1]
+            # Loop over data dimensions and create text annotations.
+            for i in range(num_groups):
+                for j in range(num_groups):
+                    entry = cur_conf_matrix[i, j]
+                    if entry > float(max_val)/2:
+                        color = 'k'
+                    else:
+                        color = 'w'
+                    text = ax.text(j, i, entry,
+                                   ha="center", va="center", color=color)
+        plt.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
+        cax = plt.axes([0.75, 0.1, 0.075, 0.8])
+        plt.colorbar(cur_im, cax=cax)
         fig.tight_layout()
         return fig
 
