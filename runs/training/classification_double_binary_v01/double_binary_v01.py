@@ -19,7 +19,7 @@ input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
 
 data_split = DataSplit(train=0.70, validation=0.15, test=0.15)
-cache_RAM = False
+cache_RAM = True
 cache_HDD = False
 batch_size = 256
 num_workers = 8
@@ -52,7 +52,7 @@ num_epoch = 1000
 # controls the interval at which the dataloader's imbalance gets updated
 loader_interval = 500
 # The fraction of debris
-fraction_debris = [0.5, 0.2]
+fraction_debris = [0.2, 0.2]
 fraction_debris_per_block = np.linspace(fraction_debris[0], fraction_debris[1], num=int(num_epoch/loader_interval))
 report_composition = False
 # list of data loaders each contains a dictionary for train and validation loaders

@@ -1,23 +1,19 @@
 import os
 import datetime
-from typing import List, Union, Dict, Sequence
-import math
+from typing import List, Union, Dict 
 
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap
 import sklearn.metrics as sk_metrics
 import torch
 from torch import nn
 from torch.utils.tensorboard import SummaryWriter
 from torch import device as torchDevice
-from torch.utils.data import Sampler, Subset, DataLoader, SequentialSampler, RandomSampler, SubsetRandomSampler
+from torch.utils.data import Sampler, Subset, RandomSampler, SubsetRandomSampler
 from torch.utils.data.sampler import WeightedRandomSampler
-from torch.nn.functional import nll_loss
 
 from genEM3.util import gpu
-from genEM3.training.metrics import Metrics
 from genEM3.data.wkwdata import WkwData
 
 
@@ -78,10 +74,8 @@ class Trainer:
 
         writer = SummaryWriter(self.log_root)
         self.model = self.model.to(self.device)
-        artefact_idx = self.target_names.columns.get_loc('artefact')
         epoch = int(self.model.epoch) + 1
         batch_counter = int(self.model.iteration)
-        sample_count_df = pd.DataFrame(np.zeros([2, 2], dtype=np.int64), columns=self.target_names.columns, index=('No', 'Yes'))
         # Epoch loop
         for epoch in range(epoch, epoch + self.num_epoch):
             # Create logging directory
@@ -94,7 +88,7 @@ class Trainer:
             epoch_metric_names = ['epoch_loss', 'epoch_accuracy', 'epoch_precision', 'epoch_recall']
             epoch_metric_dict = {metric_name: dict.fromkeys(cur_epoch_loaders.keys()) for metric_name in epoch_metric_names}
             # Loop over phases within one epoch [train, validation, test]
-            for phase in ['val']: # cur_epoch_loaders.keys()
+            for phase in cur_epoch_loaders.keys():
                 # Select training state of the NN model
                 if phase == 'train':
                     self.model.train(True)
@@ -103,14 +97,17 @@ class Trainer:
 
                 # Select Loader
                 cur_loader = cur_epoch_loaders[phase]
-                # Get the number of batches and individual samples
-                # num_batches = len(cur_loader)
+                # Number of samples 
+                sample_count_df = pd.DataFrame(np.zeros([2, 2],
+                                               dtype=np.int64),
+                                               columns=self.target_names.columns,
+                                               index=('No', 'Yes'))
                 num_samples = len(cur_loader.batch_sampler.sampler)
                 num_target_class = self.model.classifier.num_output
                 # initializing variables for keeping track of results for tensorboard reporting
                 total_sample_counter = 0
                 results_phase = {'input': -np.ones((num_samples, 1, 140, 140)).astype(float),
-                                 'output': -np.ones((num_samples, num_target_class)).astype(float),
+                                 'output_prob': -np.ones((num_samples, num_target_class)).astype(float),
                                  'loss': -np.ones((num_samples, num_target_class), dtype=np.float32),
                                  'prediction': -np.ones((num_samples, num_target_class)).astype(int),
                                  'target': -np.ones((num_samples, num_target_class)).astype(int),
@@ -139,12 +136,12 @@ class Trainer:
                     results_batch = dict.fromkeys(results_phase)
                     results_batch['loss'] = Trainer.convert2numpy(loss)
                     results_batch['input'] = Trainer.convert2numpy(data['input'])
-                    results_batch['output'] = Trainer.convert2numpy(Trainer.sigmoid(outputs))
+                    results_batch['output_prob'] = Trainer.convert2numpy(Trainer.sigmoid(outputs))
                     results_batch['target'] = Trainer.convert2numpy(data['target'])
                     decision_thresh = 0.5
-                    results_batch['prediction'] = (results_batch['output'] > decision_thresh).astype(int)
+                    results_batch['prediction'] = (results_batch['output_prob'] > decision_thresh).astype(int)
                     results_batch['correct'] = (results_batch['prediction'] == results_batch['target']).astype(int)
-                    # Aggregate results into a phase array for general epoch reporting
+                    # Aggregate results into a phase array for complete epoch reporting
                     batch_idx_range = [i * nominal_batch_size, (i * nominal_batch_size) + cur_batch_size]
                     for key in results_phase:
                         results_phase[key][batch_idx_range[0]:batch_idx_range[1]] = results_batch[key]
@@ -154,7 +151,7 @@ class Trainer:
                     cur_sample_count = np.vstack((cur_batch_size-non_zero_count, non_zero_count))
                     assert (cur_sample_count.sum(axis=0) == cur_batch_size).all(), 'Sum to batch size check failed'
                     sample_count_df = sample_count_df + cur_sample_count
-                    # logging for the mini-batches
+                    # logging for the running loss and accuracy for each target class
                     if i % self.log_int == 4:
                         running_loss_log = results_phase['loss'][:batch_idx_range[1]].mean(axis=0)
                         running_accuracy = results_phase['correct'][:batch_idx_range[1]].mean(axis=0)
@@ -165,10 +162,10 @@ class Trainer:
                         writer.add_scalars(f'{phase}/running_loss', running_loss_dict, batch_counter)
                         writer.add_scalars(f'{phase}/running_accuracy', accuracy_dict, batch_counter)
 
-                # Number of samples checked two ways
+                # Number of samples in epoch checked two ways
                 assert total_sample_counter == num_samples
                 # Make sure no -1s left in the phase results (excluding input which throws errors)
-                for key in ['loss', 'output', 'prediction', 'target', 'correct']:
+                for key in ['loss', 'output_prob', 'prediction', 'target', 'correct']:
                     assert not (results_phase[key] == -1).any()
                 # Fraction for each class of target
                 class_fraction_df = sample_count_df / num_samples
@@ -183,58 +180,63 @@ class Trainer:
                 epoch_loss_dict = self.add_target_names(epoch_loss_log.round(3))
                 epoch_accuracy_log = results_phase['correct'].mean(axis=0)
                 epoch_acc_dict = self.add_target_names(epoch_accuracy_log.round(3))
-                print(Trainer.time_str() + ' Phase: ' + phase + f', epoch: {epoch}: epoch loss: {epoch_loss_dict}, epoch accuracy: {epoch_acc_dict}')
+                print(Trainer.time_str() + ' Phase: ' + phase +
+                      f', epoch: {epoch}: epoch loss: {epoch_loss_dict}, epoch accuracy: {epoch_acc_dict}')
                 # Precision, recall, accuracy and loss 
-                precision, recall, fscore, num_pos = sk_metrics.precision_recall_fscore_support(results_phase['target'], results_phase['prediction'], zero_division=0)
+                precision, recall, fscore, num_pos = sk_metrics.precision_recall_fscore_support(results_phase['target'],
+                                                                                                results_phase['prediction'],
+                                                                                                zero_division=0)
                 assert (np.asarray(sample_count_df.loc['Yes']) == num_pos).all(), 'Number of positive samples matching failed'
                 cur_metrics = [epoch_loss_dict, epoch_acc_dict,
                                self.add_target_names(precision), self.add_target_names(recall)]
                 for i, metric_name in enumerate(epoch_metric_names):
                     epoch_metric_dict[metric_name][phase] = cur_metrics[i]
                 # Confusion matrix
-                confusion_matrix = sk_metrics.multilabel_confusion_matrix(results_phase['target'], results_phase['prediction'])
+                confusion_matrix = sk_metrics.multilabel_confusion_matrix(results_phase['target'],
+                                                                          results_phase['prediction'])
                 fig_confusion_norm = self.plot_confusion_matrix(confusion_matrix)
                 figname_confusion = 'confusion_matrix_'
-                fig_confusion_norm.savefig(os.path.join(self.log_root, epoch_root, figname_confusion + phase + '.png'), dpi=300)
+                fig_confusion_norm.savefig(os.path.join(self.log_root,
+                                                        epoch_root,
+                                                        figname_confusion + phase + '.png'),
+                                           dpi=300)
                 writer.add_figure(figname_confusion + phase, fig_confusion_norm, epoch)
-                # Example images
-                fig = Trainer.show_imgs(inputs=inputs_phase, 
-                                        outputs=outputs_phase,
-                                        predictions=predictions_phase,
-                                        targets=targets_phase,
-                                        target_names=self.get_class_names(),
-                                        sample_ind=sample_ind_phase,
-                                        class_idx=debris_idx,
-                                        )
+                # Top 5 images with highest loss in each target type (Myelin and artefact currently)
+                fig = self.show_imgs(results_phase=results_phase,
+                                     sample_ind=sample_ind_phase)
                 figname = 'Image_examples_with_highest_loss_'
                 fig.savefig(os.path.join(self.log_root, epoch_root, figname + '_' + phase + '.png'), dpi=300)
                 writer.add_figure(figname + phase, fig, epoch)
 
                 # Precision/Recall curves
-                for c in self.target_names:
-                    cur_binary_targets = (targets_phase==c[0]).astype(int)
-                    writer.add_pr_curve(
-                        'pr_curve_'+phase+'_'+c[1], labels=cur_binary_targets, predictions=np.exp(outputs_phase[:, c[0]]), global_step=epoch,
-                        num_thresholds=50)
+                for i, t_type in enumerate(self.target_names):
+                    writer.add_pr_curve('pr_curve_'+phase+'_'+t_type,
+                                        labels=results_phase.get('target')[:, i],
+                                        predictions=results_phase.get('output_prob')[:, i],
+                                        global_step=epoch,
+                                        num_thresholds=100)
+
                 # save model
                 if self.save & (phase == 'train') & (epoch % self.save_int == 0):
                     print(Trainer.time_str() + ' Writing model graph ... ')
                     # writer.add_graph(self.model, inputs)
-
                     print(Trainer.time_str() + ' Saving model state... ')
                     self.model.epoch = torch.nn.Parameter(torch.tensor(epoch), requires_grad=False)
-                    self.model.iteration = torch.nn.Parameter(torch.tensor(batch_index), requires_grad=False)
+                    self.model.iteration = torch.nn.Parameter(torch.tensor(batch_counter), requires_grad=False)
                     torch.save({
                         'model_state_dict': self.model.state_dict(),
                     }, os.path.join(self.log_root, epoch_root, 'model_state_dict'))
                     torch.save({
                         'optimizer_state_dict': self.optimizer.state_dict()
                     }, os.path.join(self.log_root, 'optimizer_state_dict'))
+
             # write the epoch related metrics to the tensorboard
             for metric_name in epoch_metric_names:
-                writer.add_scalars(metric_name, epoch_metric_dict[metric_name], epoch)
+                cur_metric = epoch_metric_dict[metric_name]
+                for ph in cur_metric:
+                    cur_metric_phase = {f'{ph}_{t_type}': val for t_type, val in cur_metric[ph].items()}
+                    writer.add_scalars(metric_name, cur_metric_phase, epoch)
         print(Trainer.time + ' Finished training ... ')
-
         writer.close()
         print(Trainer.time_str() + ' Closed writer ... ')
 
@@ -264,17 +266,6 @@ class Trainer:
         """
         assert len(self.target_names.columns) == len(array)
         return {key: val for key, val in zip(self.target_names.columns, array)}
-
-    def get_class_index(self, name: str='Debris'):
-        """Get the index from the class information list"""
-        target_index = [c[0] for c in self.target_names if c[1]==name]
-        assert len(target_index) == 1
-        return target_index[0]
-
-    def get_class_names(self):
-        """Get the index from the class information list"""
-        target_names = [c[1] for c in self.target_names]
-        return target_names
 
     def plot_confusion_matrix(self, confusion_matrix, normalize_dim: int = None):
         """Plot the confusion matrix"""
@@ -306,7 +297,7 @@ class Trainer:
         for i in range(nrows):
             ax = axes[i]
             cur_conf_matrix = confusion_matrix[i]
-            cur_im = ax.imshow(cur_conf_matrix, cmap='gray', vmin=data_range[0], vmax=data_range[1])
+            cur_im = ax.imshow(cur_conf_matrix, cmap='gray_r', vmin=data_range[0], vmax=data_range[1])
             ax.set_title(f'Confusion matrix {self.target_names.columns[i]}')
             cur_target_names = list(self.target_names.iloc[:, i])
             # We want to show all ticks...
@@ -328,15 +319,48 @@ class Trainer:
                 for j in range(num_groups):
                     entry = cur_conf_matrix[i, j]
                     if entry > float(max_val)/2:
-                        color = 'k'
-                    else:
                         color = 'w'
-                    text = ax.text(j, i, entry,
-                                   ha="center", va="center", color=color)
+                    else:
+                        color = 'k'
+                    _ = ax.text(j, i, entry,
+                                ha="center", va="center", color=color)
         plt.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
         cax = plt.axes([0.75, 0.1, 0.075, 0.8])
         plt.colorbar(cur_im, cax=cax)
         fig.tight_layout()
+        return fig
+
+    def show_imgs(self, results_phase: dict, sample_ind):
+        """
+        Show example images with highest loss
+        """
+        # convert to numpy array
+        sample_ind = np.asarray(sample_ind)
+        losses = results_phase['loss']
+        sorted_ind = np.argsort(losses, axis=0)
+        num_examples = 5
+        num_targets = losses.shape[1]
+        # loop over target types
+        fig, axs = plt.subplots(nrows=num_targets, ncols=num_examples, figsize=(3 * num_examples, 3 * num_targets))
+        for i_target, t_name in enumerate(self.target_names):
+            plot_ind = sorted_ind[-num_examples:, i_target]
+            # Loop over [top 5] loss samples
+            for i_sample, sample_idx in enumerate(plot_ind):
+                # Get the error metrics
+                metric_keys = ['output_prob', 'target', 'loss']
+                metric_val = dict.fromkeys(metric_keys)
+                for field_name in metric_keys:
+                    metric_val[field_name] = results_phase.get(field_name)[sample_idx, i_target].round(2)
+                cur_ax = axs[i_target, i_sample]
+                input_im = results_phase.get('input')[sample_idx, 0, :, :].squeeze()
+                cur_ax.imshow(input_im, cmap='gray')
+                cur_ax.set_title(f'{t_name}:\n{metric_val}', fontdict={'fontsize': 7})
+                if i_sample == 0:
+                    cur_ax.set_ylabel(f'{t_name}')
+#               cur_ax.text(0.5, 1.0, f'{t_name}: {metric_val}',
+#                                 transform=cur_ax.transAxes, ha='center', va='center', c=[0.5, 0.5, 0.5])
+                cur_ax.axis('off')
+        plt.subplots_adjust(wspace=0.3)
         return fig
 
     @staticmethod
@@ -356,12 +380,14 @@ class Trainer:
         if tensor.requires_grad:
             tensor = tensor.detach()
         return torch.sigmoid(tensor)
+
     @staticmethod
     def time_str():
         """
         Returns the time string for the reporting
         """
         return '(' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ')'
+
     @staticmethod
     def n1hw_to_n3hw(data):
         return data.cpu().repeat(1, 3, 1, 1)
@@ -373,52 +399,6 @@ class Trainer:
         fig, axs = plt.subplots(1, 2, figsize=(4, 3))
         axs[0].imshow(inputs[idx].squeeze(), cmap='gray')
         axs[1].imshow(outputs[idx].squeeze(), cmap='gray')
-        return fig
-
-    @staticmethod
-    def show_imgs(inputs, outputs, predictions, targets, sample_ind, target_names, class_idx=1, plot_ind=None):
-        # Get the top 5 losses if the indices are not give
-        if plot_ind is None:
-            losses = nll_loss(torch.from_numpy(outputs), torch.from_numpy(targets), reduction='none')
-            (values_sorted, indices_sorted) = losses.sort(descending=True)
-            plot_ind = indices_sorted[range(5)].numpy()
-
-        fig, axs = plt.subplots(2, len(plot_ind), figsize=(3 * len(plot_ind), 6))
-        for i, sample_idx in enumerate(np.asarray(sample_ind)[plot_ind]):
-            input = inputs[i, 0, :, :].squeeze()
-            target_shape = (int(input.shape[0]/3), int(input.shape[1]))
-            axs[0, i].imshow(input, cmap='gray')
-            axs[0, i].axis('off')
-
-            # Create images for the target values
-            output = np.tile(np.exp((outputs[i][class_idx])), target_shape)
-            # output values above 1 are shown as zeros (myelin is added to the clean group)
-            if predictions[i] > 1:
-                gray_val_pred = 0
-            else:
-                gray_val_pred = int(predictions[i])
-            if targets[i] > 1:
-                gray_val_target = 0
-            else:
-                gray_val_target = int(targets[i])
-            prediction = np.tile(gray_val_pred, target_shape)
-            target = np.tile(gray_val_target, target_shape)
-            fused = np.concatenate((output, prediction, target), axis=0)
-            axs[1, i].imshow(fused, cmap='gray_r', vmin=0, vmax=1)
-            axs[1, i].text(0.5, 1.0, 'Probability, Non-Myl/deb/Myl:\n{}'.format(np.exp(outputs[i]).round(2).tolist()),
-                           transform=axs[1, i].transAxes, ha='center', va='center', c=[0.8, 0.8, 0.2])
-            axs[1, i].text(0.5, 0.80, 'sample_idx: {}'.format(sample_idx),
-                           transform=axs[1, i].transAxes, ha='center', va='center', c=[0.8, 0.8, 0.2])
-            axs[1, i].text(0.5, 0.70, 'Probability {}: {:01.2f}'.format(target_names[class_idx], np.exp((outputs[i][class_idx]))),
-                             transform=axs[1, i].transAxes, ha='center', va='center', c=[0.8, 0.8, 0.2])
-            axs[1, i].text(0.5, 0.5, 'Prediction class: {}'.format(target_names[int(predictions[i])]),
-                             transform=axs[1, i].transAxes, ha='center', va='center', c=[0.5, 0.5, 0.5])
-            axs[1, i].text(0.5, 0.2, 'Target class: {}'.format(target_names[int(targets[i])]),
-                             transform=axs[1, i].transAxes, ha='center', va='center', c=[0.5, 0.5, 0.5])
-            axs[1, i].axis('off')
-
-        plt.tight_layout()
-
         return fig
 
 
