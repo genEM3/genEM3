@@ -159,8 +159,8 @@ class Trainer:
                         running_loss_dict = self.add_target_names(running_loss_log.round(3))
                         print(Trainer.time_str() + ' Phase: ' + phase +
                               f', epoch: {epoch}, batch: {i}, running loss: {running_loss_dict}, running accuracy: {running_loss_dict}')
-                        writer.add_scalars(f'{phase}/running_loss', running_loss_dict, batch_counter)
-                        writer.add_scalars(f'{phase}/running_accuracy', accuracy_dict, batch_counter)
+                        writer.add_scalars(f'running_loss/{phase}', running_loss_dict, batch_counter)
+                        writer.add_scalars(f'running_accuracy/{phase}', accuracy_dict, batch_counter)
 
                 # Number of samples in epoch checked two ways
                 assert total_sample_counter == num_samples
@@ -173,7 +173,7 @@ class Trainer:
                 # the index for positive examples in each class
                 with_index = 'Yes'
                 fraction_positive_dict = class_fraction_df.loc[with_index].to_dict()
-                writer.add_scalars(f'Fraction_with_target_{phase}', fraction_positive_dict, epoch)
+                writer.add_scalars(f'Fraction_with_target/{phase}', fraction_positive_dict, epoch)
                 # calculate epoch loss and accuracy average over batch samples
                 # Epoch error measures
                 epoch_loss_log = results_batch['loss'].mean(axis=0)
@@ -195,22 +195,22 @@ class Trainer:
                 confusion_matrix = sk_metrics.multilabel_confusion_matrix(results_phase['target'],
                                                                           results_phase['prediction'])
                 fig_confusion_norm = self.plot_confusion_matrix(confusion_matrix)
-                figname_confusion = 'confusion_matrix_'
+                figname_confusion = 'Confusion_matrix'
                 fig_confusion_norm.savefig(os.path.join(self.log_root,
                                                         epoch_root,
                                                         figname_confusion + phase + '.png'),
                                            dpi=300)
-                writer.add_figure(figname_confusion + phase, fig_confusion_norm, epoch)
+                writer.add_figure(f'{figname_confusion}/{phase}', fig_confusion_norm, epoch)
                 # Top 5 images with highest loss in each target type (Myelin and artefact currently)
                 fig = self.show_imgs(results_phase=results_phase,
                                      sample_ind=sample_ind_phase)
-                figname = 'Image_examples_with_highest_loss_'
+                figname_examples = 'Examples_with_highest_loss'
                 fig.savefig(os.path.join(self.log_root, epoch_root, figname + '_' + phase + '.png'), dpi=300)
-                writer.add_figure(figname + phase, fig, epoch)
+                writer.add_figure(f'{figname_examples}/{phase}', fig, epoch)
 
                 # Precision/Recall curves
                 for i, t_type in enumerate(self.target_names):
-                    writer.add_pr_curve('pr_curve_'+phase+'_'+t_type,
+                    writer.add_pr_curve(f'{t_type}/{phase}',
                                         labels=results_phase.get('target')[:, i],
                                         predictions=results_phase.get('output_prob')[:, i],
                                         global_step=epoch,
