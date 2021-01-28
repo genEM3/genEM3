@@ -351,14 +351,11 @@ class Trainer:
                 metric_val = dict.fromkeys(metric_keys)
                 for field_name in metric_keys:
                     metric_val[field_name] = results_phase.get(field_name)[sample_idx, i_target].round(2)
+                # Plot
                 cur_ax = axs[i_target, i_sample]
                 input_im = results_phase.get('input')[sample_idx, 0, :, :].squeeze()
                 cur_ax.imshow(input_im, cmap='gray')
                 cur_ax.set_title(f'{t_name}:\n{metric_val}', fontdict={'fontsize': 7})
-                if i_sample == 0:
-                    cur_ax.set_ylabel(f'{t_name}')
-#               cur_ax.text(0.5, 1.0, f'{t_name}: {metric_val}',
-#                                 transform=cur_ax.transAxes, ha='center', va='center', c=[0.5, 0.5, 0.5])
                 cur_ax.axis('off')
         plt.subplots_adjust(wspace=0.3)
         return fig
