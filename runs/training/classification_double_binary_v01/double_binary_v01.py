@@ -21,7 +21,7 @@ output_shape = (140, 140, 1)
 data_split = DataSplit(train=0.70, validation=0.15, test=0.15)
 cache_RAM = True
 cache_HDD = False
-batch_size = 256
+batch_size = 1024
 num_workers = 8
 # Original dataset: point annotations and 3X test bboxes of 10x10x2um3
 original_source_path = os.path.join(get_data_dir(), 'dense_3X_10_10_2_um/original_merged_double_binary_v01.json')
@@ -50,7 +50,7 @@ dataset = WkwData(
 # The sampler is linear between the given the clean sample imbalabce factor ranges
 num_epoch = 1000
 # controls the interval at which the dataloader's imbalance gets updated
-loader_interval = 500
+loader_interval = 1000
 # The fraction of debris
 fraction_debris = [0.2, 0.2]
 fraction_debris_per_block = np.linspace(fraction_debris[0], fraction_debris[1], num=int(num_epoch/loader_interval))
@@ -80,7 +80,9 @@ kernel_size = 3
 stride = 1
 n_fmaps = 16  # fixed in model class
 n_latent = 2048
-n_output = 2
+#target_names = pd.DataFrame([['Clean', 'No-myelin'], ['Debris', 'Myelin']], columns=['artefact', 'myelin'])
+target_names = pd.DataFrame([['Clean'], ['Debris']], columns=['artefact'])
+n_output = len(target_names.columns)
 model = AE_Encoder_Classifier(
     Encoder_4_sampling_bn_1px_deep_convonly_skip(input_size, kernel_size, stride, n_latent=n_latent),
     Classifier3LayeredNoLogSoftmax(n_latent=n_latent, n_output=n_output))
@@ -99,14 +101,13 @@ for name, param in model.named_parameters():
 criterion = torch.nn.BCEWithLogitsLoss(reduction='none')
 optimizer = torch.optim.Adam(model.parameters(), lr=0.00000075)
 
-log_int = 5
+log_int = 2
 device = 'cuda'
 gpu_id = 0
 save = True
 save_int = 25
 resume = False
 run_name = f'class_balance_run_without_myelin_factor_{fraction_debris[0]:.3f}_{fraction_debris[1]:.3f}_{gethostnameTimeString()}'
-target_names = pd.DataFrame([['Clean', 'No-myelin'], ['Debris', 'Myelin']], columns=['artefact', 'myelin'])
 # Training Loop
 trainer = Trainer(run_name=run_name,
                   run_root=run_root,

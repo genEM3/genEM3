@@ -97,10 +97,11 @@ class Trainer:
 
                 # Select Loader
                 cur_loader = cur_epoch_loaders[phase]
-                # Number of samples 
-                sample_count_df = pd.DataFrame(np.zeros([2, 2],
+                # Number of samples
+                columns = self.target_names.columns
+                sample_count_df = pd.DataFrame(np.zeros([2, len(columns)],
                                                dtype=np.int64),
-                                               columns=self.target_names.columns,
+                                               columns=columns,
                                                index=('No', 'Yes'))
                 num_samples = len(cur_loader.batch_sampler.sampler)
                 num_target_class = self.model.classifier.num_output
@@ -115,11 +116,12 @@ class Trainer:
                 sample_ind_phase = []
                 for i, data in enumerate(cur_loader):
                     batch_counter += 1
+                    type_indices = self.get_target_type_index()
                     # Copy input and targets to the device object
                     inputs = data['input'].to(self.device)
                     cur_batch_size = inputs.shape[0]
                     nominal_batch_size = cur_loader.batch_size
-                    targets = data['target'].float().to(self.device)
+                    targets = data['target'][:, type_indices].float().squeeze().to(self.device)
                     sample_ind_batch = data['sample_idx']
                     sample_ind_phase.extend(sample_ind_batch)
 
@@ -137,13 +139,16 @@ class Trainer:
                     results_batch['loss'] = Trainer.convert2numpy(loss)
                     results_batch['input'] = Trainer.convert2numpy(data['input'])
                     results_batch['output_prob'] = Trainer.convert2numpy(Trainer.sigmoid(outputs))
-                    results_batch['target'] = Trainer.convert2numpy(data['target'])
+                    results_batch['target'] = Trainer.convert2numpy(data['target'][:, type_indices].squeeze())
                     decision_thresh = 0.5
                     results_batch['prediction'] = (results_batch['output_prob'] > decision_thresh).astype(int)
                     results_batch['correct'] = (results_batch['prediction'] == results_batch['target']).astype(int)
                     # Aggregate results into a phase array for complete epoch reporting
                     batch_idx_range = [i * nominal_batch_size, (i * nominal_batch_size) + cur_batch_size]
                     for key in results_phase:
+                        # Add additional dimension if the array is 1d
+                        if results_batch[key].ndim == 1:
+                            results_batch[key] = np.expand_dims(results_batch[key], axis=1)
                         results_phase[key][batch_idx_range[0]:batch_idx_range[1]] = results_batch[key]
                     # Gather number of each class in mini batch
                     total_sample_counter += cur_batch_size
@@ -152,7 +157,7 @@ class Trainer:
                     assert (cur_sample_count.sum(axis=0) == cur_batch_size).all(), 'Sum to batch size check failed'
                     sample_count_df = sample_count_df + cur_sample_count
                     # logging for the running loss and accuracy for each target class
-                    if i % self.log_int == 4:
+                    if i % self.log_int == 0:
                         running_loss_log = results_phase['loss'][:batch_idx_range[1]].mean(axis=0)
                         running_accuracy = results_phase['correct'][:batch_idx_range[1]].mean(axis=0)
                         accuracy_dict = self.add_target_names(running_accuracy.round(3))
@@ -183,17 +188,30 @@ class Trainer:
                 print(Trainer.time_str() + ' Phase: ' + phase +
                       f', epoch: {epoch}: epoch loss: {epoch_loss_dict}, epoch accuracy: {epoch_acc_dict}')
                 # Precision, recall, accuracy and loss 
-                precision, recall, fscore, num_pos = sk_metrics.precision_recall_fscore_support(results_phase['target'],
-                                                                                                results_phase['prediction'],
-                                                                                                zero_division=0)
+                precision, recall, _, num_pos = sk_metrics.precision_recall_fscore_support(results_phase['target'].squeeze(),
+                                                                                           results_phase['prediction'].squeeze(),
+                                                                                           zero_division=0)
+                # The metrics function returns the result for both positive and negative labels when operated with
+                # a single target type. When the task is a multilabel decision it only returns the positive label results
+                if num_target_class == 1:
+                    precision = [precision[1]]
+                    recall = [recall[1]]
+                    num_pos = num_pos[1]
                 assert (np.asarray(sample_count_df.loc['Yes']) == num_pos).all(), 'Number of positive samples matching failed'
                 cur_metrics = [epoch_loss_dict, epoch_acc_dict,
                                self.add_target_names(precision), self.add_target_names(recall)]
                 for i, metric_name in enumerate(epoch_metric_names):
                     epoch_metric_dict[metric_name][phase] = cur_metrics[i]
                 # Confusion matrix
-                confusion_matrix = sk_metrics.multilabel_confusion_matrix(results_phase['target'],
-                                                                          results_phase['prediction'])
+                if num_target_class == 1:
+                    confusion_matrix = sk_metrics.confusion_matrix(results_phase['target'].squeeze(),
+                                                                   results_phase['prediction'].squeeze())
+                elif num_target_class > 1:
+                    confusion_matrix = sk_metrics.multilabel_confusion_matrix(results_phase['target'],
+                                                                              results_phase['prediction'])
+                else:
+                    raise Exception('number of target classes is negative')
+
                 fig_confusion_norm = self.plot_confusion_matrix(confusion_matrix)
                 figname_confusion = 'Confusion_matrix'
                 fig_confusion_norm.savefig(os.path.join(self.log_root,
@@ -205,7 +223,7 @@ class Trainer:
                 fig = self.show_imgs(results_phase=results_phase,
                                      sample_ind=sample_ind_phase)
                 figname_examples = 'Examples_with_highest_loss'
-                fig.savefig(os.path.join(self.log_root, epoch_root, figname + '_' + phase + '.png'), dpi=300)
+                fig.savefig(os.path.join(self.log_root, epoch_root, figname_examples + '_' + phase + '.png'), dpi=300)
                 writer.add_figure(f'{figname_examples}/{phase}', fig, epoch)
 
                 # Precision/Recall curves
@@ -257,7 +275,7 @@ class Trainer:
             epoch_loaders = self.data_loaders
         else:
             raise Exception(f'Loader type not defined: {type(self.data_loaders)}')
-        
+
         return epoch_loaders
 
     def add_target_names(self, array):
@@ -267,6 +285,17 @@ class Trainer:
         assert len(self.target_names.columns) == len(array)
         return {key: val for key, val in zip(self.target_names.columns, array)}
 
+    def get_target_type_index(self):
+        """
+        Get the indices of the target type based on the give target name dataframe
+        """
+        indices = []
+        if 'artefact' in self.target_names.columns:
+            indices.append(0)
+        if 'myelin' in self.target_names.columns:
+            indices.append(1)
+        return indices
+
     def plot_confusion_matrix(self, confusion_matrix, normalize_dim: int = None):
         """Plot the confusion matrix"""
         # Get the group names
@@ -274,17 +303,21 @@ class Trainer:
         # Get the number of confusion matrices from the third dimension
         if len(matrix_shape) == 3:
             nrows = matrix_shape[0]
+            fig, axes = plt.subplots(nrows=nrows, ncols=1, figsize=(5, 5))
         elif len(matrix_shape) == 2:
             nrows = 1
+            fig, axes = plt.subplots(nrows=nrows, ncols=1, figsize=(5, 5))
+            # make axes indexable
+            axes = [axes]
             # Expand the first dimension so that the indexing works the same as 3d array of confusion matrices
-            np.expand_dims(confusion_matrix, axis=0)
+            confusion_matrix = np.expand_dims(confusion_matrix, axis=0)
         else:
             raise Exception('Matrix shape invalid')
 
         num_samples_per_conf = confusion_matrix.sum(axis=tuple(range(1, confusion_matrix.ndim)))
         assert max(num_samples_per_conf) == min(num_samples_per_conf), 'Sample numbers different for different target types'
         data_range = [0, num_samples_per_conf[0]]
-        fig, axes = plt.subplots(nrows=nrows, ncols=1, figsize=(5, 5))
+        
         # Normalize data if requested. The values are rounded to 2 decimal points
         if normalize_dim is not None:
             sums_along_dim = confusion_matrix.sum(axis=normalize_dim, keepdims=True)
@@ -298,7 +331,7 @@ class Trainer:
             ax = axes[i]
             cur_conf_matrix = confusion_matrix[i]
             cur_im = ax.imshow(cur_conf_matrix, cmap='gray_r', vmin=data_range[0], vmax=data_range[1])
-            ax.set_title(f'Confusion matrix {self.target_names.columns[i]}')
+            ax.set_title(f'Confusion matrix: {self.target_names.columns[i]}')
             cur_target_names = list(self.target_names.iloc[:, i])
             # We want to show all ticks...
             num_groups = len(cur_target_names)
@@ -325,9 +358,7 @@ class Trainer:
                     _ = ax.text(j, i, entry,
                                 ha="center", va="center", color=color)
         plt.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
-        cax = plt.axes([0.75, 0.1, 0.075, 0.8])
-        plt.colorbar(cur_im, cax=cax)
-        fig.tight_layout()
+        plt.colorbar(cur_im, fraction=0.046, pad=0.04)
         return fig
 
     def show_imgs(self, results_phase: dict, sample_ind):
@@ -342,6 +373,9 @@ class Trainer:
         num_targets = losses.shape[1]
         # loop over target types
         fig, axs = plt.subplots(nrows=num_targets, ncols=num_examples, figsize=(3 * num_examples, 3 * num_targets))
+        # Make sure axs is two dimensional
+        if axs.ndim == 1:
+            axs = np.expand_dims(axs, axis=0)
         for i_target, t_name in enumerate(self.target_names):
             plot_ind = sorted_ind[-num_examples:, i_target]
             # Loop over [top 5] loss samples
