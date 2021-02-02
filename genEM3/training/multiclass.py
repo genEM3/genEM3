@@ -163,7 +163,7 @@ class Trainer:
                         accuracy_dict = self.add_target_names(running_accuracy.round(3))
                         running_loss_dict = self.add_target_names(running_loss_log.round(3))
                         print(Trainer.time_str() + ' Phase: ' + phase +
-                              f', epoch: {epoch}, batch: {i}, running loss: {running_loss_dict}, running accuracy: {running_loss_dict}')
+                              f', epoch: {epoch}, batch: {i}, running loss: {running_loss_dict}, running accuracy: {accuracy_dict}')
                         writer.add_scalars(f'running_loss/{phase}', running_loss_dict, batch_counter)
                         writer.add_scalars(f'running_accuracy/{phase}', accuracy_dict, batch_counter)
 
@@ -254,7 +254,7 @@ class Trainer:
                 for ph in cur_metric:
                     cur_metric_phase = {f'{ph}_{t_type}': val for t_type, val in cur_metric[ph].items()}
                     writer.add_scalars(metric_name, cur_metric_phase, epoch)
-        print(Trainer.time + ' Finished training ... ')
+        print(Trainer.time_str() + ' Finished training ... ')
         writer.close()
         print(Trainer.time_str() + ' Closed writer ... ')
 
@@ -358,7 +358,16 @@ class Trainer:
                     _ = ax.text(j, i, entry,
                                 ha="center", va="center", color=color)
         plt.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
-        plt.colorbar(cur_im, fraction=0.046, pad=0.04)
+        if nrows == 2:
+            cax = plt.axes([0.75, 0.1, 0.075, 0.8])
+            plt.colorbar(cur_im, cax=cax)
+            fig.tight_layout()
+        elif nrows == 1:
+            # single image
+            plt.colorbar(cur_im, fraction=0.046, pad=0.04) 
+        else:
+            raise Exception('nrows one or two')
+
         return fig
 
     def show_imgs(self, results_phase: dict, sample_ind):
