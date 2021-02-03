@@ -398,7 +398,7 @@ class Trainer:
                 cur_ax = axs[i_target, i_sample]
                 input_im = results_phase.get('input')[sample_idx, 0, :, :].squeeze()
                 cur_ax.imshow(input_im, cmap='gray')
-                cur_ax.set_title(f'{t_name}:\n{metric_val}', fontdict={'fontsize': 7})
+                cur_ax.set_title(f'Target: {t_name}, Sample index: {sample_idx}\n{metric_val}', fontdict={'fontsize': 7})
                 cur_ax.axis('off')
         plt.subplots_adjust(wspace=0.3)
         return fig
