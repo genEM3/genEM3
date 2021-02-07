@@ -80,8 +80,8 @@ kernel_size = 3
 stride = 1
 n_fmaps = 16  # fixed in model class
 n_latent = 2048
-# target_names = pd.DataFrame([['Clean', 'No-myelin'], ['Debris', 'Myelin']], columns=['artefact', 'myelin'])
-target_names = pd.DataFrame([['Clean'], ['Debris']], columns=['artefact'])
+target_names = pd.DataFrame([['Clean', 'No-myelin'], ['Debris', 'Myelin']], columns=['artefact', 'myelin'])
+# target_names = pd.DataFrame([['Clean'], ['Debris']], columns=['artefact'])
 n_output = len(target_names.columns)
 model = AE_Encoder_Classifier(
     Encoder_4_sampling_bn_1px_deep_convonly_skip(input_size, kernel_size, stride, n_latent=n_latent),
