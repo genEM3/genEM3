@@ -50,9 +50,9 @@ dataset = WkwData(
 # The sampler is linear between the given the clean sample imbalabce factor ranges
 num_epoch = 3000
 # controls the interval at which the dataloader's imbalance gets updated
-loader_interval = 3000
+loader_interval = 200
 # The fraction of debris
-fraction_debris = [0.2, 0.2]
+fraction_debris = [0.5, 0.2]
 fraction_debris_per_block = np.linspace(fraction_debris[0], fraction_debris[1], num=int(num_epoch/loader_interval))
 report_composition = False
 # list of data loaders each contains a dictionary for train and validation loaders
@@ -80,8 +80,8 @@ kernel_size = 3
 stride = 1
 n_fmaps = 16  # fixed in model class
 n_latent = 2048
-target_names = pd.DataFrame([['Clean', 'No-myelin'], ['Debris', 'Myelin']], columns=['artefact', 'myelin'])
-# target_names = pd.DataFrame([['Clean'], ['Debris']], columns=['artefact'])
+# target_names = pd.DataFrame([['Clean', 'No-myelin'], ['Debris', 'Myelin']], columns=['artefact', 'myelin'])
+target_names = pd.DataFrame([['Clean'], ['Debris']], columns=['artefact'])
 n_output = len(target_names.columns)
 model = AE_Encoder_Classifier(
     Encoder_4_sampling_bn_1px_deep_convonly_skip(input_size, kernel_size, stride, n_latent=n_latent),

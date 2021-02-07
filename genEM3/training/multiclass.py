@@ -378,7 +378,7 @@ class Trainer:
         sample_ind = np.asarray(sample_ind)
         losses = results_phase['loss']
         sorted_ind = np.argsort(losses, axis=0)
-        num_examples = 5
+        num_examples = 10
         num_targets = losses.shape[1]
         # loop over target types
         fig, axs = plt.subplots(nrows=num_targets, ncols=num_examples, figsize=(3 * num_examples, 3 * num_targets))
