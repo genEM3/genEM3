@@ -199,6 +199,15 @@ class Widget():
             else:
                 raise ValueError
 
+    def update_from_json_dataset(self):
+        """
+        Update the targets from the dataset used to define the widget
+        """
+        targets = [self.dataset.get_target_from_sample_idx(i) for i in self.index_range]
+        for index, item in enumerate(targets):
+            self.annotation_list[index][1]['Debris'] = item[0]
+            self.annotation_list[index][1]['Myelin'] = item[1]
+            
     @classmethod
     def load(cls, file_name):
         """Load the dictionary of input and the initialize the object from it"""
