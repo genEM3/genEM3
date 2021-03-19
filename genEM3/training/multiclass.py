@@ -274,7 +274,7 @@ class Trainer:
     def init_results_phase(self, num_samples: int, num_target_class: int):
         """
         initialize the dictionary for gathering the results in each epoch
-        """ 
+        """
         patch_size = self.data_loaders[0]['val'].dataset.input_shape[:2]
         results_phase = {'input': -np.ones((num_samples, 1, *patch_size)).astype(float),
                          'output_prob': -np.ones((num_samples, num_target_class)).astype(float),
@@ -282,7 +282,7 @@ class Trainer:
                          'prediction': -np.ones((num_samples, num_target_class)).astype(int),
                          'target': -np.ones((num_samples, num_target_class)).astype(int),
                          'correct': -np.ones((num_samples, num_target_class)).astype(int),
-                         'dataset_indices': -np.ones(num_samples).astype(int)}
+                         'dataset_indices': -np.ones((num_samples, 1)).astype(int)}
         return results_phase
 
     def get_results_batch(self, dict_keys, data, loss, outputs):
@@ -298,7 +298,8 @@ class Trainer:
         decision_thresh = 0.5
         results_batch['prediction'] = (results_batch['output_prob'] > decision_thresh).astype(int)
         results_batch['correct'] = (results_batch['prediction'] == results_batch['target']).astype(int)
-        results_batch['dataset_indices'] = np.asarray(data['sample_idx'])
+        results_batch['dataset_indices'] = np.expand_dims(np.asarray(data['sample_idx']), axis=1)
+        return results_batch
 
     @staticmethod
     def update_results_phase(results_phase: dict,
