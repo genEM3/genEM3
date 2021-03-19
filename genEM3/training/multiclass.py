@@ -13,7 +13,7 @@ from torch import device as torchDevice
 from torch.utils.data import Sampler, Subset, RandomSampler, SubsetRandomSampler
 from torch.utils.data.sampler import WeightedRandomSampler
 
-from genEM3.util import gpu
+from genEM3.util import gpu, io
 from genEM3.data.wkwdata import WkwData
 
 
@@ -31,7 +31,7 @@ class Trainer:
                  device: str = 'cpu',
                  save: bool = False,
                  save_int: int = 1,
-                 resume: bool = False,
+                 resume_epoch: int = None,
                  gpu_id: int = None,
                  target_names: List = None):
         self.run_name = run_name
@@ -43,7 +43,12 @@ class Trainer:
         self.log_int = log_int
         self.save = save
         self.save_int = save_int
-        self.resume = resume
+        if resume_epoch is not None:
+            self.resume = True
+            self.resume_epoch = resume_epoch
+        else:
+            self.resume = False
+            self.resume_epoch = resume_epoch
         if device == 'cuda':
             gpu.get_gpu(gpu_id)
             device = torch.device(torch.cuda.current_device())
@@ -66,7 +71,7 @@ class Trainer:
         # Load saved model if resume option selected
         if self.resume:
             print(Trainer.time_str() + ' Resuming training ... ')
-            checkpoint = torch.load(os.path.join(self.log_root, 'torch_model'))
+            checkpoint = torch.load(os.path.join(self.log_root, self.get_epoch_root(self.resume_epoch), 'torch_model_optim.pth'))
             self.model.load_state_dict(checkpoint['model_state_dict'])
             self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         else:
@@ -79,7 +84,7 @@ class Trainer:
         # Epoch loop
         for epoch in range(epoch, epoch + self.num_epoch):
             # Create logging directory
-            epoch_root = 'epoch_{:02d}'.format(epoch)
+            epoch_root = self.get_epoch_root(epoch) 
             if not os.path.exists(os.path.join(self.log_root, epoch_root)):
                 os.makedirs(os.path.join(self.log_root, epoch_root))
             # Select data loaders for the current epoch
@@ -104,27 +109,16 @@ class Trainer:
                                                columns=columns,
                                                index=('No', 'Yes'))
                 num_samples = len(cur_loader.batch_sampler.sampler)
+                total_sample_counter = 0
                 num_target_class = self.model.classifier.num_output
                 # initializing variables for keeping track of results for tensorboard reporting
-                total_sample_counter = 0
-                results_phase = {'input': -np.ones((num_samples, 1, 140, 140)).astype(float),
-                                 'output_prob': -np.ones((num_samples, num_target_class)).astype(float),
-                                 'loss': -np.ones((num_samples, num_target_class), dtype=np.float32),
-                                 'prediction': -np.ones((num_samples, num_target_class)).astype(int),
-                                 'target': -np.ones((num_samples, num_target_class)).astype(int),
-                                 'correct': -np.ones((num_samples, num_target_class)).astype(int)}
-                sample_ind_phase = []
+                results_phase = self.init_results_phase(num_samples=num_samples, num_target_class=num_target_class)
                 for i, data in enumerate(cur_loader):
                     batch_counter += 1
-                    type_indices = self.get_target_type_index()
                     # Copy input and targets to the device object
                     inputs = data['input'].to(self.device)
-                    cur_batch_size = inputs.shape[0]
-                    nominal_batch_size = cur_loader.batch_size
+                    type_indices = self.get_target_type_index()
                     targets = data['target'][:, type_indices].float().squeeze().to(self.device)
-                    sample_ind_batch = data['sample_idx']
-                    sample_ind_phase.extend(sample_ind_batch)
-
                     # Zero the parameter gradients
                     self.optimizer.zero_grad()
                     # Forward pass
@@ -134,22 +128,17 @@ class Trainer:
                     if phase == 'train':
                         loss.mean().backward()
                         self.optimizer.step()
+                    
                     # Record results of the operation for the reporting
-                    results_batch = dict.fromkeys(results_phase)
-                    results_batch['loss'] = Trainer.convert2numpy(loss)
-                    results_batch['input'] = Trainer.convert2numpy(data['input'])
-                    results_batch['output_prob'] = Trainer.convert2numpy(Trainer.sigmoid(outputs))
-                    results_batch['target'] = Trainer.convert2numpy(data['target'][:, type_indices].squeeze())
-                    decision_thresh = 0.5
-                    results_batch['prediction'] = (results_batch['output_prob'] > decision_thresh).astype(int)
-                    results_batch['correct'] = (results_batch['prediction'] == results_batch['target']).astype(int)
+                    results_batch = self.get_results_batch(results_phase.keys(), data, loss, outputs)
                     # Aggregate results into a phase array for complete epoch reporting
-                    batch_idx_range = [i * nominal_batch_size, (i * nominal_batch_size) + cur_batch_size]
-                    for key in results_phase:
-                        # Add additional dimension if the array is 1d
-                        if results_batch[key].ndim == 1:
-                            results_batch[key] = np.expand_dims(results_batch[key], axis=1)
-                        results_phase[key][batch_idx_range[0]:batch_idx_range[1]] = results_batch[key]
+                    cur_batch_size = inputs.shape[0]
+                    nominal_batch_size = cur_loader.batch_size
+                    results_phase, batch_idx_range = self.update_results_phase(results_batch=results_batch, 
+                                                                               results_phase=results_phase,
+                                                                               nominal_batch_size=nominal_batch_size,
+                                                                               cur_batch_size=cur_batch_size,
+                                                                               batch_idx=i)
                     # Gather number of each class in mini batch
                     total_sample_counter += cur_batch_size
                     non_zero_count = np.count_nonzero(results_batch['target'], axis=0)
@@ -181,16 +170,22 @@ class Trainer:
                 writer.add_scalars(f'Fraction_with_target/{phase}', fraction_positive_dict, epoch)
                 # calculate epoch loss and accuracy average over batch samples
                 # Epoch error measures
-                epoch_loss_log = results_batch['loss'].mean(axis=0)
+                epoch_loss_log = results_phase['loss'].mean(axis=0)
                 epoch_loss_dict = self.add_target_names(epoch_loss_log.round(3))
                 epoch_accuracy_log = results_phase['correct'].mean(axis=0)
                 epoch_acc_dict = self.add_target_names(epoch_accuracy_log.round(3))
                 print(Trainer.time_str() + ' Phase: ' + phase +
                       f', epoch: {epoch}: epoch loss: {epoch_loss_dict}, epoch accuracy: {epoch_acc_dict}')
+                
+                # Pickle important results dict elements: loss, output_prob and dataset_indices
+                dict_to_save = {key: results_phase[key] for key in ['loss', 'output_prob', 'dataset_indices']}
+                io.save_dict(dict_to_save, os.path.join(self.log_root, epoch_root, 'results_saved.pkl'))
+
                 # Precision, recall, accuracy and loss 
                 precision, recall, _, num_pos = sk_metrics.precision_recall_fscore_support(results_phase['target'].squeeze(),
                                                                                            results_phase['prediction'].squeeze(),
                                                                                            zero_division=0)
+               
                 # The metrics function returns the result for both positive and negative labels when operated with
                 # a single target type. When the task is a multilabel decision it only returns the positive label results
                 if num_target_class == 1:
@@ -202,7 +197,8 @@ class Trainer:
                                self.add_target_names(precision), self.add_target_names(recall)]
                 for i, metric_name in enumerate(epoch_metric_names):
                     epoch_metric_dict[metric_name][phase] = cur_metrics[i]
-                # Confusion matrix
+                
+                # Confusion matrix Figure
                 if num_target_class == 1:
                     confusion_matrix = sk_metrics.confusion_matrix(results_phase['target'].squeeze(),
                                                                    results_phase['prediction'].squeeze())
@@ -211,7 +207,6 @@ class Trainer:
                                                                               results_phase['prediction'])
                 else:
                     raise Exception('number of target classes is negative')
-
                 fig_confusion_norm = self.plot_confusion_matrix(confusion_matrix)
                 figname_confusion = 'Confusion_matrix'
                 fig_confusion_norm.savefig(os.path.join(self.log_root,
@@ -219,9 +214,9 @@ class Trainer:
                                                         figname_confusion + phase + '.png'),
                                            dpi=300)
                 writer.add_figure(f'{figname_confusion}/{phase}', fig_confusion_norm, epoch)
-                # Top 5 images with highest loss in each target type (Myelin and artefact currently)
-                fig = self.show_imgs(results_phase=results_phase,
-                                     batch_sample_indexes=sample_ind_phase)
+
+                # Images with highest loss in each target type (Myelin and artefact currently)
+                fig = self.show_imgs(results_phase=results_phase)
                 figname_examples = 'Examples_with_highest_loss'
                 fig.savefig(os.path.join(self.log_root, epoch_root, figname_examples + '_' + phase + '.png'), dpi=300)
                 writer.add_figure(f'{figname_examples}/{phase}', fig, epoch)
@@ -243,10 +238,8 @@ class Trainer:
                     self.model.iteration = torch.nn.Parameter(torch.tensor(batch_counter), requires_grad=False)
                     torch.save({
                         'model_state_dict': self.model.state_dict(),
-                    }, os.path.join(self.log_root, epoch_root, 'model_state_dict'))
-                    torch.save({
                         'optimizer_state_dict': self.optimizer.state_dict()
-                    }, os.path.join(self.log_root, 'optimizer_state_dict'))
+                    }, os.path.join(self.log_root, epoch_root, 'torch_model_optim.pth'))
 
             # write the epoch related metrics to the tensorboard
             for metric_name in epoch_metric_names:
@@ -277,6 +270,52 @@ class Trainer:
             raise Exception(f'Loader type not defined: {type(self.data_loaders)}')
 
         return epoch_loaders
+
+    def init_results_phase(self, num_samples: int, num_target_class: int):
+        """
+        initialize the dictionary for gathering the results in each epoch
+        """ 
+        patch_size = self.data_loaders[0]['val'].dataset.input_shape[:2]
+        results_phase = {'input': -np.ones((num_samples, 1, *patch_size)).astype(float),
+                         'output_prob': -np.ones((num_samples, num_target_class)).astype(float),
+                         'loss': -np.ones((num_samples, num_target_class), dtype=np.float32),
+                         'prediction': -np.ones((num_samples, num_target_class)).astype(int),
+                         'target': -np.ones((num_samples, num_target_class)).astype(int),
+                         'correct': -np.ones((num_samples, num_target_class)).astype(int),
+                         'dataset_indices': -np.ones(num_samples).astype(int)}
+        return results_phase
+
+    def get_results_batch(self, dict_keys, data, loss, outputs):
+        """
+        Create a dictionary that holds the results for the current batch
+        """
+        type_indices = self.get_target_type_index()
+        results_batch = dict.fromkeys(dict_keys)
+        results_batch['loss'] = Trainer.convert2numpy(loss)
+        results_batch['input'] = Trainer.convert2numpy(data['input'])
+        results_batch['output_prob'] = Trainer.convert2numpy(Trainer.sigmoid(outputs))
+        results_batch['target'] = Trainer.convert2numpy(data['target'][:, type_indices].squeeze())
+        decision_thresh = 0.5
+        results_batch['prediction'] = (results_batch['output_prob'] > decision_thresh).astype(int)
+        results_batch['correct'] = (results_batch['prediction'] == results_batch['target']).astype(int)
+        results_batch['dataset_indices'] = np.asarray(data['sample_idx'])
+
+    @staticmethod
+    def update_results_phase(results_phase: dict,
+                             results_batch: dict,
+                             nominal_batch_size: int,
+                             cur_batch_size: int,
+                             batch_idx: int):
+        """
+        Update the entries in results for the whole epoch using the batch results
+        """
+        batch_idx_range = [batch_idx * nominal_batch_size, (batch_idx * nominal_batch_size) + cur_batch_size]
+        for key in results_phase:
+            # Add additional dimension if the array is 1d
+            if results_batch[key].ndim == 1:
+                results_batch[key] = np.expand_dims(results_batch[key], axis=1)
+            results_phase[key][batch_idx_range[0]:batch_idx_range[1]] = results_batch[key]
+        return results_phase, batch_idx_range
 
     def add_target_names(self, array):
         """
@@ -370,12 +409,12 @@ class Trainer:
 
         return fig
 
-    def show_imgs(self, results_phase: dict, batch_sample_indexes):
+    def show_imgs(self, results_phase: dict):
         """
         Show example images with highest loss
         """
         # convert to numpy array
-        batch_sample_indexes = np.asarray(batch_sample_indexes)
+        batch_sample_indexes = results_phase['dataset_indices'] 
         losses = results_phase['loss']
         sorted_ind = np.argsort(losses, axis=0)
         num_examples = 10
@@ -440,6 +479,11 @@ class Trainer:
         axs[0].imshow(inputs[idx].squeeze(), cmap='gray')
         axs[1].imshow(outputs[idx].squeeze(), cmap='gray')
         return fig
+
+    @staticmethod
+    def get_epoch_root(epoch):
+        # returns the name of the epoch directory
+        return 'epoch_{:02d}'.format(epoch)
 
 
 class subsetWeightedSampler(Sampler):
