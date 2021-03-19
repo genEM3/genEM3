@@ -221,7 +221,7 @@ class Trainer:
                 writer.add_figure(f'{figname_confusion}/{phase}', fig_confusion_norm, epoch)
                 # Top 5 images with highest loss in each target type (Myelin and artefact currently)
                 fig = self.show_imgs(results_phase=results_phase,
-                                     sample_ind=sample_ind_phase)
+                                     batch_sample_indexes=sample_ind_phase)
                 figname_examples = 'Examples_with_highest_loss'
                 fig.savefig(os.path.join(self.log_root, epoch_root, figname_examples + '_' + phase + '.png'), dpi=300)
                 writer.add_figure(f'{figname_examples}/{phase}', fig, epoch)
@@ -370,12 +370,12 @@ class Trainer:
 
         return fig
 
-    def show_imgs(self, results_phase: dict, sample_ind):
+    def show_imgs(self, results_phase: dict, batch_sample_indexes):
         """
         Show example images with highest loss
         """
         # convert to numpy array
-        sample_ind = np.asarray(sample_ind)
+        batch_sample_indexes = np.asarray(batch_sample_indexes)
         losses = results_phase['loss']
         sorted_ind = np.argsort(losses, axis=0)
         num_examples = 10
@@ -388,17 +388,17 @@ class Trainer:
         for i_target, t_name in enumerate(self.target_names):
             plot_ind = sorted_ind[-num_examples:, i_target]
             # Loop over [top 5] loss samples
-            for i_sample, sample_idx in enumerate(plot_ind):
+            for idx, array_idx in enumerate(plot_ind):
                 # Get the error metrics
                 metric_keys = ['output_prob', 'target', 'loss']
                 metric_val = dict.fromkeys(metric_keys)
                 for field_name in metric_keys:
-                    metric_val[field_name] = results_phase.get(field_name)[sample_idx, i_target].round(2)
+                    metric_val[field_name] = results_phase.get(field_name)[array_idx, i_target].round(2)
                 # Plot
-                cur_ax = axs[i_target, i_sample]
-                input_im = results_phase.get('input')[sample_idx, 0, :, :].squeeze()
+                cur_ax = axs[i_target, idx]
+                input_im = results_phase.get('input')[array_idx, 0]
                 cur_ax.imshow(input_im, cmap='gray')
-                cur_ax.set_title(f'Target: {t_name}, Sample index: {sample_idx}\n{metric_val}', fontdict={'fontsize': 7})
+                cur_ax.set_title(f'Target: {t_name}, Sample index: {batch_sample_indexes[array_idx]}\n{metric_val}', fontdict={'fontsize': 7})
                 cur_ax.axis('off')
         plt.subplots_adjust(wspace=0.3)
         return fig
