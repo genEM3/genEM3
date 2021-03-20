@@ -8,7 +8,7 @@ from genEM3.data.annotation import Widget
 from genEM3.data.wkwdata import WkwData, DataSource
 
 # Load the annotation widget
-file_name = '/u/alik/code/genEM3/playground/AK/classifier/.log/10X_9_9_1_um_with_myelin_Final.pkl'
+file_name = '/u/alik/code/genEM3/playground/AK/classifier/.log/original_merged_with_myelin_Final.pkl'
 w_loaded = Widget.load(file_name=file_name)
 # Get the datasources
 source_list = []
