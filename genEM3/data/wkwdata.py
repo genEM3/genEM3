@@ -2,7 +2,7 @@ import os
 import json
 import random
 from collections import namedtuple
-from typing import Tuple, Sequence, List, Callable, Dict, NamedTuple
+from typing import Tuple, Sequence, List, Callable, Dict, NamedTuple, Union
 from functools import lru_cache
 
 import numpy as np
@@ -688,6 +688,73 @@ class WkwData(Dataset):
 
         with open(json_path, 'w') as f:
             f.write(dumps)
+
+    @staticmethod
+    def datasources_to_short_json(datasources: Union[dict, list], json_path: str):
+        """
+        Write a more compressed version of the json files
+        """
+        if not isinstance(datasources, dict):
+            ds_dict = WkwData.convert_ds_to_dict(datasources)
+        else:
+            ds_dict = datasources
+        with open(json_path, 'w') as f:
+            json.dump(ds_dict, f, indent=4)
+
+    @staticmethod
+    def datasources_from_short_json(json_path: str):
+        """
+        Read a more compressed version of the json files
+        """
+        with open(json_path, 'r') as f:
+            ds_dict = json.load(f)
+        # Add shared properties
+        if 'shared_properties' in  ds_dict.keys():
+            p_key = 'shared_properties'
+            # Keys of the data sources
+            ds_keys = list(ds_dict.keys())
+            ds_keys.remove('shared_properties')
+            assert all(['datasource_' in key for key in ds_keys]), 'data source key names problem'
+            for key in ds_keys:
+                ds_dict[key].update(ds_dict[p_key])
+            del ds_dict[p_key]
+        # Convert to DataSource list
+        datasources = WkwData.convert_ds_to_list(ds_dict)
+        return datasources
+
+    @staticmethod
+    def convert_to_short_ds(long_sources, shared_properties=None):
+        """
+        Convert to a shortened version of the data sources
+        """
+        # if not given, make the shared dict
+        if shared_properties is None:
+            shared_properties = {'shared_properties': {'input_mean': 148.0,
+                                                       'input_std': 36.0,
+                                                       'input_path': '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1', 
+                                                       'target_binary': 1}}
+        # Remove the shared properties from the data sources
+        long_ds_dict = WkwData.convert_ds_to_dict(long_sources)
+        for ds_key in long_ds_dict:
+            # Also the target bounding box and path if target is binary
+            if long_ds_dict[ds_key]['target_binary']:
+                key2remove_list = list(shared_properties['shared_properties'].keys()) + ['target_path', 'target_bbox']
+            else:
+                key2remove_list = list(shared_properties['shared_properties'].keys())
+            # Removal
+            for key2remove in key2remove_list:
+                long_ds_dict[ds_key].pop(key2remove, None)
+        # Concatenate the two dictionaries
+        final_dict = {**shared_properties, **long_ds_dict}
+        return final_dict
+
+    @staticmethod
+    def convert_ds_to_dict(datasources: list):
+        return {f'datasource_{d.id}': d._asdict() for d in datasources}
+
+    @staticmethod
+    def convert_ds_to_list(datasources_dict: dict):
+        return [DataSource(**cur_ds) for cur_ds in datasources_dict.values()] 
 
     @staticmethod
     def concat_datasources(json_paths_in: Sequence[str], json_path_out: str = None):
