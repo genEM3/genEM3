@@ -19,10 +19,10 @@ input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
 
 data_split = DataSplit(train=0.70, validation=0.15, test=0.15)
-cache_RAM = True
+cache_RAM = False
 cache_HDD = False
 batch_size = 1024
-num_workers = 8
+num_workers = 0
 # Original dataset: point annotations and 3X test bboxes of 10x10x2um3
 original_source_path = os.path.join(get_data_dir(), 'dense_3X_10_10_2_um/original_merged_double_binary_v01.json')
 # Test dataset: 10 bboxes of size 9 x 9 x 1 um:
@@ -50,9 +50,9 @@ dataset = WkwData(
 # The sampler is linear between the given the clean sample imbalabce factor ranges
 num_epoch = 3000
 # controls the interval at which the dataloader's imbalance gets updated
-loader_interval = 200
+loader_interval = 3000
 # The fraction of debris
-fraction_debris = [0.5, 0.2]
+fraction_debris = [0.2, 0.2]
 fraction_debris_per_block = np.linspace(fraction_debris[0], fraction_debris[1], num=int(num_epoch/loader_interval))
 report_composition = False
 # list of data loaders each contains a dictionary for train and validation loaders
@@ -106,8 +106,8 @@ device = 'cuda'
 gpu_id = 0
 save = True
 save_int = 25
-resume = False
-run_name = f'class_balance_run_without_myelin_factor_{fraction_debris[0]:.3f}_{fraction_debris[1]:.3f}_{gethostnameTimeString()}'
+resume_epoch = None
+run_name = f'test_class_balance_run_without_myelin_factor_{fraction_debris[0]:.3f}_{fraction_debris[1]:.3f}_{gethostnameTimeString()}'
 # Training Loop
 trainer = Trainer(run_name=run_name,
                   run_root=run_root,
@@ -120,7 +120,7 @@ trainer = Trainer(run_name=run_name,
                   device=device,
                   save=save,
                   save_int=save_int,
-                  resume=resume,
+                  resume_epoch=resume_epoch,
                   gpu_id=gpu_id,
                   target_names=target_names)
 trainer.train()
