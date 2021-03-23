@@ -693,6 +693,10 @@ class WkwData(Dataset):
     def datasources_to_short_json(datasources: Union[dict, list], json_path: str):
         """
         Write a more compressed version of the json files
+        Args:
+            datasources: data source to write (dictionary or list[DataSource] representation)
+            json_path: The path to json file
+        Returns: None
         """
         if not isinstance(datasources, dict):
             ds_dict = WkwData.convert_ds_to_dict(datasources)
@@ -705,11 +709,15 @@ class WkwData(Dataset):
     def datasources_from_short_json(json_path: str):
         """
         Read a more compressed version of the json files
+        Args:
+            json_path: The path to the json file
+        Returns:
+            datasources: list of DataSources 
         """
         with open(json_path, 'r') as f:
             ds_dict = json.load(f)
         # Add shared properties
-        if 'shared_properties' in  ds_dict.keys():
+        if 'shared_properties' in ds_dict.keys():
             p_key = 'shared_properties'
             # Keys of the data sources
             ds_keys = list(ds_dict.keys())
@@ -723,9 +731,14 @@ class WkwData(Dataset):
         return datasources
 
     @staticmethod
-    def convert_to_short_ds(long_sources, shared_properties=None):
+    def convert_to_short_ds(long_sources: list, shared_properties: dict = None) -> dict:  
         """
         Convert to a shortened version of the data sources
+        Args:
+            long_sources: list of sources with all fields individually given
+            shared_properties: dictionary with the fields shared by all individual data sources.
+        Returns:
+            short_dict: The compact data source with shared properties separated into a separate field. 
         """
         # if not given, make the shared dict
         if shared_properties is None:
@@ -745,21 +758,40 @@ class WkwData(Dataset):
             for key2remove in key2remove_list:
                 long_ds_dict[ds_key].pop(key2remove, None)
         # Concatenate the two dictionaries
-        final_dict = {**shared_properties, **long_ds_dict}
-        return final_dict
+        short_dict = {**shared_properties, **long_ds_dict}
+        return short_dict
 
     @staticmethod
     def convert_ds_to_dict(datasources: list):
+        """
+        Convert DataSource list to dictionary
+        Args:
+            datasources: List of DataSources
+        Returns:
+            Dictionary of data sources
+        """
         return {f'datasource_{d.id}': d._asdict() for d in datasources}
 
     @staticmethod
     def convert_ds_to_list(datasources_dict: dict):
+        """
+        Convert dictionary of data sources into the list
+        Args:
+            datasources_dict: The dictioanry of data sources
+        Return
+            list of DataSource objects
+        """
         return [DataSource(**cur_ds) for cur_ds in datasources_dict.values()] 
 
     @staticmethod
     def concat_datasources(json_paths_in: Sequence[str], json_path_out: str = None):
         """
         Concatenate multiple .json data sources into one list and possibly write to a new json file
+        Args:
+            json_paths_in: List of json paths to merge
+            json_path_out: [Optional] Path to write the merged json file
+        Returns:
+            List of merged data sources
         """
         all_ds = []
         for json_path in json_paths_in:
