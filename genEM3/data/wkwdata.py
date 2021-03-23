@@ -690,7 +690,7 @@ class WkwData(Dataset):
             f.write(dumps)
 
     @staticmethod
-    def datasources_to_short_json(datasources: Union[dict, list], json_path: str):
+    def write_short_ds_json(datasources: Union[dict, list], json_path: str, convert_to_short: bool = False):
         """
         Write a more compressed version of the json files
         Args:
@@ -698,6 +698,10 @@ class WkwData(Dataset):
             json_path: The path to json file
         Returns: None
         """
+        # convert to shortened form if asked
+        if convert_to_short:
+            datasources = WkwData.convert_to_short_ds(data_sources=datasources)
+
         if not isinstance(datasources, dict):
             ds_dict = WkwData.convert_ds_to_dict(datasources)
         else:
@@ -706,13 +710,13 @@ class WkwData(Dataset):
             json.dump(ds_dict, f, indent=4)
 
     @staticmethod
-    def datasources_from_short_json(json_path: str):
+    def read_short_ds_json(json_path: str):
         """
         Read a more compressed version of the json files
         Args:
             json_path: The path to the json file
         Returns:
-            datasources: list of DataSources 
+            datasources: list of DataSources
         """
         with open(json_path, 'r') as f:
             ds_dict = json.load(f)
@@ -731,15 +735,18 @@ class WkwData(Dataset):
         return datasources
 
     @staticmethod
-    def convert_to_short_ds(long_sources: list, shared_properties: dict = None) -> dict:  
+    def convert_to_short_ds(data_sources: Union[list, dict], shared_properties: dict = None) -> dict:  
         """
         Convert to a shortened version of the data sources
         Args:
-            long_sources: list of sources with all fields individually given
+            data_sources: list of sources with all fields individually given. If given a dict with shared properties, It would do nothing.
             shared_properties: dictionary with the fields shared by all individual data sources.
         Returns:
             short_dict: The compact data source with shared properties separated into a separate field. 
         """
+        # if the given sources has the shared property field do nothing and return the list
+        if isinstance(data_sources, dict) and 'shared_properties' in data_sources.keys():
+            return data_sources 
         # if not given, make the shared dict
         if shared_properties is None:
             shared_properties = {'shared_properties': {'input_mean': 148.0,
@@ -747,7 +754,7 @@ class WkwData(Dataset):
                                                        'input_path': '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1', 
                                                        'target_binary': 1}}
         # Remove the shared properties from the data sources
-        long_ds_dict = WkwData.convert_ds_to_dict(long_sources)
+        long_ds_dict = WkwData.convert_ds_to_dict(data_sources)
         for ds_key in long_ds_dict:
             # Also the target bounding box and path if target is binary
             if long_ds_dict[ds_key]['target_binary']:
