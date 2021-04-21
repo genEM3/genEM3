@@ -20,11 +20,6 @@ import ipywidgets as widgets
 class Widget():
     """
     Build an interactive widget for annotating a list of input examples.
-
-    Parameters
-    ----------
-    Returns
-    -------
     """
     def __init__(self,
                  dataset: WkwData = None,
@@ -66,18 +61,17 @@ class Widget():
         self.prev_next = self.get_prev_next_button()
         # Annotation buttons
         self.annotation_buttons = self.get_annotation_buttons()
-        
         # Save/Load properties
         self.input_to_init = ['dataset','index_range','button_names','target_classes','margin','roi_size']
         self.additional_save_props = ['annotation_list', '_current_index']
-    
+
     @property
     def current_index(self):
         """
         The getter for the current index
         """
         return self._current_index
-    
+
     @current_index.setter
     def current_index(self, current_index):
         """
@@ -105,7 +99,6 @@ class Widget():
         # output the plot
         plt.show()
 
-    
     def update_image(self, relative_pos: int = 0):
         """
         Similar to the display_button_callback without the button input required by the ipywidgets
@@ -157,12 +150,12 @@ class Widget():
                                      layout=widgets.Layout(width='100%', justify_content='center'))
 
         def on_change_handler(slider_change):
-            # update current index, note: 
+            # update current index
             self.current_index = slider_change['new']
             self.update_image(relative_pos=0)
         progress.observe(on_change_handler, names='value')
         return progress
-    
+
     def set_annotation(self, button_value, target_class):
         """
         Set the annotation
