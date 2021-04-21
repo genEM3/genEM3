@@ -692,7 +692,7 @@ class WkwData(Dataset):
     @staticmethod
     def write_short_ds_json(datasources: Union[dict, list], json_path: str, convert_to_short: bool = False):
         """
-        Write a more compressed version of the json files
+        Write a compressed version of the json files with shared properties factored
         Args:
             datasources: data source to write (dictionary or list[DataSource] representation)
             json_path: The path to json file
@@ -712,7 +712,7 @@ class WkwData(Dataset):
     @staticmethod
     def read_short_ds_json(json_path: str):
         """
-        Read a more compressed version of the json files
+        Read a compressed version of the json files
         Args:
             json_path: The path to the json file
         Returns:

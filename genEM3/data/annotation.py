@@ -4,8 +4,7 @@ Functions used in relation to data annotation that might not fit in other module
 import os
 import pickle
 from typing import Sequence, Tuple
-from collections import namedtuple
-from functools import partial, partialmethod
+from functools import partial
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,8 +13,6 @@ from genEM3.data.wkwdata import DataSource, WkwData
 from genEM3.util.path import get_data_dir
 
 # Copied from pigeon data annotator:
-import random
-import functools
 from IPython.display import display, clear_output
 import ipywidgets as widgets
 
@@ -30,12 +27,24 @@ class Widget():
     -------
     """
     def __init__(self,
-                 dataset: WkwData=None,
-                 index_range: range=None,
+                 dataset: WkwData = None,
+                 index_range: range = None,
                  button_names: Sequence[Sequence[str]] = [['No', 'Yes'], ['No', 'Yes']],
                  target_classes: Sequence[str] = ['Myelin', 'Debris'],
                  margin: int = 35, 
                  roi_size: int = 140):
+        """
+        The initilizer for the annotation Widget
+        Args:
+            dataset: The WkwData object
+            index_range: The range of indices
+            button_names: The strings for button names
+            target_classes: The classes of targets
+            margin: additional margin of image batches
+            roi_size: The size (in pixels) of image patch
+        Returns: 
+            Widget object
+        """
         self.dataset = dataset
         self.index_range = index_range
         self._current_index = min(index_range)
@@ -46,15 +55,16 @@ class Widget():
         self.margin = margin
         self.roi_size = roi_size
         # elements of the widget
-        # index slider
+        # Slider
         self.index_slider = self.get_slider()
-        # output element for the example image (output of display_example)
-        self.image_output = widgets.Output(layout={'border': '1px solid black', 'width': '50%', 
-                                            'align_self':'center'})
+        # Image (output of display_example)
+        self.image_output = widgets.Output(layout={'border': '1px solid black', 'width': '50%',
+                                                   'align_self': 'center'})
         self.text_output = widgets.Label(value=None, layout=widgets.Layout(display="flex", justify_content="center", align_self='center',
                                                                 width="35%", border="solid"))
         # Previous/Next buttons
         self.prev_next = self.get_prev_next_button()
+        # Annotation buttons
         self.annotation_buttons = self.get_annotation_buttons()
         
         # Save/Load properties
@@ -63,23 +73,31 @@ class Widget():
     
     @property
     def current_index(self):
+        """
+        The getter for the current index
+        """
         return self._current_index
     
     @current_index.setter
     def current_index(self, current_index):
+        """
+        The setter for the current_index
+        """
         # sync the slider with the current index
         assert min(self.index_range)<= current_index <= max(self.index_range), f'Index out of range. current: {current_index}, range{self.index_range}'
         self.index_slider.value = current_index
         self._current_index = current_index
 
     def display_current(self):
-        """Display an image with a central rectangle for the roi"""
-        _ , ax = plt.subplots(figsize=(10, 10))
+        """
+        Display the current image patch
+        """
+        _, ax = plt.subplots(figsize=(10, 10))
         current_image = self.dataset.get_ordered_sample(self.current_index)['input'].squeeze()
-        ax.imshow(current_image,cmap='gray')
+        ax.imshow(current_image, cmap='gray')
         # Add a red rectangle
-        rectangle = plt.Rectangle((self.margin, self.margin), 
-                                   self.roi_size, self.roi_size, fill=False, ec="red")
+        rectangle = plt.Rectangle((self.margin, self.margin),
+                                  self.roi_size, self.roi_size, fill=False, ec="red")
         ax.add_patch(rectangle)
         plt.title(f'Sample index: {self.current_index}')
         # turn off the axis
@@ -100,21 +118,33 @@ class Widget():
 
     def update_result_text(self):
         """
-        Update the text of the image to represent the current result for it
+        Update the text of the image to represent the current patch
         """
         self.text_output.value = f'Annotation result: {self.annotation_list[self.current_index][1]}'
 
     def get_prev_next_button(self):
+        """
+        Make prev/next buttons
+        Args:
+            self
+        Returns:
+            control_buttons: A horizontal box xontaining the previous and next buttons
+        """
         b1 = widgets.Button(description="Previous")
         b2 = widgets.Button(description="Next")
         b1.on_click(partial(self.display_button_callback, widget_obj=self, relative_pos=-1))
-        b2.on_click(partial(self.display_button_callback, widget_obj=self,relative_pos=1))
-        control_buttons = widgets.HBox([widgets.Label('Controlers: '),b1, b2], layout=widgets.Layout(justify_content='center'))
+        b2.on_click(partial(self.display_button_callback, widget_obj=self, relative_pos=1))
+        control_buttons = widgets.HBox([widgets.Label('Controllers: '), b1, b2], layout=widgets.Layout(justify_content='center'))
         return control_buttons
     
     def get_slider(self):
         """
-        Generate the slider for the sample indicees
+        Make the slider for the sample indices
+        Args:
+            self
+        Returns:
+            progress: The integer slider for the index of the image patch
+        Note: the current index setter also updates the value of the slider
         """
         progress = widgets.IntSlider(value=self.current_index,
                                      min=min(self.index_range),
@@ -124,10 +154,10 @@ class Widget():
                                      disabled=False,
                                      continuous_update=False,
                                      orientation='horizontal',
-                                     layout=widgets.Layout(width='100%',justify_content='center'))
-        # Change the current index and display the image when slider value is changed
+                                     layout=widgets.Layout(width='100%', justify_content='center'))
+
         def on_change_handler(slider_change):
-            # update current index, note: the current index setter also updates the value of the slider
+            # update current index, note: 
             self.current_index = slider_change['new']
             self.update_image(relative_pos=0)
         progress.observe(on_change_handler, names='value')
@@ -135,29 +165,46 @@ class Widget():
     
     def set_annotation(self, button_value, target_class):
         """
-        Set the annotation value
+        Set the annotation
+        Args:
+            self
+            button_value: The value to be set
+            target_class: The class of the target to be set
         """
         self.annotation_list[self.current_index][1][target_class] = button_value
 
     def get_button(self, button_name, target_class):
-        """Get the button given the button type [Yes or no] and target type [Debris, Myelin]"""
+        """
+        Get the button given the 
+        Args:
+            button_name: type of button Yes (true, 1.0) or no (false, 0.0)
+            target_class: the string of the target type: Debris, Myelin
+        Returns:
+            button: The button object
+        """
         assert button_name in ['Yes', 'No'], "Target type should be either 'Yes' or 'No'"
         button_value = 1.0 if (button_name == 'Yes') else 0.0
         button = widgets.Button(description=button_name,
-                        disabled=False) 
-        # Callback function of the button
+                                disabled=False) 
+
         def on_click(b):
+            # Callback function of the button
             self.set_annotation(button_value, target_class)
             self.update_result_text()
         button.on_click(on_click)
         return button
 
     def get_annotation_buttons(self):
-        # Get the buttons for setting
+        """
+        Generate the annotation buttons
+        Returns:
+            annotation_buttons
+        """
         annotation_buttons = []
         for index, target in enumerate(self.target_classes):
             cur_target_buttons = [self.get_button(b_name, target) for b_name in self.button_names[index]]
-            annotation_buttons.append(widgets.HBox([widgets.Label(target+': ')]+cur_target_buttons, layout=widgets.Layout(justify_content='center')))
+            annotation_buttons.append(widgets.HBox([widgets.Label(target+': ')] + cur_target_buttons, 
+                                      layout=widgets.Layout(justify_content='center')))
         return annotation_buttons
 
     def show_widget(self):
@@ -172,9 +219,8 @@ class Widget():
     def save(self, file_name):
         """
         Save the dictionary of the object to the filename
-        Note: The ipywidget items seem to be not picklable so I just save the necessary items for initiating for load
+        Note: The ipywidget items cannot be pickled
         """
-        
         things2save = self.input_to_init + self.additional_save_props 
         with open(file_name, 'wb') as output:
             dict2save = {k: v for k, v in self.__dict__.items() if k in things2save}
@@ -207,10 +253,12 @@ class Widget():
         for index, item in enumerate(targets):
             self.annotation_list[index][1]['Debris'] = item[0]
             self.annotation_list[index][1]['Myelin'] = item[1]
-            
+
     @classmethod
     def load(cls, file_name):
-        """Load the dictionary of input and the initialize the object from it"""
+        """
+        Load the dictionary of input and the initialize the object from it
+        """
         propertiesAfterLoading = ['annotation_list', '_current_index']
         with open(file_name, 'rb') as input:
             saved_dict = pickle.load(input)
@@ -221,8 +269,7 @@ class Widget():
         loaded_widget.current_index = saved_dict.get('_current_index')
         return loaded_widget
 
-
-    @staticmethod 
+    @staticmethod
     def display_button_callback(btn, widget_obj=None, relative_pos=0):
         """
         Update the output image given the relative change as compared to current index
@@ -234,10 +281,13 @@ class Widget():
         with widget_obj.image_output:
             clear_output(wait=True)# wait until the next image is loaded
             widget_obj.display_current()
-        
+
+
 def update_data_source_targets(dataset: WkwData,
                                target_index_tuple_list: Sequence[Tuple[int, float]]):
-    """Create an updated list of datasources from a wkwdataset and a list of sample index, target_class pair"""
+    """
+    Create an updated list of datasources from a wkwdataset and a list of sample index, target_class pair
+    """
     list_source_idx = [dataset.get_source_idx_from_sample_idx(sample_idx) for (sample_idx, _) in target_index_tuple_list]
     source_list = []
     for cur_target_tuple in target_index_tuple_list:
@@ -253,7 +303,9 @@ def update_data_source_targets(dataset: WkwData,
 
 def update_data_source_bbox(dataset: WkwData,
                             bbox_list: Sequence[Tuple[int, Sequence[int]]]):
-    """Create an updated list of datasources from a wkwdataset and a list of index and bounding box tuples"""
+    """
+    Create an updated list of datasources from a wkwdataset and a list of index and bounding box tuples
+    """
     assert len(bbox_list) == len(dataset)
     source_list = []
     for sample_idx, (source_idx, cur_bbox) in enumerate(bbox_list):
@@ -265,7 +317,9 @@ def update_data_source_bbox(dataset: WkwData,
 
 
 def display_example(index: int, dataset: WkwData, margin: int = 35, roi_size: int = 140):
-    """Display an image with a central rectangle for the roi"""
+    """
+    Display an image with a central rectangle for the roi
+    """
     _ , ax = plt.subplots(figsize=(10, 10))
     ax.imshow(dataset.get_ordered_sample(index)['input'].squeeze(),cmap='gray')
     rectangle = plt.Rectangle((margin,margin), roi_size, roi_size, fill=False, ec="red")
@@ -275,7 +329,9 @@ def display_example(index: int, dataset: WkwData, margin: int = 35, roi_size: in
 
 
 def merge_json_from_data_dir(fnames: Sequence[str], output_fname: str):
-    """Function concatenates the data directory to the list of file names and concatenats the related jsons"""
+    """
+    Function concatenates the data directory to the list of file names and concatenats the related jsons
+    """
     # Test concatenating jsons
     full_fnames = []
     for fname in fnames:
@@ -291,7 +347,10 @@ def merge_json_from_data_dir(fnames: Sequence[str], output_fname: str):
 def patch_source_list_from_dataset(dataset: WkwData, 
                                    margin: int = 35,
                                    roi_size: int = 140):
-    """Return two data_sources from the image patches contained in a dataset. One data source has a larger bbox for annotations"""
+    """
+    Return two data_sources from the image patches contained in a dataset. 
+    One data source has a larger bbox for annotations
+    """
     corner_xy_index = [0, 1]
     length_xy_index = [3, 4]
     large_bboxes_idx = []
@@ -311,9 +370,15 @@ def patch_source_list_from_dataset(dataset: WkwData,
     return {'original': patch_source_list,'large':large_source_list}
 
 
-def divide_range(total_size: int, chunk_size: int = 1000,):
-    """Break down the range into partitions of 1000"""
-    chunk_size = 1000
+def divide_range(total_size: int, chunk_size: int = 1000):
+    """
+    Break down the range into chunks of specific size.
+    Args:
+        total_size: The total size of the range
+        chunk_size: The size of each chunk
+    return:
+        list_ranges: A list of chunked range objects
+    """
     num_thousand, remainder = divmod(total_size, chunk_size)
     list_ranges = []
     # Create a list of ranges
@@ -322,5 +387,4 @@ def divide_range(total_size: int, chunk_size: int = 1000,):
     if remainder > 0:
         final_range = range(num_thousand*chunk_size, num_thousand*chunk_size+remainder)
         list_ranges.append(final_range)
-
     return list_ranges
