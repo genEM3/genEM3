@@ -7,4 +7,6 @@ data_sources = WkwData.read_short_ds_json(json_path=json_name)
 # Read an old json for comparison
 old_json_name = os.path.join(get_data_dir(), 'dense_3X_10_10_2_um/original_merged_double_binary_v01.json')
 old_example = WkwData.datasources_from_json(old_json_name)
-breakpoint()
+# Write a copy [with some modifications]
+ouput_name = os.path.join(get_data_dir(), 'combined', 'copyTest_20K_patches.json')
+WkwData.write_short_ds_json(datasources=data_sources, json_path=ouput_name, convert_to_short=True)

@@ -744,7 +744,7 @@ class WkwData(Dataset):
         Returns:
             short_dict: The compact data source with shared properties separated into a separate field. 
         """
-        # if the given sources has the shared property field do nothing and return the list
+        # if the given source dict has the 'shared_property' field do nothing and return the dict
         if isinstance(data_sources, dict) and 'shared_properties' in data_sources.keys():
             return data_sources 
         # if not given, make the shared dict
@@ -754,7 +754,29 @@ class WkwData(Dataset):
                                                        'input_path': '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1', 
                                                        'target_binary': 1}}
         # Remove the shared properties from the data sources
+        assert isinstance(data_sources, list)
         long_ds_dict = WkwData.convert_ds_to_dict(data_sources)
+        # Here try to find the common groups in the json
+        # Get data source and per datasource keys
+        ds_keys = list(long_ds_dict)
+        per_ds_keys = list(long_ds_dict[ds_keys[0]])
+        # initialize with empty lists for each key
+        list_all = {k: [] for k in per_ds_keys}
+        # get a list of all elements to find shared properties amongst all data sources
+        for key in ds_keys:
+            cur_ds = long_ds_dict[key]
+            for per_key in per_ds_keys:
+                list_all[per_key].append(cur_ds[per_key])
+        # Create the shared property dictionary
+        shared_prop = {'shared_properties': {}}
+        for key in list_all:
+            cur_elem_list = list_all[key]
+            cur_elem_iter = iter(cur_elem_list)
+            first = next(cur_elem_iter)
+            is_identical = all(first == x for x in cur_elem_iter)
+            if is_identical:
+                shared_prop['shared_properties'].update({key: cur_elem_list[0]})
+
         for ds_key in long_ds_dict:
             # Also the target bounding box and path if target is binary
             if long_ds_dict[ds_key]['target_binary']:
@@ -777,6 +799,7 @@ class WkwData(Dataset):
         Returns:
             Dictionary of data sources
         """
+        assert isinstance(datasources, list)
         return {f'datasource_{d.id}': d._asdict() for d in datasources}
 
     @staticmethod
@@ -788,6 +811,7 @@ class WkwData(Dataset):
         Return
             list of DataSource objects
         """
+        assert isinstance(datasources_dict, dict)
         return [DataSource(**cur_ds) for cur_ds in datasources_dict.values()] 
 
     @staticmethod

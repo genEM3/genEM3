@@ -16,4 +16,4 @@ shared_properties = {'shared_properties': {'input_mean': 148.0,
                                            'target_binary': 1}}
 short_ds = WkwData.convert_to_short_ds(data_sources=data_sources, shared_properties=shared_properties)
 # Write combined data points
-WkwData.write_short_ds_json(datasources=short_ds, json_path=output_name)
+# WkwData.write_short_ds_json(datasources=short_ds, json_path=output_name)
