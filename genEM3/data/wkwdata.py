@@ -746,13 +746,32 @@ class WkwData(Dataset):
         """
         # if the given source dict has the 'shared_property' field do nothing and return the dict
         if isinstance(data_sources, dict) and 'shared_properties' in data_sources.keys():
+            print('data sources already contains the shared_properties. No change is done')
             return data_sources 
         # if not given, make the shared dict
         if shared_properties is None:
-            shared_properties = {'shared_properties': {'input_mean': 148.0,
-                                                       'input_std': 36.0,
-                                                       'input_path': '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1', 
-                                                       'target_binary': 1}}
+            shared_properties = WkwData.ds_find_shared_properties(data_sources=data_sources)
+        ds_dict = WkwData.convert_ds_to_dict(data_sources)
+        key2remove_list = list(shared_properties.keys())
+        # Loop over each data source
+        for ds_key in ds_dict:
+            # Removal of shared properties
+            for key2remove in key2remove_list:
+                ds_dict[ds_key].pop(key2remove, None)
+        # Concatenate the shared properties
+        short_dict = {**{'shared_properties': shared_properties}, **ds_dict}
+        return short_dict
+
+    @staticmethod
+    def ds_find_shared_properties(data_sources: list) -> dict:
+        """
+        Find the properties that are shared amongst all the data_sources
+        Note: the equality operator(==) is used for the properties
+        Args:
+            data_sources: a list of data sources
+        Returns:
+            shared_prop: Shared properties as a dictionary
+        """
         # Remove the shared properties from the data sources
         assert isinstance(data_sources, list)
         long_ds_dict = WkwData.convert_ds_to_dict(data_sources)
@@ -768,27 +787,15 @@ class WkwData(Dataset):
             for per_key in per_ds_keys:
                 list_all[per_key].append(cur_ds[per_key])
         # Create the shared property dictionary
-        shared_prop = {'shared_properties': {}}
+        shared_prop = {}
         for key in list_all:
             cur_elem_list = list_all[key]
             cur_elem_iter = iter(cur_elem_list)
             first = next(cur_elem_iter)
             is_identical = all(first == x for x in cur_elem_iter)
             if is_identical:
-                shared_prop['shared_properties'].update({key: cur_elem_list[0]})
-
-        for ds_key in long_ds_dict:
-            # Also the target bounding box and path if target is binary
-            if long_ds_dict[ds_key]['target_binary']:
-                key2remove_list = list(shared_properties['shared_properties'].keys()) + ['target_path', 'target_bbox']
-            else:
-                key2remove_list = list(shared_properties['shared_properties'].keys())
-            # Removal
-            for key2remove in key2remove_list:
-                long_ds_dict[ds_key].pop(key2remove, None)
-        # Concatenate the two dictionaries
-        short_dict = {**shared_properties, **long_ds_dict}
-        return short_dict
+                shared_prop.update({key: cur_elem_list[0]})
+        return shared_prop
 
     @staticmethod
     def convert_ds_to_dict(datasources: list):
