@@ -63,7 +63,7 @@ def get_volume_df(skeletons: Sequence[Skeleton]):
     return volume_df
 
 
-def add_bbox_tree(coord_center, input_shape, tree_name, skel):
+def add_bbox_tree_from_center(coord_center, input_shape, tree_name, skel):
     """Adds a bbox skeleton at specified coordinate to skeleton""" 
     cx, cy, cz = coord_center
     positions = np.array([
@@ -93,8 +93,46 @@ def add_bbox_tree(coord_center, input_shape, tree_name, skel):
         [4, 6]
     ]) + skel.max_node_id()
     
-    
     skel.add_tree(
         nodes=nodes,
         edges=edges,
         name=tree_name)
+
+
+def add_bbox_tree(skel, bbox: list, tree_name: str):
+    """
+    Add a tree based on the bounding box
+    """
+    # Get upper left corner and shape of bbox
+    upper_left = np.asarray(bbox[0:3])
+    shape = np.asarray(bbox[3:])
+    # no change in Z
+    shape[2] = 0
+    # Get the shift for the corners of the bbox
+    zeros = np.zeros((1, 3), dtype=np.int64)
+    deltas = np.vstack((zeros, shape, shape, shape, zeros))
+    deltas[[1, 2], [1, 0]] = 0
+    # Setup corners
+    corners = np.tile(upper_left, (5, 1))
+    corners = corners + deltas
+    # Create nodes and edges from corners
+    min_id = skel.max_node_id() + 1
+    max_id = min_id + corners.shape[0] - 1
+    nodes = skel.define_nodes(
+        position_x=corners[:, 0].tolist(),
+        position_y=corners[:, 1].tolist(),
+        position_z=corners[:, 2].tolist(),
+        id=list(range(min_id, max_id + 1))
+    )
+    edges = np.array([
+        [1, 2],
+        [2, 4],
+        [4, 3],
+        [3, 5]
+    ]) + skel.max_node_id()
+    # add tree
+    skel.add_tree(
+        nodes=nodes,
+        edges=edges,
+        name=tree_name)
+    return skel
