@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import torch
 from torch.utils.data import Dataset
 import wkw
+import pandas as pd
 
 from genEM3.util.path import get_data_dir
 
@@ -143,7 +144,7 @@ class WkwData(Dataset):
 
         if cache_RAM | cache_HDD:
             self.fill_caches()
-    
+
     def __len__(self):
         """This method returns the length of the dataset"""
         return self.data_inds_max[-1] + 1
@@ -796,6 +797,41 @@ class WkwData(Dataset):
             if is_identical:
                 shared_prop.update({key: cur_elem_list[0]})
         return shared_prop
+    
+    @staticmethod
+    def compare_ds_targets(two_datasources: List[Dict],
+                           source_names: List[str],
+                           target_names: List[str] = ['Debris', 'Myelin']) -> List:
+        """
+        Compare data sources and return the differnce.
+        Args:
+             two_datasources: A List that contains the two data sources as dictionaries
+             source_names: The name of jsons. Used as row names in difference dataframes
+             target_names: The names for each of the binary target classes 
+        """
+        # Read the two jsons
+
+        # Check length equality
+        assert len(set([len(j) for j in two_datasources])) == 1
+
+        t_string = 'target_class'
+        diff_sources = []
+        for index, ((key_1, source_1), (key_2, source_2)) in enumerate(zip(two_datasources[0].items(), two_datasources[1].items())):
+            assert key_1 == key_2
+            # assert equality of all fields except for the target class
+            fields = list(source_1.keys())
+            fields.remove(t_string)
+            for f in fields:
+                assert source_1[f] == source_2[f]
+            # If target class is different record the result for each source as a data frame
+            if source_1[t_string] != source_2[t_string]:
+                cur_diff_dict = dict.fromkeys([key_1])
+                cur_diff_df = pd.DataFrame([source_1[t_string], source_2[t_string]],
+                                           columns=target_names, index=source_names)
+                cur_diff_dict[key_1] = cur_diff_df
+                diff_sources.append(cur_diff_dict)
+            
+        return diff_sources
 
     @staticmethod
     def convert_ds_to_dict(datasources: list):

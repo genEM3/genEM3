@@ -11,5 +11,5 @@ data_sources = WkwData.concat_datasources(ds_names)
 # Get the short version of the data sources
 output_name = os.path.join(get_data_dir(), 'combined', 'combined_20K_patches.json')
 short_ds = WkwData.convert_to_short_ds(data_sources=data_sources)
-# Write combined data points
+# Write combined data source json file
 WkwData.write_short_ds_json(datasources=short_ds, json_path=output_name)
