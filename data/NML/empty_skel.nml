@@ -1,0 +1,19 @@
+<things>
+  <meta name="writer" content="NmlWriter.scala" />
+  <meta name="writerGitCommit" content="25666665ee50a7011f10c7946d4d1bcf8794a570" />
+  <meta name="timestamp" content="1619621902549" />
+  <meta name="annotationId" content="608978020100007600f534cd" />
+  <meta name="username" content="Ali Karimi" />
+  <parameters>
+    <experiment name="2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8_artifact_pred" organization="Connectomics_Department" description="" />
+    <scale x="32.0" y="32.0" z="35.0" />
+    <offset x="0" y="0" z="0" />
+    <time ms="1619621890426" />
+    <editPosition x="25125" y="20875" z="3593" />
+    <editRotation xRot="0.0" yRot="0.0" zRot="0.0" />
+    <zoomLevel zoom="2.0" />
+  </parameters>
+  <branchpoints />
+  <comments />
+  <groups />
+</things>
