@@ -99,7 +99,7 @@ def add_bbox_tree_from_center(coord_center, input_shape, tree_name, skel):
         name=tree_name)
 
 
-def add_bbox_tree(skel, bbox: list, tree_name: str):
+def add_bbox_tree(skel, bbox: list):
     """
     Add a tree based on the bounding box
     """
@@ -119,12 +119,7 @@ def add_bbox_tree(skel, bbox: list, tree_name: str):
         [4, 3],
         [3, 5]
     ]) + skel.max_node_id()
-    # add tree
-    skel.add_tree(
-        nodes=nodes,
-        edges=edges,
-        name=tree_name)
-    return skel
+    return (nodes, edges)
 
 
 def corners_from_bbox(bbox: list):

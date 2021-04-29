@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="utf-8"?>
+<things>
+  <parameters>
+    <experiment name="2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8_artifact_pred" />
+    <scale x="32.0" y="32.0" z="35.0" />
+    <offset x="0.0" y="0.0" z="0.0" />
+    <time ms="1619621890426" />
+    <editPosition x="25125.0" y="20875.0" z="3593.0" />
+    <editRotation xRot="0.0" yRot="0.0" zRot="0.0" />
+    <zoomLevel zoom="2.0" />
+  </parameters>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="1" name="datasource_0, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="1" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25168" y="20476" z="3546" />
+      <node bitDepth="8" id="2" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25308" y="20476" z="3546" />
+      <node bitDepth="8" id="3" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25168" y="20616" z="3546" />
+      <node bitDepth="8" id="4" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25308" y="20616" z="3546" />
+      <node bitDepth="8" id="5" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25168" y="20476" z="3546" />
+    </nodes>
+    <edges>
+      <edge source="1" target="2" />
+      <edge source="2" target="4" />
+      <edge source="4" target="3" />
+      <edge source="3" target="5" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="2" name="datasource_1, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="6" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25133" y="20476" z="3546" />
+      <node bitDepth="8" id="7" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25273" y="20476" z="3546" />
+      <node bitDepth="8" id="8" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25133" y="20616" z="3546" />
+      <node bitDepth="8" id="9" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25273" y="20616" z="3546" />
+      <node bitDepth="8" id="10" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25133" y="20476" z="3546" />
+    </nodes>
+    <edges>
+      <edge source="6" target="7" />
+      <edge source="7" target="9" />
+      <edge source="9" target="8" />
+      <edge source="8" target="10" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="3" name="datasource_2, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="11" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25203" y="20476" z="3546" />
+      <node bitDepth="8" id="12" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25343" y="20476" z="3546" />
+      <node bitDepth="8" id="13" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25203" y="20616" z="3546" />
+      <node bitDepth="8" id="14" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25343" y="20616" z="3546" />
+      <node bitDepth="8" id="15" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25203" y="20476" z="3546" />
+    </nodes>
+    <edges>
+      <edge source="11" target="12" />
+      <edge source="12" target="14" />
+      <edge source="14" target="13" />
+      <edge source="13" target="15" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="4" name="datasource_3, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="16" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25168" y="20441" z="3546" />
+      <node bitDepth="8" id="17" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25308" y="20441" z="3546" />
+      <node bitDepth="8" id="18" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25168" y="20581" z="3546" />
+      <node bitDepth="8" id="19" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25308" y="20581" z="3546" />
+      <node bitDepth="8" id="20" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25168" y="20441" z="3546" />
+    </nodes>
+    <edges>
+      <edge source="16" target="17" />
+      <edge source="17" target="19" />
+      <edge source="19" target="18" />
+      <edge source="18" target="20" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="5" name="datasource_4, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="21" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25168" y="20511" z="3546" />
+      <node bitDepth="8" id="22" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25308" y="20511" z="3546" />
+      <node bitDepth="8" id="23" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25168" y="20651" z="3546" />
+      <node bitDepth="8" id="24" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25308" y="20651" z="3546" />
+      <node bitDepth="8" id="25" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25168" y="20511" z="3546" />
+    </nodes>
+    <edges>
+      <edge source="21" target="22" />
+      <edge source="22" target="24" />
+      <edge source="24" target="23" />
+      <edge source="23" target="25" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="6" name="datasource_5, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="26" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25270" y="20359" z="3531" />
+      <node bitDepth="8" id="27" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25410" y="20359" z="3531" />
+      <node bitDepth="8" id="28" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25270" y="20499" z="3531" />
+      <node bitDepth="8" id="29" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25410" y="20499" z="3531" />
+      <node bitDepth="8" id="30" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25270" y="20359" z="3531" />
+    </nodes>
+    <edges>
+      <edge source="26" target="27" />
+      <edge source="27" target="29" />
+      <edge source="29" target="28" />
+      <edge source="28" target="30" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="7" name="datasource_6, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="31" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25235" y="20359" z="3531" />
+      <node bitDepth="8" id="32" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25375" y="20359" z="3531" />
+      <node bitDepth="8" id="33" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25235" y="20499" z="3531" />
+      <node bitDepth="8" id="34" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25375" y="20499" z="3531" />
+      <node bitDepth="8" id="35" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25235" y="20359" z="3531" />
+    </nodes>
+    <edges>
+      <edge source="31" target="32" />
+      <edge source="32" target="34" />
+      <edge source="34" target="33" />
+      <edge source="33" target="35" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="8" name="datasource_7, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="36" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25305" y="20359" z="3531" />
+      <node bitDepth="8" id="37" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25445" y="20359" z="3531" />
+      <node bitDepth="8" id="38" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25305" y="20499" z="3531" />
+      <node bitDepth="8" id="39" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25445" y="20499" z="3531" />
+      <node bitDepth="8" id="40" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25305" y="20359" z="3531" />
+    </nodes>
+    <edges>
+      <edge source="36" target="37" />
+      <edge source="37" target="39" />
+      <edge source="39" target="38" />
+      <edge source="38" target="40" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="9" name="datasource_8, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="41" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25270" y="20324" z="3531" />
+      <node bitDepth="8" id="42" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25410" y="20324" z="3531" />
+      <node bitDepth="8" id="43" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25270" y="20464" z="3531" />
+      <node bitDepth="8" id="44" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25410" y="20464" z="3531" />
+      <node bitDepth="8" id="45" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25270" y="20324" z="3531" />
+    </nodes>
+    <edges>
+      <edge source="41" target="42" />
+      <edge source="42" target="44" />
+      <edge source="44" target="43" />
+      <edge source="43" target="45" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="10" name="datasource_9, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="46" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25270" y="20394" z="3531" />
+      <node bitDepth="8" id="47" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25410" y="20394" z="3531" />
+      <node bitDepth="8" id="48" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25270" y="20534" z="3531" />
+      <node bitDepth="8" id="49" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25410" y="20534" z="3531" />
+      <node bitDepth="8" id="50" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25270" y="20394" z="3531" />
+    </nodes>
+    <edges>
+      <edge source="46" target="47" />
+      <edge source="47" target="49" />
+      <edge source="49" target="48" />
+      <edge source="48" target="50" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="11" name="datasource_10, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="51" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25146" y="20353" z="3579" />
+      <node bitDepth="8" id="52" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25286" y="20353" z="3579" />
+      <node bitDepth="8" id="53" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25146" y="20493" z="3579" />
+      <node bitDepth="8" id="54" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25286" y="20493" z="3579" />
+      <node bitDepth="8" id="55" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25146" y="20353" z="3579" />
+    </nodes>
+    <edges>
+      <edge source="51" target="52" />
+      <edge source="52" target="54" />
+      <edge source="54" target="53" />
+      <edge source="53" target="55" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="12" name="datasource_11, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="56" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25111" y="20353" z="3579" />
+      <node bitDepth="8" id="57" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25251" y="20353" z="3579" />
+      <node bitDepth="8" id="58" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25111" y="20493" z="3579" />
+      <node bitDepth="8" id="59" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25251" y="20493" z="3579" />
+      <node bitDepth="8" id="60" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25111" y="20353" z="3579" />
+    </nodes>
+    <edges>
+      <edge source="56" target="57" />
+      <edge source="57" target="59" />
+      <edge source="59" target="58" />
+      <edge source="58" target="60" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="13" name="datasource_12, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="61" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25181" y="20353" z="3579" />
+      <node bitDepth="8" id="62" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25321" y="20353" z="3579" />
+      <node bitDepth="8" id="63" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25181" y="20493" z="3579" />
+      <node bitDepth="8" id="64" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25321" y="20493" z="3579" />
+      <node bitDepth="8" id="65" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25181" y="20353" z="3579" />
+    </nodes>
+    <edges>
+      <edge source="61" target="62" />
+      <edge source="62" target="64" />
+      <edge source="64" target="63" />
+      <edge source="63" target="65" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="14" name="datasource_13, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="66" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25146" y="20318" z="3579" />
+      <node bitDepth="8" id="67" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25286" y="20318" z="3579" />
+      <node bitDepth="8" id="68" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25146" y="20458" z="3579" />
+      <node bitDepth="8" id="69" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25286" y="20458" z="3579" />
+      <node bitDepth="8" id="70" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25146" y="20318" z="3579" />
+    </nodes>
+    <edges>
+      <edge source="66" target="67" />
+      <edge source="67" target="69" />
+      <edge source="69" target="68" />
+      <edge source="68" target="70" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="15" name="datasource_14, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="71" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25146" y="20388" z="3579" />
+      <node bitDepth="8" id="72" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25286" y="20388" z="3579" />
+      <node bitDepth="8" id="73" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25146" y="20528" z="3579" />
+      <node bitDepth="8" id="74" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25286" y="20528" z="3579" />
+      <node bitDepth="8" id="75" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25146" y="20388" z="3579" />
+    </nodes>
+    <edges>
+      <edge source="71" target="72" />
+      <edge source="72" target="74" />
+      <edge source="74" target="73" />
+      <edge source="73" target="75" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="16" name="datasource_15, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="76" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25063" y="20396" z="3562" />
+      <node bitDepth="8" id="77" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25203" y="20396" z="3562" />
+      <node bitDepth="8" id="78" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25063" y="20536" z="3562" />
+      <node bitDepth="8" id="79" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25203" y="20536" z="3562" />
+      <node bitDepth="8" id="80" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25063" y="20396" z="3562" />
+    </nodes>
+    <edges>
+      <edge source="76" target="77" />
+      <edge source="77" target="79" />
+      <edge source="79" target="78" />
+      <edge source="78" target="80" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="17" name="datasource_16, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="81" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25028" y="20396" z="3562" />
+      <node bitDepth="8" id="82" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25168" y="20396" z="3562" />
+      <node bitDepth="8" id="83" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25028" y="20536" z="3562" />
+      <node bitDepth="8" id="84" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25168" y="20536" z="3562" />
+      <node bitDepth="8" id="85" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25028" y="20396" z="3562" />
+    </nodes>
+    <edges>
+      <edge source="81" target="82" />
+      <edge source="82" target="84" />
+      <edge source="84" target="83" />
+      <edge source="83" target="85" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="18" name="datasource_17, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="86" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25098" y="20396" z="3562" />
+      <node bitDepth="8" id="87" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25238" y="20396" z="3562" />
+      <node bitDepth="8" id="88" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25098" y="20536" z="3562" />
+      <node bitDepth="8" id="89" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25238" y="20536" z="3562" />
+      <node bitDepth="8" id="90" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25098" y="20396" z="3562" />
+    </nodes>
+    <edges>
+      <edge source="86" target="87" />
+      <edge source="87" target="89" />
+      <edge source="89" target="88" />
+      <edge source="88" target="90" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="19" name="datasource_18, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="91" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25063" y="20361" z="3562" />
+      <node bitDepth="8" id="92" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25203" y="20361" z="3562" />
+      <node bitDepth="8" id="93" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25063" y="20501" z="3562" />
+      <node bitDepth="8" id="94" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25203" y="20501" z="3562" />
+      <node bitDepth="8" id="95" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25063" y="20361" z="3562" />
+    </nodes>
+    <edges>
+      <edge source="91" target="92" />
+      <edge source="92" target="94" />
+      <edge source="94" target="93" />
+      <edge source="93" target="95" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="20" name="datasource_19, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="96" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25063" y="20431" z="3562" />
+      <node bitDepth="8" id="97" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25203" y="20431" z="3562" />
+      <node bitDepth="8" id="98" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25063" y="20571" z="3562" />
+      <node bitDepth="8" id="99" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25203" y="20571" z="3562" />
+      <node bitDepth="8" id="100" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="25063" y="20431" z="3562" />
+    </nodes>
+    <edges>
+      <edge source="96" target="97" />
+      <edge source="97" target="99" />
+      <edge source="99" target="98" />
+      <edge source="98" target="100" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="21" name="datasource_20, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="101" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20775" y="15362" z="3517" />
+      <node bitDepth="8" id="102" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20915" y="15362" z="3517" />
+      <node bitDepth="8" id="103" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20775" y="15502" z="3517" />
+      <node bitDepth="8" id="104" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20915" y="15502" z="3517" />
+      <node bitDepth="8" id="105" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20775" y="15362" z="3517" />
+    </nodes>
+    <edges>
+      <edge source="101" target="102" />
+      <edge source="102" target="104" />
+      <edge source="104" target="103" />
+      <edge source="103" target="105" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="22" name="datasource_21, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="106" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20740" y="15362" z="3517" />
+      <node bitDepth="8" id="107" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20880" y="15362" z="3517" />
+      <node bitDepth="8" id="108" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20740" y="15502" z="3517" />
+      <node bitDepth="8" id="109" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20880" y="15502" z="3517" />
+      <node bitDepth="8" id="110" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20740" y="15362" z="3517" />
+    </nodes>
+    <edges>
+      <edge source="106" target="107" />
+      <edge source="107" target="109" />
+      <edge source="109" target="108" />
+      <edge source="108" target="110" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="23" name="datasource_22, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="111" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20810" y="15362" z="3517" />
+      <node bitDepth="8" id="112" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20950" y="15362" z="3517" />
+      <node bitDepth="8" id="113" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20810" y="15502" z="3517" />
+      <node bitDepth="8" id="114" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20950" y="15502" z="3517" />
+      <node bitDepth="8" id="115" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20810" y="15362" z="3517" />
+    </nodes>
+    <edges>
+      <edge source="111" target="112" />
+      <edge source="112" target="114" />
+      <edge source="114" target="113" />
+      <edge source="113" target="115" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="24" name="datasource_23, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="116" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20775" y="15327" z="3517" />
+      <node bitDepth="8" id="117" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20915" y="15327" z="3517" />
+      <node bitDepth="8" id="118" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20775" y="15467" z="3517" />
+      <node bitDepth="8" id="119" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20915" y="15467" z="3517" />
+      <node bitDepth="8" id="120" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20775" y="15327" z="3517" />
+    </nodes>
+    <edges>
+      <edge source="116" target="117" />
+      <edge source="117" target="119" />
+      <edge source="119" target="118" />
+      <edge source="118" target="120" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="25" name="datasource_24, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="121" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20775" y="15397" z="3517" />
+      <node bitDepth="8" id="122" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20915" y="15397" z="3517" />
+      <node bitDepth="8" id="123" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20775" y="15537" z="3517" />
+      <node bitDepth="8" id="124" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20915" y="15537" z="3517" />
+      <node bitDepth="8" id="125" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20775" y="15397" z="3517" />
+    </nodes>
+    <edges>
+      <edge source="121" target="122" />
+      <edge source="122" target="124" />
+      <edge source="124" target="123" />
+      <edge source="123" target="125" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="26" name="datasource_25, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="126" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20485" y="15608" z="3564" />
+      <node bitDepth="8" id="127" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20625" y="15608" z="3564" />
+      <node bitDepth="8" id="128" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20485" y="15748" z="3564" />
+      <node bitDepth="8" id="129" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20625" y="15748" z="3564" />
+      <node bitDepth="8" id="130" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20485" y="15608" z="3564" />
+    </nodes>
+    <edges>
+      <edge source="126" target="127" />
+      <edge source="127" target="129" />
+      <edge source="129" target="128" />
+      <edge source="128" target="130" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="27" name="datasource_26, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="131" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20450" y="15608" z="3564" />
+      <node bitDepth="8" id="132" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20590" y="15608" z="3564" />
+      <node bitDepth="8" id="133" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20450" y="15748" z="3564" />
+      <node bitDepth="8" id="134" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20590" y="15748" z="3564" />
+      <node bitDepth="8" id="135" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20450" y="15608" z="3564" />
+    </nodes>
+    <edges>
+      <edge source="131" target="132" />
+      <edge source="132" target="134" />
+      <edge source="134" target="133" />
+      <edge source="133" target="135" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="28" name="datasource_27, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="136" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20520" y="15608" z="3564" />
+      <node bitDepth="8" id="137" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20660" y="15608" z="3564" />
+      <node bitDepth="8" id="138" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20520" y="15748" z="3564" />
+      <node bitDepth="8" id="139" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20660" y="15748" z="3564" />
+      <node bitDepth="8" id="140" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20520" y="15608" z="3564" />
+    </nodes>
+    <edges>
+      <edge source="136" target="137" />
+      <edge source="137" target="139" />
+      <edge source="139" target="138" />
+      <edge source="138" target="140" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="29" name="datasource_28, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="141" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20485" y="15573" z="3564" />
+      <node bitDepth="8" id="142" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20625" y="15573" z="3564" />
+      <node bitDepth="8" id="143" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20485" y="15713" z="3564" />
+      <node bitDepth="8" id="144" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20625" y="15713" z="3564" />
+      <node bitDepth="8" id="145" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20485" y="15573" z="3564" />
+    </nodes>
+    <edges>
+      <edge source="141" target="142" />
+      <edge source="142" target="144" />
+      <edge source="144" target="143" />
+      <edge source="143" target="145" />
+    </edges>
+  </thing>
+  <thing color.a="1.0" color.b="0.0" color.g="0.0" color.r="0.0" id="30" name="datasource_29, Debris: 1.0, Myelin: 0.0">
+    <nodes>
+      <node bitDepth="8" id="146" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20485" y="15643" z="3564" />
+      <node bitDepth="8" id="147" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20625" y="15643" z="3564" />
+      <node bitDepth="8" id="148" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20485" y="15783" z="3564" />
+      <node bitDepth="8" id="149" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20625" y="15783" z="3564" />
+      <node bitDepth="8" id="150" inMag="1" inVp="1" interpolation="True" radius="100.0" rotX="0.0" rotY="0.0" rotZ="0.0" time="0" x="20485" y="15643" z="3564" />
+    </nodes>
+    <edges>
+      <edge source="146" target="147" />
+      <edge source="147" target="149" />
+      <edge source="149" target="148" />
+      <edge source="148" target="150" />
+    </edges>
+  </thing>
+  <branchpoints />
+  <comments />
+  <groups />
+</things>
