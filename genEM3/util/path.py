@@ -35,7 +35,7 @@ def get_runs_dir():
 
 def getMag8DatasetDir():
     """return string for mag8 dataset we work with"""
-    wkwDir = '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8/color/1'
+    wkwDir = '/tmpscratch/webknossos/Connectomics_Department/2018-11-13_scMS109_1to7199_v01_l4_06_24_fixed_mag8_artifact_pred/color/1'
     return wkwDir
 
 

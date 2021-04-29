@@ -381,3 +381,13 @@ def divide_range(total_size: int, chunk_size: int = 1000):
         final_range = range(num_thousand*chunk_size, num_thousand*chunk_size+remainder)
         list_ranges.append(final_range)
     return list_ranges
+
+
+def remove_bbox_margin(bbox: list,
+                       margin: int = 35):
+    """remove the margin of a bbox"""
+    bbox = np.asarray(bbox)
+    # fix upper left corner
+    bbox[0:2] = bbox[0:2] + margin
+    bbox[3:5] = bbox[3:5] - (2 * margin)
+    return bbox.tolist()
