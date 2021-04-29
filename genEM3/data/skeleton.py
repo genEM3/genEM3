@@ -103,18 +103,7 @@ def add_bbox_tree(skel, bbox: list, tree_name: str):
     """
     Add a tree based on the bounding box
     """
-    # Get upper left corner and shape of bbox
-    upper_left = np.asarray(bbox[0:3])
-    shape = np.asarray(bbox[3:])
-    # no change in Z
-    shape[2] = 0
-    # Get the shift for the corners of the bbox
-    zeros = np.zeros((1, 3), dtype=np.int64)
-    deltas = np.vstack((zeros, shape, shape, shape, zeros))
-    deltas[[1, 2], [1, 0]] = 0
-    # Setup corners
-    corners = np.tile(upper_left, (5, 1))
-    corners = corners + deltas
+    corners = corners_from_bbox(bbox=bbox)
     # Create nodes and edges from corners
     min_id = skel.max_node_id() + 1
     max_id = min_id + corners.shape[0] - 1
@@ -136,3 +125,27 @@ def add_bbox_tree(skel, bbox: list, tree_name: str):
         edges=edges,
         name=tree_name)
     return skel
+
+
+def corners_from_bbox(bbox: list):
+    """
+    Get the coordinates of the corners given a webknossos style bounding box
+    Args:
+        bbox: 1 x 6 vector of webknossos bbox: upper left corner + bbox shape
+    Returns:
+        corners: 5 x 3 coordinates of the corners of the 2D image patch. 
+        Upper left corner is repeated to close the loop
+    """ 
+    # Get upper left corner and shape of bbox
+    upper_left = np.asarray(bbox[0:3])
+    shape = np.asarray(bbox[3:])
+    # no change in Z
+    shape[2] = 0
+    # Get the shift for the corners of the bbox
+    zeros = np.zeros((1, 3), dtype=np.int64)
+    deltas = np.vstack((zeros, shape, shape, shape, zeros))
+    deltas[[1, 2], [1, 0]] = 0
+    # Setup corners
+    corners = np.tile(upper_left, (5, 1))
+    corners = corners + deltas
+    return corners
