@@ -1,40 +1,19 @@
 import os
-import cProfile, pstats
-import wkskel
-from tqdm import tqdm
+import cProfile
+import pstats
 
-from genEM3.data.wkwdata import WkwData
 from genEM3.util.path import get_data_dir
-from genEM3.data.skeleton import add_bbox_tree
+from genEM3.data.skeleton import make_skel_from_json
 
-# create an empty skel to add the bounding boxes 
-empty_skel_name = os.path.join(get_data_dir(), 'NML', 'empty_skel.nml')
-empty_skel = wkskel.Skeleton(nml_path=empty_skel_name)
-
-# read the json data sources
-json_path = os.path.join(get_data_dir(), 'combined', 'combined_20K_patches.json')
-data_sources_list = WkwData.read_short_ds_json(json_path=json_path)
-data_sources_dict = WkwData.convert_ds_to_dict(datasources=data_sources_list)
-# Init with empty skeleton
-skel = empty_skel
-# Loop over data source patches
-keys = list(data_sources_dict.keys())
-keys = keys[:300]
 # start profiling
 profiler = cProfile.Profile()
 profiler.enable()
-for key in tqdm(keys, desc='Making bbox nml', total=len(keys)):
-    # Encode the target in the tree name
-    cur_target = data_sources_dict[key]['target_class']
-    cur_name = f'{key}, Debris: {cur_target[0]}, Myelin: {cur_target[1]}'
-    # add current tree
-    nodes, edges = add_bbox_tree(skel=skel,
-                                 bbox=data_sources_dict[key]['input_bbox'])
-    # TODO: try profiling this function
-    skel.add_tree(
-        nodes=nodes,
-        edges=edges,
-        name=cur_name)
+
+# read the json data sources
+json_path = os.path.join(get_data_dir(), 'combined', 'combined_20K_patches.json')
+skel = make_skel_from_json(json_path=json_path)
+
+# Finish profiling
 profiler.disable()
 stats = pstats.Stats(profiler).sort_stats('cumtime')
 stats.print_stats()

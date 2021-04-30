@@ -1,9 +1,15 @@
 """Functions for manipulating the skeleton object (These could be moved to wkskel repo if not already there)"""
+import os
 from typing import Sequence
+
 import numpy as np
 import pandas as pd
-
+from tqdm import tqdm
+import wkskel
 from wkskel import Skeleton
+
+from genEM3.data.wkwdata import WkwData
+from genEM3.util.path import get_data_dir
 
 
 def getAllTreeCoordinates(skel):
@@ -92,34 +98,66 @@ def add_bbox_tree_from_center(coord_center, input_shape, tree_name, skel):
         [3, 5],
         [4, 6]
     ]) + skel.max_node_id()
-    
     skel.add_tree(
         nodes=nodes,
         edges=edges,
         name=tree_name)
 
 
-def add_bbox_tree(skel, bbox: list):
+def make_skel_from_json(json_path: str):
     """
-    Add a tree based on the bounding box
+    Creates a skeleton object from the binary targets of the data sources in json
+    Args:
+        json_path: the path of the data source json file
+    Returns:
+        skel: the skeleton object
+    """
+    data_sources_dict = WkwData.convert_ds_to_dict(WkwData.read_short_ds_json(json_path=json_path))
+    # Init with empty skeleton
+    empty_skel_name = os.path.join(get_data_dir(), 'NML', 'empty_skel.nml')
+    skel = wkskel.Skeleton(nml_path=empty_skel_name)
+
+    # Loop over each bbox
+    keys = list(data_sources_dict.keys())
+    num_nodes_perTree = 5
+    for idx, key in tqdm(enumerate(keys), desc='Making bbox nml', total=len(keys)):
+        # Get minimum and maximum node id
+        min_id = (num_nodes_perTree * idx) + 1
+        max_id = num_nodes_perTree * (idx + 1)
+        # Encode the target in the tree name
+        cur_target = data_sources_dict[key]['target_class']
+        cur_name = f'{key}, Debris: {cur_target[0]}, Myelin: {cur_target[1]}'
+        # add current tree
+        add_bbox_tree(skel=skel,
+                      bbox=data_sources_dict[key]['input_bbox'],
+                      tree_name=cur_name,
+                      node_id_min_max=[min_id, max_id])
+    return skel
+
+
+def add_bbox_tree(skel, bbox: list, tree_name: str, node_id_min_max: list):
+    """
+    Get the nodes and edges of a bounding box tree
     """
     corners = corners_from_bbox(bbox=bbox)
-    # Create nodes and edges from corners
-    min_id = skel.max_node_id() + 1
-    max_id = min_id + corners.shape[0] - 1
+    min_id, max_id = node_id_min_max
+    # Nodes
     nodes = skel.define_nodes(
         position_x=corners[:, 0].tolist(),
         position_y=corners[:, 1].tolist(),
         position_z=corners[:, 2].tolist(),
         id=list(range(min_id, max_id + 1))
     )
+    # Edges
     edges = np.array([
         [1, 2],
         [2, 4],
         [4, 3],
         [3, 5]
-    ]) + skel.max_node_id()
-    return (nodes, edges)
+    ]) + min_id - 1
+    # Add tree
+    # Note: There's no need to return the object since the change is not limited to the scope of the function
+    skel.add_tree(nodes=nodes, edges=edges, name=tree_name)
 
 
 def corners_from_bbox(bbox: list):
