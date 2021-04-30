@@ -1,4 +1,5 @@
 import os
+import cProfile, pstats
 import wkskel
 from tqdm import tqdm
 
@@ -18,6 +19,10 @@ data_sources_dict = WkwData.convert_ds_to_dict(datasources=data_sources_list)
 skel = empty_skel
 # Loop over data source patches
 keys = list(data_sources_dict.keys())
+keys = keys[:300]
+# start profiling
+profiler = cProfile.Profile()
+profiler.enable()
 for key in tqdm(keys, desc='Making bbox nml', total=len(keys)):
     # Encode the target in the tree name
     cur_target = data_sources_dict[key]['target_class']
@@ -25,12 +30,14 @@ for key in tqdm(keys, desc='Making bbox nml', total=len(keys)):
     # add current tree
     nodes, edges = add_bbox_tree(skel=skel,
                                  bbox=data_sources_dict[key]['input_bbox'])
-    # add tree
+    # TODO: try profiling this function
     skel.add_tree(
         nodes=nodes,
         edges=edges,
         name=cur_name)
-
+profiler.disable()
+stats = pstats.Stats(profiler).sort_stats('cumtime')
+stats.print_stats()
 # write the nml file
 nml_name = os.path.join(get_data_dir(), 'NML', 'combined_20K_patches.nml')
 skel.write_nml(nml_write_path=nml_name)
