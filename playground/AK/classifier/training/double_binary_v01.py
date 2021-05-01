@@ -19,16 +19,14 @@ input_shape = (140, 140, 1)
 output_shape = (140, 140, 1)
 
 data_split = DataSplit(train=0.70, validation=0.15, test=0.15)
-cache_RAM = False
+cache_RAM = True
 cache_HDD = False
 batch_size = 1024
-num_workers = 0
-# Original dataset: point annotations and 3X test bboxes of 10x10x2um3
-original_source_path = os.path.join(get_data_dir(), 'dense_3X_10_10_2_um/original_merged_double_binary_v01.json')
-# Test dataset: 10 bboxes of size 9 x 9 x 1 um:
-test_source_path = os.path.join(get_data_dir(), '10x_test_bboxes/10X_9_9_1_um_double_binary_v01.json')
-# Combine the sources
-data_sources = WkwData.concat_datasources([original_source_path, test_source_path])
+num_workers = 8
+
+# Read the data sources
+json_name = os.path.join(get_data_dir(), 'combined', 'combined_20K_patches.json')
+data_sources = WkwData.read_short_ds_json(json_path=json_name)
 
 transforms = transforms.Compose([
     transforms.RandomFlip(p=0.5, flip_plane=(1, 2)),
@@ -107,7 +105,7 @@ gpu_id = 0
 save = True
 save_int = 25
 resume_epoch = None
-run_name = f'test_class_balance_run_without_myelin_factor_{fraction_debris[0]:.3f}_{fraction_debris[1]:.3f}_{gethostnameTimeString()}'
+run_name = f'class_balance_run_with_myelin_factor_{fraction_debris[0]:.3f}_{fraction_debris[1]:.3f}_{gethostnameTimeString()}'
 # Training Loop
 trainer = Trainer(run_name=run_name,
                   run_root=run_root,
