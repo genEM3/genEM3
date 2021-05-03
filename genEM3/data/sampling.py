@@ -160,3 +160,37 @@ class subsetWeightedSampler(Sampler):
             print(f'____\nDataLoader type: {key}, Num batches: {len(cur_dataloader)}, Batch size: {cur_dataloader.batch_size}')
             print(f'Average Fraction debris: {avg_fraction_debris:.2f}%\nAverage Repetition Fraction:{average_Frac_repetition:.2f}%')
             print(f'Total debris fraction: {total_frac_debris * 100:.2f} %\n_____')
+
+
+def data_loaders_split(params: dict):
+    """
+    Creats data loaders for train, validation and test sections of data
+
+    Args:
+        params: dictionary of params to input to data loader:
+            dataset, batch_size, num_workers, collate_fn
+    Returns:
+        data_loaders: dictionary of data loaders for train, val, test splits of data
+    """
+    # Create a dictionary to collect
+    index_names = get_split_index_names()
+    data_loaders = dict.fromkeys(index_names)
+
+    for key in data_loaders:
+        # Make sampler and data loader
+        cur_prop_name = index_names[key]
+        cur_split_indices = getattr(params['dataset'], cur_prop_name)
+        cur_sampler = SubsetRandomSampler(cur_split_indices)
+        data_loaders[key] = torch.utils.data.DataLoader(sampler=cur_sampler, **params)
+    return data_loaders
+
+
+def get_split_index_names():
+    """
+    Return a dictionary with the property names of data splits in the WkwData object
+    """
+    index_names = {
+        "train": "data_train_inds", 
+        "val": "data_validation_inds", 
+        "test": "data_test_inds"}
+    return index_names

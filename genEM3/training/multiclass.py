@@ -301,23 +301,6 @@ class Trainer:
         results_batch['dataset_indices'] = np.expand_dims(np.asarray(data['sample_idx']), axis=1)
         return results_batch
 
-    @staticmethod
-    def update_results_phase(results_phase: dict,
-                             results_batch: dict,
-                             nominal_batch_size: int,
-                             cur_batch_size: int,
-                             batch_idx: int):
-        """
-        Update the entries in results for the whole epoch using the batch results
-        """
-        batch_idx_range = [batch_idx * nominal_batch_size, (batch_idx * nominal_batch_size) + cur_batch_size]
-        for key in results_phase:
-            # Add additional dimension if the array is 1d
-            if results_batch[key].ndim == 1:
-                results_batch[key] = np.expand_dims(results_batch[key], axis=1)
-            results_phase[key][batch_idx_range[0]:batch_idx_range[1]] = results_batch[key]
-        return results_phase, batch_idx_range
-
     def add_target_names(self, array):
         """
         Creates a dictionary with each element of array corresponding to the target names
@@ -357,7 +340,6 @@ class Trainer:
         num_samples_per_conf = confusion_matrix.sum(axis=tuple(range(1, confusion_matrix.ndim)))
         assert max(num_samples_per_conf) == min(num_samples_per_conf), 'Sample numbers different for different target types'
         data_range = [0, num_samples_per_conf[0]]
-        
         # Normalize data if requested. The values are rounded to 2 decimal points
         if normalize_dim is not None:
             sums_along_dim = confusion_matrix.sum(axis=normalize_dim, keepdims=True)
@@ -444,6 +426,23 @@ class Trainer:
         return fig
 
     @staticmethod
+    def update_results_phase(results_phase: dict,
+                             results_batch: dict,
+                             nominal_batch_size: int,
+                             cur_batch_size: int,
+                             batch_idx: int):
+        """
+        Update the entries in results for the whole epoch using the batch results
+        """
+        batch_idx_range = [batch_idx * nominal_batch_size, (batch_idx * nominal_batch_size) + cur_batch_size]
+        for key in results_phase:
+            # Add additional dimension if the array is 1d
+            if results_batch[key].ndim == 1:
+                results_batch[key] = np.expand_dims(results_batch[key], axis=1)
+            results_phase[key][batch_idx_range[0]:batch_idx_range[1]] = results_batch[key]
+        return results_phase, batch_idx_range
+
+    @staticmethod
     def convert2numpy(tensor):
         """
         Convert tensor to a numpy array for tensorboard reporting
@@ -486,3 +485,21 @@ class Trainer:
         # returns the name of the epoch directory
         return 'epoch_{:02d}'.format(epoch)
 
+    @staticmethod
+    def target_strings(num_targets: int = 1):
+        """
+        Return a pandas data frame with the strings of the names for the targets
+
+        Args:
+            num_targets: The number of target types (1 or 2)
+
+        Returns:
+            target_names: data frame containing the strings for target names 
+        """
+        if num_targets == 1:
+            target_names = pd.DataFrame([['Clean'], ['Debris']], columns=['artefact'])
+        elif num_targets == 2:
+            target_names = pd.DataFrame([['Clean', 'No-myelin'], ['Debris', 'Myelin']], columns=['artefact', 'myelin'])
+        else:
+            raise Exception('The number of targets should be 1 or 2')
+        return target_names

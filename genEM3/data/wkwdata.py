@@ -14,6 +14,7 @@ import wkw
 import pandas as pd
 
 from genEM3.util.path import get_data_dir
+from genEM3.data import transforms
 
 np.random.seed(1337)
 
@@ -884,3 +885,18 @@ class WkwData(Dataset):
             WkwData.datasources_to_json(data_sources_out, json_path_out)
         # return the list of data sources
         return data_sources_out
+
+    @staticmethod
+    def get_common_transforms():
+        """
+        Get the transform object with the common transforms (Flips, rotation90)
+        Args: None
+        Returns:
+            transformation: the transformation
+        """
+        common_transforms = transforms.Compose([
+            transforms.RandomFlip(p=0.5, flip_plane=(1, 2)),
+            transforms.RandomFlip(p=0.5, flip_plane=(2, 1)),
+            transforms.RandomRotation90(p=1.0, mult_90=[0, 1, 2, 3], rot_plane=(1, 2))
+            ])
+        return common_transforms
