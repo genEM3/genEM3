@@ -7,7 +7,8 @@ import pandas as pd
 from genEM3.data import transforms
 from genEM3.data.wkwdata import WkwData, DataSplit
 from genEM3.model.autoencoder2d import Encoder_4_sampling_bn_1px_deep_convonly_skip, AE_Encoder_Classifier, Classifier3LayeredNoLogSoftmax
-from genEM3.training.multiclass import Trainer, subsetWeightedSampler
+from genEM3.training.multiclass import Trainer
+from genEM3.data.sampling import subsetWeightedSampler
 from genEM3.util.path import get_data_dir, gethostnameTimeString
 
 import matplotlib
@@ -78,8 +79,8 @@ kernel_size = 3
 stride = 1
 n_fmaps = 16  # fixed in model class
 n_latent = 2048
-target_names = pd.DataFrame([['Clean', 'No-myelin'], ['Debris', 'Myelin']], columns=['artefact', 'myelin'])
-# target_names = pd.DataFrame([['Clean'], ['Debris']], columns=['artefact'])
+# target_names = pd.DataFrame([['Clean', 'No-myelin'], ['Debris', 'Myelin']], columns=['artefact', 'myelin'])
+target_names = pd.DataFrame([['Clean'], ['Debris']], columns=['artefact'])
 n_output = len(target_names.columns)
 model = AE_Encoder_Classifier(
     Encoder_4_sampling_bn_1px_deep_convonly_skip(input_size, kernel_size, stride, n_latent=n_latent),
